@@ -1,0 +1,1 @@
+{"version":3,"file":"useChannelDeletedListener.d.ts","sourceRoot":"","sources":["../../../../src/components/ChannelList/hooks/useChannelDeletedListener.ts"],"names":[],"mappings":"AAIA,OAAO,KAAK,EAAE,OAAO,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAElD,OAAO,KAAK,EAAE,yBAAyB,EAAE,MAAM,sBAAsB,CAAC;AAEtE,eAAO,MAAM,yBAAyB,wVAO/B,IAAI,sBA4BV,CAAC"}

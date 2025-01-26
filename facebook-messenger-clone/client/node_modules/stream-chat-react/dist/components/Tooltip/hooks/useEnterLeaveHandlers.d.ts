@@ -1,0 +1,7 @@
+import React from 'react';
+export declare const useEnterLeaveHandlers: <T extends HTMLElement>({ onMouseEnter, onMouseLeave, }?: Partial<Record<"onMouseEnter" | "onMouseLeave", React.MouseEventHandler<T>>>) => {
+    handleEnter: React.MouseEventHandler<T>;
+    handleLeave: React.MouseEventHandler<T>;
+    tooltipVisible: boolean;
+};
+//# sourceMappingURL=useEnterLeaveHandlers.d.ts.map

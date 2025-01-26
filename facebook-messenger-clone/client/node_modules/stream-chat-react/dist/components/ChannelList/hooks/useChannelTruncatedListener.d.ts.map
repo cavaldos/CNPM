@@ -1,0 +1,1 @@
+{"version":3,"file":"useChannelTruncatedListener.d.ts","sourceRoot":"","sources":["../../../../src/components/ChannelList/hooks/useChannelTruncatedListener.ts"],"names":[],"mappings":"AAIA,OAAO,KAAK,EAAE,OAAO,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAElD,OAAO,KAAK,EAAE,yBAAyB,EAAE,MAAM,sBAAsB,CAAC;AAEtE,eAAO,MAAM,2BAA2B,wVAOjC,IAAI,6BACK,MAAM,IAAI,SAsBzB,CAAC"}
