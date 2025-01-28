@@ -20,7 +20,7 @@ async function runGemini() {
         }); 
 
         // Send a message and get the response
-        const result = await chat.sendMessage(`bạn hãy cho tôi 1 setup vào lệnh sử dụng smart money concept`);
+        const result = await chat.sendMessage(` 9,9 hay 9,11 lớn hơn`);
         const response = await result.response;
         console.log("Gemini:", response.text());
 
