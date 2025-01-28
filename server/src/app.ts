@@ -3,23 +3,29 @@ import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
 import routers from "./api/routes";
-import DataService from "./utils/DataService";
+import DataConnect from "./utils/DataConnect";
 
-DataService.checkConnection();
+DataConnect.open();
 const app = express();
-import "./test";
 
 app.use(
   cors({
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization, Origin, X-Requested-With, Accept"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization, Origin, X-Requested-With, Accept" + "Content-Type",
+      "Authorization",
+      "Origin",
+      "X-Requested-With",
+      "Accept",
+    ],
   })
 );
 app.use(json());
 app.use(helmet());
 app.use(morgan("tiny"));
-app.use(routers);
+app.use("/api", () => {
+  console.log("hello");
+});
 export default app;
-
-

@@ -61,7 +61,8 @@ const GuestLayout = ({ children }) => {
             </button>
             <button
               onClick={() => navigate("/signup")}
-              className="hover:text-sky-700 border hover:border-sky-700 rounded-full px-4 py-2 font-semibold"
+              to="#"
+              className="bg-[#2a5bd7] text-white px-4 py-2 rounded-full hover:bg-blue-700"
             >
               Join for Free
             </button>

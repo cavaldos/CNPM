@@ -13,26 +13,7 @@ export default {
         montserrat: ["Montserrat", "sans-serif", "ui-sans-serif", "system-ui"],
       },
       colors: {
-        primary: "#0D6EFD",
-        secondary: "#6C757D",
-        success: "#198754",
-        danger: "#DC3545",
-        warning: "#FFC107",
-        info: "#0DCAF0",
-        blue: "#1577FF",
-        ret: "red",
-        test:"#fecaca",
-        grin: "#24A65F",
-        'grey': "#ACACAC",
-        '#4B4B4B':"#4B4B4B",
-        'darkblue': "#296dcd",
-        'lightblue': "#f0f7ff", // màu nền 
-        'orange': "#ff7f16",
-        'darkgrin': "#15663a",
-        'darkorange': "#d1660e",
-        'pinkk': "#F36062",
-        'darkpinkk': "#E0595A",
-        'darkgrey': "#5D5D5D",
+  
       },
       screens: {
         sm: "640px",

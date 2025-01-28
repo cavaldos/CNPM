@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 
-import ProductCard from "../../components/ProductCard";
 const StudentPage = () => {
-  return (
-    <>
-      <div className=" m-5">
-        <ProductCard />
-
-      </div>
-    </>
-  );
+    return (
+        <>
+            <div className=" m-5">
+                <h1>Student Page</h1>
+            </div>
+        </>
+    );
 };
 
 export default StudentPage;
