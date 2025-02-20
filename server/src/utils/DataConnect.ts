@@ -1,11 +1,14 @@
 import sql, { ConnectionPool, config as SqlConfig, IResult } from "mssql";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const config: SqlConfig = {
-  user: "sa",
-  password: "password123@",
-  server: "113.173.16.55",
-  database: "ADB", // Ensure the default database is 'master'
-  port: 1448,
+  user: process.env.DB_USER || 'sa',
+  password: process.env.DB_PASSWORD || '',
+  server: process.env.DB_SERVER || 'localhost',
+  database: process.env.DB_NAME || 'CourseDB',
+  port: Number(process.env.DB_PORT) || 1433,
   options: {
     encrypt: false,
     trustServerCertificate: true,

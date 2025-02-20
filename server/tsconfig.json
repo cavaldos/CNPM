@@ -6,7 +6,10 @@
     "outDir": "dist",
     "rootDir": "./src",
     "allowUmdGlobalAccess": true,
-
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     /* Strict Type-Checking Options */
     "strict": true,
     "noImplicitAny": true,
