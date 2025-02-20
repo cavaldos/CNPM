@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { StudentController } from "../controllers";
+import { Router } from 'express';
+import { StudentController } from '../controllers';
 const StudentRouter = Router();
-StudentRouter.post("/p", StudentController.createProduct);
+StudentRouter.post('/p', StudentController.createProduct);
 
 export default StudentRouter;

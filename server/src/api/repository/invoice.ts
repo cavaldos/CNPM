@@ -1,9 +1,9 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const InvoiceRepository = {
   async getInvoices() {
     try {
-      const query = "SELECT * FROM [Invoice]";
+      const query = 'SELECT * FROM [Invoice]';
       const result = await DataConnect.execute(query);
       return result;
     } catch (error) {
@@ -31,18 +31,18 @@ const InvoiceRepository = {
     totalAmount: number;
     invoiceStatus: 'Paied' | 'UnPaied';
     studentId: number;
-    courses: Array<{ courseId: number; price: number; }>;
+    courses: Array<{ courseId: number; price: number }>;
   }) {
     try {
       // Start transaction
       await DataConnect.execute('BEGIN TRANSACTION');
-      
+
       // Create invoice
       const invoiceQuery = `
         INSERT INTO [Invoice] (InvoiceDate, TotalAmount, InvoiceStatus, StudentID)
         OUTPUT INSERTED.InvoiceID
         VALUES (GETDATE(), ${invoice.totalAmount}, '${invoice.invoiceStatus}', ${invoice.studentId})`;
-      
+
       const invoiceResult = await DataConnect.execute(invoiceQuery);
       const invoiceId = invoiceResult[0].InvoiceID;
 
@@ -67,14 +67,19 @@ const InvoiceRepository = {
     }
   },
 
-  async updateInvoice(id: number, invoice: {
-    totalAmount?: number;
-    invoiceStatus?: 'Paied' | 'UnPaied';
-  }) {
+  async updateInvoice(
+    id: number,
+    invoice: {
+      totalAmount?: number;
+      invoiceStatus?: 'Paied' | 'UnPaied';
+    },
+  ) {
     try {
       let updateFields = [];
-      if (invoice.totalAmount) updateFields.push(`TotalAmount = ${invoice.totalAmount}`);
-      if (invoice.invoiceStatus) updateFields.push(`InvoiceStatus = '${invoice.invoiceStatus}'`);
+      if (invoice.totalAmount)
+        updateFields.push(`TotalAmount = ${invoice.totalAmount}`);
+      if (invoice.invoiceStatus)
+        updateFields.push(`InvoiceStatus = '${invoice.invoiceStatus}'`);
 
       const query = `
         UPDATE [Invoice] 
@@ -94,13 +99,17 @@ const InvoiceRepository = {
     try {
       // Start transaction
       await DataConnect.execute('BEGIN TRANSACTION');
-      
+
       // Delete invoice details first
-      await DataConnect.execute(`DELETE FROM [InvoiceDetail] WHERE InvoiceID = ${id}`);
-      
+      await DataConnect.execute(
+        `DELETE FROM [InvoiceDetail] WHERE InvoiceID = ${id}`,
+      );
+
       // Then delete invoice
-      await DataConnect.execute(`DELETE FROM [Invoice] WHERE InvoiceID = ${id}`);
-      
+      await DataConnect.execute(
+        `DELETE FROM [Invoice] WHERE InvoiceID = ${id}`,
+      );
+
       // Commit transaction
       await DataConnect.execute('COMMIT');
     } catch (error) {
@@ -128,7 +137,7 @@ const InvoiceRepository = {
       }
       throw new Error('Error getting invoices by student');
     }
-  }
+  },
 };
 
 export default InvoiceRepository;

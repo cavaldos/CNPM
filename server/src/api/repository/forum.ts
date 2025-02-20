@@ -1,4 +1,4 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const ForumRepository = {
   async getForumPosts() {
@@ -60,9 +60,12 @@ const ForumRepository = {
     }
   },
 
-  async updateForumPost(id: number, post: {
-    content: string;
-  }) {
+  async updateForumPost(
+    id: number,
+    post: {
+      content: string;
+    },
+  ) {
     try {
       const query = `
         UPDATE [Forum] 
@@ -103,7 +106,9 @@ const ForumRepository = {
       return result;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Error getting forum posts by course: ${error.message}`);
+        throw new Error(
+          `Error getting forum posts by course: ${error.message}`,
+        );
       }
       throw new Error('Error getting forum posts by course');
     }
@@ -125,7 +130,7 @@ const ForumRepository = {
       }
       throw new Error('Error getting forum posts by user');
     }
-  }
+  },
 };
 
 export default ForumRepository;

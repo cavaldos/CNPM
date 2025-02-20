@@ -1,4 +1,4 @@
-import sql, { ConnectionPool, config as SqlConfig, IResult } from "mssql";
+import sql, { ConnectionPool, config as SqlConfig, IResult } from 'mssql';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -31,7 +31,7 @@ class DataConnect {
       }
       if (!this.pool.connected) {
         await this.pool.connect();
-        console.log("Connected to SQL Server 🎉");
+        console.log('Connected to SQL Server 🎉');
       }
     } catch (error: any) {
       this.pool = null;
@@ -61,7 +61,7 @@ class DataConnect {
 
   async executeWithParams(
     query: string,
-    params: { [key: string]: any }
+    params: { [key: string]: any },
   ): Promise<any> {
     try {
       if (!this.pool) {
@@ -72,7 +72,7 @@ class DataConnect {
       }
       const request = this.pool.request();
       for (const [key, value] of Object.entries(params)) {
-        request.input(key.replace("@", ""), value); // Remove '@' before adding to request
+        request.input(key.replace('@', ''), value); // Remove '@' before adding to request
       }
       const fullQuery = `USE ${config.database}; ${query}`;
       const result: IResult<any> = await request.query(fullQuery);
@@ -84,7 +84,7 @@ class DataConnect {
   //executeProcedure
   async executeProcedure(
     procedureName: string,
-    params: { [key: string]: any }
+    params: { [key: string]: any },
   ): Promise<any> {
     try {
       if (!this.pool) {
@@ -119,12 +119,12 @@ class DataConnect {
     try {
       if (this.pool && this.pool.connected) {
         await this.pool.close();
-        console.log("Connection to SQL Server closed ✅");
+        console.log('Connection to SQL Server closed ✅');
         this.pool = null;
       }
     } catch (error: any) {
       throw new Error(
-        `Error closing connection to SQL Server: ${error.message}`
+        `Error closing connection to SQL Server: ${error.message}`,
       );
     }
   }

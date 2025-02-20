@@ -1,6 +1,6 @@
 export interface LessonsProcess {
   LessonsProcessID: number;
-  Status: "NotStarted" | "InProcess" | "Done";
+  Status: 'NotStarted' | 'InProcess' | 'Done';
   StartTime: Date | null;
   EndTime: Date | null;
   LessonsID: number;
@@ -11,7 +11,7 @@ export interface Lessons {
   LessonsID: number;
   Title: string;
   Duration: number;
-  ComplexityLevel: "Easy" | "Medium" | "Hard";
+  ComplexityLevel: 'Easy' | 'Medium' | 'Hard';
   CreatedTime: Date;
   UpdatedTime: Date;
   LessonType: string;
@@ -71,7 +71,7 @@ export interface User {
   FullName: string;
   Phone: string;
   Address: string;
-  Role: "Student" | "Instructor" | "Admin";
+  Role: 'Student' | 'Instructor' | 'Admin';
   CreatedTime: Date;
   UpdateTime: Date;
 }
@@ -89,8 +89,8 @@ export interface Student {
 
 export interface Instructor {
   InstructorID: number;
-  Level: "Beginner" | "Intermediate" | "Advanced";
-  Status: "Pending" | "Done";
+  Level: 'Beginner' | 'Intermediate' | 'Advanced';
+  Status: 'Pending' | 'Done';
   UserID: number;
 }
 
@@ -125,7 +125,7 @@ export interface Course {
   Language: string;
   Image: string;
   Price: number;
-  Status: "Hide" | "Free" | "Plus";
+  Status: 'Hide' | 'Free' | 'Plus';
   CreateTime: Date;
   CategoryID: number;
   InstructorID: number;
@@ -139,7 +139,7 @@ export interface CourseHistory {
   Language: string;
   Image: string;
   Price: number;
-  Status: "Hide" | "Free" | "Plus";
+  Status: 'Hide' | 'Free' | 'Plus';
   UpdateTime: Date;
   CourseID: number;
   Version: number;
@@ -178,7 +178,7 @@ export interface Topic {
 
 export interface Cart {
   CartID: number;
-  CartStatus: "Pending" | "Done";
+  CartStatus: 'Pending' | 'Done';
   UserID: number;
 }
 
@@ -232,7 +232,7 @@ export interface Transfer {
   TransferID: number;
   TransactionTime: Date;
   Amount: number;
-  TransferType: "Deposit" | "Withdrawal";
+  TransferType: 'Deposit' | 'Withdrawal';
   TransferDescription: string;
   BankBeneficiaryID: number;
   BankOrderingID: number;
@@ -252,7 +252,7 @@ export interface Invoice {
   InvoiceID: number;
   InvoiceDate: Date;
   TotalAmount: number;
-  Status: "Paied" | "UnPaied";
+  Status: 'Paied' | 'UnPaied';
   TransferID: number | null;
   StudentID: number;
 }

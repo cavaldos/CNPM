@@ -1,9 +1,9 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const ReviewRepository = {
   async getReviews() {
     try {
-      const query = "SELECT * FROM [Review]";
+      const query = 'SELECT * FROM [Review]';
       const result = await DataConnect.execute(query);
       return result;
     } catch (error) {
@@ -53,10 +53,13 @@ const ReviewRepository = {
     }
   },
 
-  async updateReview(id: number, review: {
-    comment?: string;
-    rating?: number;
-  }) {
+  async updateReview(
+    id: number,
+    review: {
+      comment?: string;
+      rating?: number;
+    },
+  ) {
     try {
       let updateFields = [];
       if (review.comment) updateFields.push(`Comment = '${review.comment}'`);
@@ -105,7 +108,7 @@ const ReviewRepository = {
       }
       throw new Error('Error getting reviews by course');
     }
-  }
+  },
 };
 
 export default ReviewRepository;

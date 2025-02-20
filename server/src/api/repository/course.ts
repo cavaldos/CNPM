@@ -1,9 +1,9 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const CourseRepository = {
   async getCourses() {
     try {
-      const query = "SELECT * FROM [Course]";
+      const query = 'SELECT * FROM [Course]';
       const result = await DataConnect.execute(query);
       return result;
     } catch (error) {
@@ -55,20 +55,28 @@ const CourseRepository = {
     }
   },
 
-  async updateCourse(id: number, course: {
-    title?: string;
-    description?: string;
-    image?: string;
-    price?: number;
-    instructorId?: number;
-  }) {
+  async updateCourse(
+    id: number,
+    course: {
+      title?: string;
+      description?: string;
+      image?: string;
+      price?: number;
+      instructorId?: number;
+    },
+  ) {
     try {
       let updateFields = [];
       if (course.title) updateFields.push(`Title = '${course.title}'`);
-      if (course.description) updateFields.push(`Description = '${course.description}'`);
-      if (course.image !== undefined) updateFields.push(`Image = ${course.image ? `'${course.image}'` : 'NULL'}`);
+      if (course.description)
+        updateFields.push(`Description = '${course.description}'`);
+      if (course.image !== undefined)
+        updateFields.push(
+          `Image = ${course.image ? `'${course.image}'` : 'NULL'}`,
+        );
       if (course.price) updateFields.push(`Price = ${course.price}`);
-      if (course.instructorId) updateFields.push(`InstructorID = ${course.instructorId}`);
+      if (course.instructorId)
+        updateFields.push(`InstructorID = ${course.instructorId}`);
 
       const query = `
         UPDATE [Course] 
@@ -88,16 +96,18 @@ const CourseRepository = {
     try {
       // Start transaction
       await DataConnect.execute('BEGIN TRANSACTION');
-      
+
       // Delete related records first
       await DataConnect.execute(`DELETE FROM [Lessons] WHERE CourseID = ${id}`);
       await DataConnect.execute(`DELETE FROM [Review] WHERE CourseID = ${id}`);
-      await DataConnect.execute(`DELETE FROM [InvoiceDetail] WHERE CourseID = ${id}`);
+      await DataConnect.execute(
+        `DELETE FROM [InvoiceDetail] WHERE CourseID = ${id}`,
+      );
       await DataConnect.execute(`DELETE FROM [Forum] WHERE CourseID = ${id}`);
-      
+
       // Then delete the course
       await DataConnect.execute(`DELETE FROM [Course] WHERE CourseID = ${id}`);
-      
+
       // Commit transaction
       await DataConnect.execute('COMMIT');
     } catch (error) {
@@ -117,7 +127,9 @@ const CourseRepository = {
       return result;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Error getting courses by instructor: ${error.message}`);
+        throw new Error(
+          `Error getting courses by instructor: ${error.message}`,
+        );
       }
       throw new Error('Error getting courses by instructor');
     }
@@ -157,7 +169,7 @@ const CourseRepository = {
       }
       throw new Error('Error getting course reviews');
     }
-  }
+  },
 };
 
 export default CourseRepository;

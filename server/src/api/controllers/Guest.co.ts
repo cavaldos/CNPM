@@ -1,17 +1,17 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 const GuestController = {
   async createProduct(req: Request, res: Response) {
-    res.send("Create Product");
+    res.send('Create Product');
   },
   async updateProduct(req: Request, res: Response) {
-    res.send("Update Product");
+    res.send('Update Product');
   },
   async deleteProduct(req: Request, res: Response) {
-    res.send("Delete Product");
+    res.send('Delete Product');
   },
   async getProducts(req: Request, res: Response) {
-    res.send("Get Products");
+    res.send('Get Products');
   },
 };
 

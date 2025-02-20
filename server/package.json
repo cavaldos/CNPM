@@ -10,8 +10,7 @@
     "ts:start": "ts-node src/server.ts",
     "dev": "tsnd --respawn --transpile-only --exit-child src/server.ts",
     "debug": "tsnd --respawn --transpile-only --exit-child --debug src/server.ts",
-    "migrate": "npx prisma migrate dev",
-    "studio": "npx prisma studio",
+    "format": "prettier --write \"src/**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -56,6 +55,7 @@
     "@types/mssql": "^9.1.5",
     "@types/node": "^18.0.3",
     "morgan": "^1.10.0",
+    "prettier": "^3.5.1",
     "prisma": "^4.1.0",
     "ts-node": "^10.8.2",
     "ts-node-dev": "^2.0.0",

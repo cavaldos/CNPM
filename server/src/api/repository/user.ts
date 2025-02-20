@@ -1,9 +1,9 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const UserRepository = {
   async getUsers() {
     try {
-      const query = "SELECT * FROM [User]";
+      const query = 'SELECT * FROM [User]';
       const result = await DataConnect.execute(query);
       return result;
     } catch (error) {
@@ -54,12 +54,15 @@ const UserRepository = {
     }
   },
 
-  async updateUser(id: number, user: {
-    userName?: string;
-    email?: string;
-    fullName?: string;
-    role?: 'Student' | 'Instructor' | 'Admin';
-  }) {
+  async updateUser(
+    id: number,
+    user: {
+      userName?: string;
+      email?: string;
+      fullName?: string;
+      role?: 'Student' | 'Instructor' | 'Admin';
+    },
+  ) {
     try {
       let updateFields = [];
       if (user.userName) updateFields.push(`UserName = '${user.userName}'`);
@@ -93,7 +96,7 @@ const UserRepository = {
       }
       throw new Error('Error deleting user');
     }
-  }
+  },
 };
 
 export default UserRepository;

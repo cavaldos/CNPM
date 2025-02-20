@@ -1,6 +1,6 @@
 export default class AppError {
   constructor(
-    public log: string ,
+    public log: string,
     public statusCode: number,
     public message: string,
     public details: string | {} | string[],

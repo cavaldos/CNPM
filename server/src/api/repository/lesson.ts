@@ -1,9 +1,9 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const LessonRepository = {
   async getLessons() {
     try {
-      const query = "SELECT * FROM [Lessons]";
+      const query = 'SELECT * FROM [Lessons]';
       const result = await DataConnect.execute(query);
       return result;
     } catch (error) {
@@ -63,22 +63,27 @@ const LessonRepository = {
     }
   },
 
-  async updateLesson(id: number, lesson: {
-    title?: string;
-    content?: string;
-    duration?: number;
-    complexityLevel?: 'Easy' | 'Medium' | 'Hard';
-    lessonType?: string;
-    ordinal?: number;
-    courseId?: number;
-  }) {
+  async updateLesson(
+    id: number,
+    lesson: {
+      title?: string;
+      content?: string;
+      duration?: number;
+      complexityLevel?: 'Easy' | 'Medium' | 'Hard';
+      lessonType?: string;
+      ordinal?: number;
+      courseId?: number;
+    },
+  ) {
     try {
       let updateFields = [];
       if (lesson.title) updateFields.push(`Title = '${lesson.title}'`);
       if (lesson.content) updateFields.push(`Content = '${lesson.content}'`);
       if (lesson.duration) updateFields.push(`Duration = ${lesson.duration}`);
-      if (lesson.complexityLevel) updateFields.push(`ComplexityLevel = '${lesson.complexityLevel}'`);
-      if (lesson.lessonType) updateFields.push(`LessonType = '${lesson.lessonType}'`);
+      if (lesson.complexityLevel)
+        updateFields.push(`ComplexityLevel = '${lesson.complexityLevel}'`);
+      if (lesson.lessonType)
+        updateFields.push(`LessonType = '${lesson.lessonType}'`);
       if (lesson.ordinal) updateFields.push(`Ordinal = ${lesson.ordinal}`);
       if (lesson.courseId) updateFields.push(`CourseID = ${lesson.courseId}`);
       updateFields.push(`UpdatedTime = GETDATE()`);
@@ -124,7 +129,7 @@ const LessonRepository = {
       }
       throw new Error('Error getting lessons by course');
     }
-  }
+  },
 };
 
 export default LessonRepository;

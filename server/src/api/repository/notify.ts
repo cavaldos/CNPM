@@ -1,9 +1,9 @@
-import DataConnect from "../../utils/DataConnect";
+import DataConnect from '../../utils/DataConnect';
 
 const NotifyRepository = {
   async getNotifies() {
     try {
-      const query = "SELECT * FROM [Notify]";
+      const query = 'SELECT * FROM [Notify]';
       const result = await DataConnect.execute(query);
       return result;
     } catch (error) {
@@ -51,14 +51,19 @@ const NotifyRepository = {
     }
   },
 
-  async updateNotify(id: number, notify: {
-    messageNotify?: string;
-    statusNotify?: string;
-  }) {
+  async updateNotify(
+    id: number,
+    notify: {
+      messageNotify?: string;
+      statusNotify?: string;
+    },
+  ) {
     try {
       let updateFields = [];
-      if (notify.messageNotify) updateFields.push(`MessageNotify = '${notify.messageNotify}'`);
-      if (notify.statusNotify) updateFields.push(`StatusNotify = '${notify.statusNotify}'`);
+      if (notify.messageNotify)
+        updateFields.push(`MessageNotify = '${notify.messageNotify}'`);
+      if (notify.statusNotify)
+        updateFields.push(`StatusNotify = '${notify.statusNotify}'`);
 
       const query = `
         UPDATE [Notify] 
@@ -98,7 +103,7 @@ const NotifyRepository = {
       }
       throw new Error('Error getting notifies by user');
     }
-  }
+  },
 };
 
 export default NotifyRepository;
