@@ -19,7 +19,7 @@ function App() {
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
-            {GuestRouter.map((route, index) => {
+            {AdminRouter.map((route, index) => {
               const Layout = route.Layout === null ? Fragment : route.Layout;
               const Page = route.component;
               return (

@@ -1,17 +1,34 @@
 
+import React, { useState } from 'react';
+import axios from 'axios';
+
 const AdminPage = () => {
+  const [video, setVideo] = useState(null);
+
+  const handleVideoChange = (e) => {
+    setVideo(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    formData.append('video', video);
+
+    try {
+      const response = await axios.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('Video uploaded successfully:', response.data);
+    } catch (error) {
+      console.error('Error uploading video:', error);
+    }
+  };
+
   return (
-    <div className="flex flex-col justify-center bg-red-200  align-middle items-center mb-11 ">
-      <h1> admminhello</h1>
-      <div className="container mx-auto px-6 py-3 flex justify-between items-center bg-gray-500 h-[600px] pb-32 ">
-        sdfsdfsf
-      </div>
-      <div className="container mx-auto px-6 py-3 flex justify-between items-center  bg-gray-500 h-[600px] pb-32 ">
-        sdfsdfsf
-      </div>{" "}
-      <div className="container mx-auto px-6 py-3 flex justify-between items-center  bg-gray-500 h-[600px] pb-32 ">
-        sdfsdfsf
-      </div>
+    <div>
+      <input type="file" accept="video/*" onChange={handleVideoChange} />
+      <button onClick={handleUpload}>Upload Video</button>
     </div>
   );
 };
