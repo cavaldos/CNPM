@@ -3,6 +3,41 @@ import CourseRepository from "../repositories/course";
 import ReviewRepository from "../repositories/review";
 
 const CourseController = {
+    getCourseByID: async (req: Request, res: Response) => {
+        try {
+            const { courseID } = req.body;
+            const result = await CourseRepository.getCourseByID(courseID);
+            res.status(200).json({
+                success: true,
+                message: "Course retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get course",
+                error: error
+            });
+        }
+    },
+
+    getAllCourses: async (_req: Request, res: Response) => {
+        try {
+            const result = await CourseRepository.getAllCourses();
+            res.status(200).json({
+                success: true,
+                message: "Courses retrieved successfully",
+                data: result[0]
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get courses",
+                error: error
+            });
+        }
+    },
+
     createCourse: async (req: Request, res: Response) => {
         try {
             const { title, topic, description, image, price, instructorID } = req.body;
@@ -72,40 +107,6 @@ const CourseController = {
         }
     },
 
-    getCourse: async (req: Request, res: Response) => {
-        try {
-            const { courseID } = req.body;
-            const result = await CourseRepository.getCourse(courseID);
-            res.status(200).json({
-                success: true,
-                message: "Course retrieved successfully",
-                data: result
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to get course",
-                error: error
-            });
-        }
-    },
-
-    getAllCourses: async (_req: Request, res: Response) => {
-        try {
-            const result = await CourseRepository.getAllCourses();
-            res.status(200).json({
-                success: true,
-                message: "Courses retrieved successfully",
-                data: result[0]
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to get courses",
-                error: error
-            });
-        }
-    },
 
 
 

@@ -1,6 +1,21 @@
 import DataConnect from '../../utils/DataConnect';
 
 const CourseRepository = {
+    async getCourseByID(courseID: number) {
+        //  chua xong
+        const query = 'SELECT * FROM Course WHERE CourseID = @CourseID';
+        const params = {
+            CourseID: courseID
+        };
+
+        return await DataConnect.executeWithParams(query, params);
+    },
+
+    async getAllCourses() {
+        const query = 'SELECT * FROM Course';
+        return await DataConnect.execute(query)
+    },
+
     async createCourse(title: string, topic: string, description: string, image: string, price: number, instructorID: number) {
         const proc = 'create_course'
         const params = {
@@ -36,19 +51,7 @@ const CourseRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async getCourse(courseID: number) {
-        //  chua xong
-        const proc = 'get_course';
-        const params = {
-            CourseID: courseID
-        };
-        return await DataConnect.executeProcedure(proc, params);
-    },
 
-    async getAllCourses() {
-        const query = 'SELECT * FROM Course';
-        return await DataConnect.execute(query)
-    }
 };
 
 export default CourseRepository;

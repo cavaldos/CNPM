@@ -31,6 +31,45 @@ const InvoiceRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
+    async getInvoice(invoiceID: number) {
+        const proc = 'get_invoice';
+        const params = {
+            InvoiceID: invoiceID
+        };
+        return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getAllInvoices() {
+        const proc = 'get_all_invoices';
+        return await DataConnect.executeProcedure(proc, {});
+    },
+
+    async getInvoiceDetails(invoiceID: number) {
+        const proc = 'get_invoice_details';
+        const params = {
+            InvoiceID: invoiceID
+        };
+        return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getInvoicesByStudent(studentID: number) {
+        const proc = 'get_student_invoices';
+        const params = {
+            StudentID: studentID
+        };
+        return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getUnpaidInvoices() {
+        const proc = 'get_unpaid_invoices';
+        return await DataConnect.executeProcedure(proc, {});
+    },
+
+    async getPaidInvoices() {
+        const proc = 'get_paid_invoices';
+        return await DataConnect.executeProcedure(proc, {});
+    },
+
     // Invoice Detail methods
     async createInvoiceDetail(price: number, invoiceID: number, courseID: number) {
         const proc = 'create_invoice_detail';
