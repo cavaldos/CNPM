@@ -2,7 +2,7 @@ import express, { json } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
-// import routers from "./api/routes";
+import routers from "./api/routes";
 import DataConnect from './utils/DataConnect';
 // import './test';
 DataConnect.open();
@@ -25,5 +25,6 @@ app.use(
 app.use(json());
 app.use(helmet());
 app.use(morgan('tiny'));
+app.use(routers);
 
 export default app;

@@ -1,7 +1,7 @@
 import DataConnect from '../../utils/DataConnect';
 
 const ReviewRepository = {
-async createReview(comment: string, rating: number, studentID: number, courseID: number) {
+    async createReview(comment: string, rating: number, studentID: number, courseID: number) {
         const proc = 'create_review';
         const params = {
             Comment: comment,
@@ -28,7 +28,15 @@ async createReview(comment: string, rating: number, studentID: number, courseID:
             ReviewID: reviewID
         };
         return await DataConnect.executeProcedure(proc, params);
-    }  
+    },
+
+    async getCourseReviews(courseID: number) {
+        const proc = 'get_course_reviews';
+        const params = {
+            CourseID: courseID
+        };
+        return await DataConnect.executeProcedure(proc, params);
+    }
 };
 
 export default ReviewRepository;
