@@ -1,14 +1,15 @@
-import AdminRouter from "./Admin.route";
-import StudentRouter from "./Student.route";
-import InstructorRouter from "./Instructor.route";
-
 import { Router } from "express";
+import AdminRouter from "./admin.route";
+import InstructorRouter from "./instructor.route";
+import StudentRouter from "./student.route";
+import PublicRouter from "./public.route";
 
+const router = Router();
 
-const MainRoute = Router();
+// Mounting all routes
+router.use("/public", PublicRouter);
+router.use("/admin", AdminRouter);
+router.use("/instructor", InstructorRouter);
+router.use("/student", StudentRouter);
 
-MainRoute.use("/admin", AdminRouter);
-MainRoute.use("/student", StudentRouter);
-MainRoute.use("/instructor", InstructorRouter);
-
-export default MainRoute;
+export default router;

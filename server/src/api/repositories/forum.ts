@@ -1,6 +1,8 @@
 import DataConnect from '../../utils/DataConnect';
 
 const ForumRepository = {
+
+    
     async createForumMessage(content: string, courseID: number, userID: number) {
         const proc = 'create_forum_message';
         const params = {
