@@ -65,6 +65,41 @@ const LearnProgressController = {
                 error: error
             });
         }
+    },
+
+    getAllLearnProgress: async (_req: Request, res: Response) => {
+        try {
+            const result = await LearnProgressRepository.getAllLearnProgress();
+            res.status(200).json({
+                success: true,
+                message: "All learn progress records retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get all learn progress records",
+                error: error
+            });
+        }
+    },
+
+    getLearnProgressByStudent: async (req: Request, res: Response) => {
+        try {
+            const { studentID } = req.body;
+            const result = await LearnProgressRepository.getLearnProgressByStudent(studentID);
+            res.status(200).json({
+                success: true,
+                message: "Student's learn progress records retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get student's learn progress records",
+                error: error
+            });
+        }
     }
 };
 

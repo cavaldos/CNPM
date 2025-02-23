@@ -20,3 +20,6 @@ BEGIN
     ORDER BY l.LessonID;
 END
 GO
+
+
+SELECT * FROM Course WHERE CourseID = 1

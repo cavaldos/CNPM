@@ -133,6 +133,23 @@ const ForumController = {
                 error: error
             });
         }
+    },
+
+    getAllMessages: async (_req: Request, res: Response) => {
+        try {
+            const result = await ForumRepository.getAllMessages();
+            res.status(200).json({
+                success: true,
+                message: "All forum messages retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get all forum messages",
+                error: error
+            });
+        }
     }
 };
 

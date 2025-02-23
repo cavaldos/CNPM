@@ -2,7 +2,7 @@ import DataConnect from '../../utils/DataConnect';
 
 const ForumRepository = {
 
-    
+
     async createForumMessage(content: string, courseID: number, userID: number) {
         const proc = 'create_forum_message';
         const params = {
@@ -60,6 +60,17 @@ const ForumRepository = {
             CourseID: courseID
         };
         return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getAllMessages() {
+        const query = `
+            SELECT fm.*, u.FullName as UserName, c.Title as CourseName 
+            FROM ForumMessage fm
+            INNER JOIN [User] u ON fm.UserID = u.UserID
+            INNER JOIN Course c ON fm.CourseID = c.CourseID
+            ORDER BY fm.CreateAt DESC
+        `;
+        return await DataConnect.execute(query);
     }
 };
 

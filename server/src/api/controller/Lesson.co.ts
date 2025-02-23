@@ -62,6 +62,41 @@ const LessonController = {
                 error: error
             });
         }
+    },
+
+    getAllLessons: async (_req: Request, res: Response) => {
+        try {
+            const result = await LessonRepository.getAllLessons();
+            res.status(200).json({
+                success: true,
+                message: "All lessons retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get all lessons",
+                error: error
+            });
+        }
+    },
+
+    getLessonByID: async (req: Request, res: Response) => {
+        try {
+            const { lessonID } = req.body;
+            const result = await LessonRepository.getLessonByID(lessonID);
+            res.status(200).json({
+                success: true,
+                message: "Lesson retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get lesson",
+                error: error
+            });
+        }
     }
 };
 

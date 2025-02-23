@@ -73,6 +73,37 @@ const LessonRepository = {
             LessonID: lessonID
         };
         return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getAllLessons() {
+        const query = `
+            SELECT l.*, 
+                   lv.URL as VideoURL,
+                   ld.Content as DocumentContent,
+                   c.Title as CourseName
+            FROM [Lessons] l
+            LEFT JOIN [LessonVideo] lv ON l.LessonID = lv.LessonID
+            LEFT JOIN [LessonDocument] ld ON l.LessonID = ld.LessonID
+            INNER JOIN [Course] c ON l.CourseID = c.CourseID
+            ORDER BY l.CreatedTime DESC
+        `;
+        return await DataConnect.execute(query);
+    },
+
+    async getLessonByID(lessonID: number) {
+        const query = `
+            SELECT l.*, 
+                   lv.URL as VideoURL,
+                   ld.Content as DocumentContent,
+                   c.Title as CourseName
+            FROM [Lessons] l
+            LEFT JOIN [LessonVideo] lv ON l.LessonID = lv.LessonID
+            LEFT JOIN [LessonDocument] ld ON l.LessonID = ld.LessonID
+            INNER JOIN [Course] c ON l.CourseID = c.CourseID
+            WHERE l.LessonID = @LessonID
+        `;
+        const params = { LessonID: lessonID };
+        return await DataConnect.executeWithParams(query, params);
     }
 };
 

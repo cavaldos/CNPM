@@ -303,7 +303,8 @@ BEGIN
         BEGIN
             UPDATE [Notify]
             SET MessageNotify = @MessageNotify,
-                StatusNotify = @StatusNotify
+                StatusNotify = @StatusNotify,
+                UpdatedDate = GETDATE()
             WHERE NotifyID = @NotifyID;
             PRINT 'Notify updated successfully.';
         END
@@ -424,6 +425,95 @@ BEGIN
 END;
 GO
 
+-- Procedures for Forum Messages
+
+IF OBJECT_ID('get_course_forum_messages', 'P') IS NOT NULL DROP PROCEDURE get_course_forum_messages;
+GO
+
+CREATE PROCEDURE get_course_forum_messages
+    @CourseID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        SELECT fm.*, u.FullName as UserName
+        FROM [ForumMessage] fm
+        INNER JOIN [User] u ON fm.UserID = u.UserID
+        WHERE fm.CourseID = @CourseID
+        ORDER BY fm.CreateAt DESC;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while retrieving course forum messages.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('get_user_forum_messages', 'P') IS NOT NULL DROP PROCEDURE get_user_forum_messages;
+GO
+
+CREATE PROCEDURE get_user_forum_messages
+    @UserID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        SELECT fm.*, c.Title as CourseName
+        FROM [ForumMessage] fm
+        INNER JOIN [Course] c ON fm.CourseID = c.CourseID
+        WHERE fm.UserID = @UserID
+        ORDER BY fm.CreateAt DESC;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while retrieving user forum messages.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+-- Procedures for getting latest messages and count
+
+IF OBJECT_ID('get_latest_forum_messages', 'P') IS NOT NULL DROP PROCEDURE get_latest_forum_messages;
+GO
+
+CREATE PROCEDURE get_latest_forum_messages
+    @Limit int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        SELECT TOP(@Limit) fm.*, u.FullName as UserName, c.Title as CourseName
+        FROM [ForumMessage] fm
+        INNER JOIN [User] u ON fm.UserID = u.UserID
+        INNER JOIN [Course] c ON fm.CourseID = c.CourseID
+        ORDER BY fm.CreateAt DESC;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while retrieving latest forum messages.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('get_forum_message_count', 'P') IS NOT NULL DROP PROCEDURE get_forum_message_count;
+GO
+
+CREATE PROCEDURE get_forum_message_count
+    @CourseID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        SELECT COUNT(*) as MessageCount
+        FROM [ForumMessage]
+        WHERE CourseID = @CourseID;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while counting forum messages.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
 
 -- 6. Procedures for LessonVideo and LessonDocument and delete Lessons
 

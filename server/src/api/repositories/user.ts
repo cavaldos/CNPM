@@ -30,6 +30,25 @@ const UserRepository = {
             UserID: userID
         };
         return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getAllUsers() {
+        const query = `
+            SELECT u.*, 
+                   (SELECT COUNT(*) FROM Course c WHERE c.InstructorID = u.UserID) as CoursesCount,
+                   (SELECT COUNT(*) FROM Invoice i WHERE i.StudentID = u.UserID) as InvoicesCount
+            FROM [User] u
+            ORDER BY u.CreatedTime DESC
+        `;
+        return await DataConnect.execute(query);
+    },
+
+    async getUserByID(userID: number) {
+        const query = `
+            SELECT * FROM [User] WHERE UserID = @UserID
+        `;
+        const params = { UserID: userID };
+        return await DataConnect.executeWithParams(query, params);
     }
 };
 

@@ -54,6 +54,41 @@ const UserController = {
                 error: error
             });
         }
+    },
+
+    getAllUsers: async (_req: Request, res: Response) => {
+        try {
+            const result = await UserRepository.getAllUsers();
+            res.status(200).json({
+                success: true,
+                message: "All users retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get all users",
+                error: error
+            });
+        }
+    },
+
+    getUserByID: async (req: Request, res: Response) => {
+        try {
+            const { userID } = req.body;
+            const result = await UserRepository.getUserByID(userID);
+            res.status(200).json({
+                success: true,
+                message: "User retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get user",
+                error: error
+            });
+        }
     }
 };
 

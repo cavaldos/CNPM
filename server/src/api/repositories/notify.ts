@@ -27,6 +27,30 @@ const NotifyRepository = {
             NotifyID: notifyID
         };
         return await DataConnect.executeProcedure(proc, params);
+    },
+
+    async getAllNotifications() {
+        const query = `
+            SELECT n.*, 
+                   u.FullName as ReceiverName
+            FROM [Notify] n
+            INNER JOIN [User] u ON n.ReceiveUserID = u.UserID
+            ORDER BY n.CreatedDate DESC
+        `;
+        return await DataConnect.execute(query);
+    },
+
+    async getNotificationsByUser(userID: number) {
+        const query = `
+            SELECT n.*
+            FROM [Notify] n
+            WHERE n.ReceiveUserID = @UserID
+            ORDER BY n.CreatedDate DESC
+        `;
+        const params = {
+            UserID: userID
+        };
+        return await DataConnect.executeWithParams(query, params);
     }
 };
 
