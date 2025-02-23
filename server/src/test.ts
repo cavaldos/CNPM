@@ -1,2 +1,2 @@
-import Courserepo from './api/repository/course';
+import Courserepo from './api/repositories/course';
 
