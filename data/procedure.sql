@@ -511,8 +511,8 @@ BEGIN
         VALUES (@Title, @Duration, @ComplexityLevel, GETDATE(), @LessonType, @Ordinal, @CourseID);
         SET @LessonID = SCOPE_IDENTITY();
         
-        INSERT INTO [LessonDocument] (LessonID)
-        VALUES (@LessonID);
+        INSERT INTO [LessonDocument] (LessonID, Content)
+        VALUES (@LessonID, @DocumentContent);
         
         PRINT 'Lesson and LessonDocument created successfully.';
     END TRY
@@ -528,15 +528,18 @@ IF OBJECT_ID('update_lesson_document', 'P') IS NOT NULL DROP PROCEDURE update_le
 GO
 
 CREATE PROCEDURE update_lesson_document
-    @LessonDocumentID int
+    @LessonDocumentID int,
+    @DocumentContent nvarchar(max)
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
         IF EXISTS (SELECT 1 FROM [LessonDocument] WHERE LessonDocumentID = @LessonDocumentID)
         BEGIN
-            -- No updatable content field in LessonDocument as per requirements
-            PRINT 'LessonDocument update not applicable since there is no content to update.';
+            UPDATE [LessonDocument]
+            SET Content = @DocumentContent
+            WHERE LessonDocumentID = @LessonDocumentID;
+            PRINT 'LessonDocument updated successfully.';
         END
         ELSE
         BEGIN
@@ -618,6 +621,257 @@ BEGIN
     BEGIN CATCH
          PRINT 'Error occurred while updating lesson.';
          PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+-- 7. Procedures for Invoice
+
+IF OBJECT_ID('create_invoice', 'P') IS NOT NULL DROP PROCEDURE create_invoice;
+GO
+
+CREATE PROCEDURE create_invoice
+    @TotalAmount float,
+    @InvoiceStatus nvarchar(255),
+    @StudentID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        INSERT INTO [Invoice] (InvoiceDate, TotalAmount, InvoiceStatus, StudentID)
+        VALUES (GETDATE(), @TotalAmount, @InvoiceStatus, @StudentID);
+        PRINT 'Invoice created successfully.';
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while creating invoice.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('update_invoice', 'P') IS NOT NULL DROP PROCEDURE update_invoice;
+GO
+
+CREATE PROCEDURE update_invoice
+    @InvoiceID int,
+    @TotalAmount float,
+    @InvoiceStatus nvarchar(255),
+    @StudentID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM [Invoice] WHERE InvoiceID = @InvoiceID)
+        BEGIN
+            UPDATE [Invoice]
+            SET TotalAmount = @TotalAmount,
+                InvoiceStatus = @InvoiceStatus,
+                StudentID = @StudentID
+            WHERE InvoiceID = @InvoiceID;
+            PRINT 'Invoice updated successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Invoice not found.';
+        END;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while updating invoice.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('delete_invoice', 'P') IS NOT NULL DROP PROCEDURE delete_invoice;
+GO
+
+CREATE PROCEDURE delete_invoice
+    @InvoiceID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM [Invoice] WHERE InvoiceID = @InvoiceID)
+        BEGIN
+            DELETE FROM [Invoice] WHERE InvoiceID = @InvoiceID;
+            PRINT 'Invoice deleted successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Invoice not found.';
+        END;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while deleting invoice.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+-- Procedures for InvoiceDetail
+
+IF OBJECT_ID('create_invoice_detail', 'P') IS NOT NULL DROP PROCEDURE create_invoice_detail;
+GO
+
+CREATE PROCEDURE create_invoice_detail
+    @Price float,
+    @InvoiceID int,
+    @CourseID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        INSERT INTO [InvoiceDetail] (Price, InvoiceID, CourseID)
+        VALUES (@Price, @InvoiceID, @CourseID);
+        PRINT 'InvoiceDetail created successfully.';
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while creating invoice detail.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('update_invoice_detail', 'P') IS NOT NULL DROP PROCEDURE update_invoice_detail;
+GO
+
+CREATE PROCEDURE update_invoice_detail
+    @InvoiceDetailID int,
+    @Price float,
+    @InvoiceID int,
+    @CourseID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM [InvoiceDetail] WHERE InvoiceDetailID = @InvoiceDetailID)
+        BEGIN
+            UPDATE [InvoiceDetail]
+            SET Price = @Price,
+                InvoiceID = @InvoiceID,
+                CourseID = @CourseID
+            WHERE InvoiceDetailID = @InvoiceDetailID;
+            PRINT 'InvoiceDetail updated successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'InvoiceDetail not found.';
+        END;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while updating invoice detail.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('delete_invoice_detail', 'P') IS NOT NULL DROP PROCEDURE delete_invoice_detail;
+GO
+
+CREATE PROCEDURE delete_invoice_detail
+    @InvoiceDetailID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM [InvoiceDetail] WHERE InvoiceDetailID = @InvoiceDetailID)
+        BEGIN
+            DELETE FROM [InvoiceDetail] WHERE InvoiceDetailID = @InvoiceDetailID;
+            PRINT 'InvoiceDetail deleted successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'InvoiceDetail not found.';
+        END;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while deleting invoice detail.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+-- Procedures for LearnProgress
+
+IF OBJECT_ID('create_learn_progress', 'P') IS NOT NULL DROP PROCEDURE create_learn_progress;
+GO
+
+CREATE PROCEDURE create_learn_progress
+    @StudentID int,
+    @LessonID int,
+    @ProcessStatus nvarchar(255),
+    @StartTime datetime = NULL,
+    @CompletionTime datetime = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        INSERT INTO [LearnProgress] (StudentID, LessonID, ProcessStatus, StartTime, CompletionTime)
+        VALUES (@StudentID, @LessonID, @ProcessStatus, ISNULL(@StartTime, GETDATE()), @CompletionTime);
+        PRINT 'LearnProgress created successfully.';
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while creating learn progress.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('update_learn_progress', 'P') IS NOT NULL DROP PROCEDURE update_learn_progress;
+GO
+
+CREATE PROCEDURE update_learn_progress
+    @ProgressID int,
+    @ProcessStatus nvarchar(255),
+    @StartTime datetime = NULL,
+    @CompletionTime datetime = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM [LearnProgress] WHERE ProgressID = @ProgressID)
+        BEGIN
+            UPDATE [LearnProgress]
+            SET ProcessStatus = @ProcessStatus,
+                StartTime = ISNULL(@StartTime, StartTime),
+                CompletionTime = ISNULL(@CompletionTime, CompletionTime)
+            WHERE ProgressID = @ProgressID;
+            PRINT 'LearnProgress updated successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'LearnProgress record not found.';
+        END
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while updating learn progress.';
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+
+IF OBJECT_ID('delete_learn_progress', 'P') IS NOT NULL DROP PROCEDURE delete_learn_progress;
+GO
+
+CREATE PROCEDURE delete_learn_progress
+    @ProgressID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM [LearnProgress] WHERE ProgressID = @ProgressID)
+        BEGIN
+            DELETE FROM [LearnProgress] WHERE ProgressID = @ProgressID;
+            PRINT 'LearnProgress deleted successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'LearnProgress record not found.';
+        END
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred while deleting learn progress.';
+        PRINT ERROR_MESSAGE();
     END CATCH;
 END;
 GO
