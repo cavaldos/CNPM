@@ -13,7 +13,7 @@ export const fetchProducts = createAsyncThunk(
 export const countSlice = createSlice({
   name: "count",
   initialState: {
-    value: 3333,
+    value: 3339,
     products: [],
     status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,

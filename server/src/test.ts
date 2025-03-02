@@ -1,2 +1,2 @@
-import Courserepo from './api/repositories/course';
-
+import syncDataToElasticsearch from './config/ElasticSearch';
+syncDataToElasticsearch();

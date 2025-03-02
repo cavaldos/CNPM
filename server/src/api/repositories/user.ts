@@ -1,4 +1,4 @@
-import DataConnect from '../../utils/DataConnect';
+import DataConnect from '../../config/DataConnect';
 
 const UserRepository = {
     async createUser(userName: string, email: string, fullName: string, role: string) {

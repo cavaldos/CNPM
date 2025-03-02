@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { InstructorRouter } from "../../routes";
-import { InstructorAccount } from "../AccountCpn";
+import { InstructorRouter } from "../../../routes";
 
 const ButtonItem = ({ isHovered, name, icon, path }) => {
   const navigate = useNavigate();
@@ -73,7 +72,7 @@ const Header = () => {
     <>
       <div className="fixed flex  left-14 top-0 right-0 h-16  justify-end  ">
         <div className="container mx-auto px-6 py-3 flex  items-center justify-end ">
-          <InstructorAccount />
+          {/* <InstructorAccount /> */}
         </div>
       </div>
     </>

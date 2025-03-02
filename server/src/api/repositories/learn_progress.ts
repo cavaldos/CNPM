@@ -1,4 +1,4 @@
-import DataConnect from '../../utils/DataConnect';
+import DataConnect from '../../config/DataConnect';
 
 const LearnProgressRepository = {
     async createLearnProgress(studentID: number, lessonID: number, processStatus: string, startTime?: Date, completionTime?: Date) {

@@ -34,5 +34,6 @@ dist
 # Local template files
 **.template.**
 
+.DS_Store
 yarn.lock
 /yarn.lock

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import Footer from "../Footer";
-import { GuestRouter } from "../../routes";
+import { GuestRouter } from "../../../routes";
 
 const ButtonItem = ({ name, path }) => {
   const location = useLocation();

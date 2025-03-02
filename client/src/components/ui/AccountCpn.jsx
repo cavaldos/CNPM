@@ -4,7 +4,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/features/authSlice";
+import { logout } from "../../redux/features/authSlice";
 const ButtonItem = ({ name, path }) => {
   const navigate = useNavigate();
   const handleClick = () => {

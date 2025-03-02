@@ -3,6 +3,8 @@ export default {
   content: [
     "./src/pages/**/*.{html,js,jsx}",
     "./src/components/**/*.{html,js,jsx}",
+    "./src/app/**/*.{html,js,jsx}",
+    "./src/**/*.{html,js,jsx}",
   ],
   darkMode: "class",
   mode: "jit",
@@ -59,4 +61,5 @@ export default {
     },
   },
   plugins: [],
+  
 };

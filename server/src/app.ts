@@ -3,8 +3,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import routers from "./api/routes";
-import DataConnect from './utils/DataConnect';
-// import './test';
+import DataConnect from './config/DataConnect';
+import './test';
 DataConnect.open();
 const app = express();
 

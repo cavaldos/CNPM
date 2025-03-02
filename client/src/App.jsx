@@ -5,21 +5,20 @@ import {
   InstructorRouter,
 } from "./routes";
 
+
 import React, { Fragment, Suspense, lazy } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loading from "./components/err/loading";
-const NotfoundError = lazy(() => import("~/components/err"));
+import NotfoundError from "./components/err";
 
 function App() {
-
-
   return (
     <>
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
-            {AdminRouter.map((route, index) => {
+            {StudentRouter.map((route, index) => {
               const Layout = route.Layout === null ? Fragment : route.Layout;
               const Page = route.component;
               return (

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import AdminRouter from "../../routes/Admin";
+import AdminRouter from "../../../routes/Admin";
 import { AdminAccount } from "../AccountCpn";
 import Bread from "../Breadcrum";
 const NavbarItem = ({ name, togglemenu, icon, path }) => {

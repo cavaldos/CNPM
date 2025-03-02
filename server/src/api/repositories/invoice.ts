@@ -1,4 +1,4 @@
-import DataConnect from '../../utils/DataConnect';
+import DataConnect from '../../config/DataConnect';
 
 const InvoiceRepository = {
     // Invoice methods

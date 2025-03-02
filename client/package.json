@@ -11,14 +11,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.15.20",
-    "@mui/material": "^5.15.21",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "5.16.14",
+    "@mui/material": "^6.4.6",
+    "@mui/styled-engine-sc": "^6.4.6",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.5",
+    "antd": "^5.24.2",
     "axios": "^1.6.2",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.476.0",
     "moment": "^2.29.4",
     "npm": "^10.2.4",
     "react": "^18.2.0",
@@ -26,8 +29,10 @@
     "react-icons": "^4.12.0",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.16.0",
+    "recharts": "^2.15.1",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
+    "styled-components": "^6.1.15",
     "swr": "^2.2.2"
   },
   "devDependencies": {

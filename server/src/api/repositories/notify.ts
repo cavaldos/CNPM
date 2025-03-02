@@ -1,4 +1,4 @@
-import DataConnect from '../../utils/DataConnect';
+import DataConnect from '../../config/DataConnect';
 
 const NotifyRepository = {
     async createNotify(messageNotify: string, statusNotify: string, receiveUserID: number) {
