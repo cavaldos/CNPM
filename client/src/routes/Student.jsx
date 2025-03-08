@@ -13,6 +13,7 @@ import CourseMaterialPage from "../pages/student/CourseMaterial";
 import DiscussionForumsPage from "../pages/student/DiscussionForum";
 import MessagesPage from "../pages/student/Messages";
 import CourseInfo from "../pages/student/CourseInfo";
+import TestPage from "../pages/student/test";
 
 const StudentRouter = [
   {
@@ -80,7 +81,14 @@ const StudentRouter = [
     Layout: null,
     key: "" // This route won't appear in the header
   }
-
+,
+  {
+    name: "Tesst",
+    path: "/test",
+    component: TestPage,
+    Layout: StudentLayout,
+    key: "header" // This route won't appear in the header
+  }
 
 ];
 
