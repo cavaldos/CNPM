@@ -53,7 +53,7 @@ class DataConnect {
       const request = this.pool.request();
       const fullQuery = `USE ${config.database}; ${query}`;
       const result: IResult<any> = await request.query(fullQuery);
-      return result.recordsets;
+      return result.recordset;
     } catch (error: any) {
       throw new Error(`Query failed: ${error.message}`);
     }

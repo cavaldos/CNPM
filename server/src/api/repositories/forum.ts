@@ -46,21 +46,6 @@ const ForumRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async getLatestMessages(limit: number) {
-        const proc = 'get_latest_forum_messages';
-        const params = {
-            Limit: limit
-        };
-        return await DataConnect.executeProcedure(proc, params);
-    },
-
-    async getMessageCount(courseID: number) {
-        const proc = 'get_forum_message_count';
-        const params = {
-            CourseID: courseID
-        };
-        return await DataConnect.executeProcedure(proc, params);
-    },
 
     async getAllMessages() {
         const query = `

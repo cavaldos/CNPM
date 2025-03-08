@@ -51,6 +51,7 @@ const LessonRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
+
     // General lesson methods
     async updateLesson(lessonID: number, title: string, duration: number, complexityLevel: string,
         lessonType: string, ordinal: number, courseID: number) {
@@ -75,36 +76,53 @@ const LessonRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async getAllLessons() {
+    async getAllLessons(courseID: number) {
         const query = `
-            SELECT l.*, 
-                   lv.URL as VideoURL,
-                   ld.Content as DocumentContent,
-                   c.Title as CourseName
-            FROM [Lessons] l
-            LEFT JOIN [LessonVideo] lv ON l.LessonID = lv.LessonID
-            LEFT JOIN [LessonDocument] ld ON l.LessonID = ld.LessonID
-            INNER JOIN [Course] c ON l.CourseID = c.CourseID
-            ORDER BY l.CreatedTime DESC
+                    SELECT l.* from Lessons l
+                    JOIN Course c on l.CourseID = c.CourseID
+                    WHERE c.CourseID = ${courseID}
+                    ORDER BY l.Ordinal
         `;
         return await DataConnect.execute(query);
     },
 
     async getLessonByID(lessonID: number) {
         const query = `
-            SELECT l.*, 
-                   lv.URL as VideoURL,
-                   ld.Content as DocumentContent,
-                   c.Title as CourseName
-            FROM [Lessons] l
-            LEFT JOIN [LessonVideo] lv ON l.LessonID = lv.LessonID
-            LEFT JOIN [LessonDocument] ld ON l.LessonID = ld.LessonID
-            INNER JOIN [Course] c ON l.CourseID = c.CourseID
-            WHERE l.LessonID = @LessonID
+                    SELECT
+                    L.LessonID,
+                    L.Title AS LessonTitle,
+                    L.LessonType,
+                    CASE
+                        WHEN L.LessonType = 'Video' THEN LV.URL
+                        WHEN L.LessonType = 'Document' THEN LD.Content
+                        ELSE NULL
+                    END AS Content,
+                    CASE
+                        WHEN L.LessonType = 'Video' THEN LV.LessonVideoID
+                        WHEN L.LessonType = 'Document' THEN LD.LessonDocumentID
+                        ELSE NULL
+                    END AS ResourceID
+                        FROM
+                            Lessons L
+                        LEFT JOIN
+                            LessonVideo LV ON L.LessonID = LV.LessonID
+                        LEFT JOIN
+                            LessonDocument LD ON L.LessonID = LD.LessonID
+                        WHERE
+                            L.LessonID = ${lessonID}
         `;
         const params = { LessonID: lessonID };
         return await DataConnect.executeWithParams(query, params);
-    }
+    },
+
+    async sortLessons(lessonID: number, ordinal: number) {
+        const query = `
+        UPDATE Lessons
+        SET Ordinal = ${ordinal}
+        WHERE LessonID = ${lessonID}
+        `;
+        return await DataConnect.execute(query);
+    },
 };
 
 export default LessonRepository;

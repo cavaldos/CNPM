@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import CourseRepository from "../repositories/course";
 import ReviewRepository from "../repositories/review";
-
+import { datasearch, paginationData } from "../../fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
         try {
@@ -27,7 +27,7 @@ const CourseController = {
             res.status(200).json({
                 success: true,
                 message: "Courses retrieved successfully",
-                data: result[0]
+                data: result
             });
         } catch (error) {
             res.status(500).json({
@@ -106,90 +106,124 @@ const CourseController = {
             });
         }
     },
-
-
-
-
-    // Review management
-    getCourseReviews: async (req: Request, res: Response) => {
+    autoComplete: async (req: Request, res: Response) => {
         try {
-            const { courseID } = req.body;
-            const result = await ReviewRepository.getCourseReviews(courseID);
+            const { searchTerm } = req.body;
+            console.log("searchTerm", searchTerm);
             res.status(200).json({
                 success: true,
-                message: "Course reviews retrieved successfully",
-                data: result
+                message: "Auto-complete results retrieved successfully",
+                data: datasearch,
             });
         } catch (error) {
             res.status(500).json({
                 success: false,
-                message: "Failed to get course reviews",
+                message: "Failed to get auto-complete results",
+                error: error
+            });
+        }
+    },
+    searchCourse: async (req: Request, res: Response) => {
+        try {
+            const { searchTerm } = req.body;
+            console.log("searchTerm", searchTerm);
+            res.status(200).json({
+                success: true,
+                message: "Auto-complete results retrieved successfully",
+                data: paginationData,
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get auto-complete results",
                 error: error
             });
         }
     },
 
-    // Review management
-    createReview: async (req: Request, res: Response) => {
-        try {
-            const { comment, rating, studentID, courseID } = req.body;
-            const result = await ReviewRepository.createReview(
-                comment,
-                rating,
-                studentID,
-                courseID
-            );
-            res.status(201).json({
-                success: true,
-                message: "Review created successfully",
-                data: result
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to create review",
-                error: error
-            });
-        }
-    },
+    review: {
 
-    updateReview: async (req: Request, res: Response) => {
-        try {
-            const { reviewID, comment, rating } = req.body;
-            const result = await ReviewRepository.updateReview(
-                reviewID,
-                comment,
-                rating
-            );
-            res.status(200).json({
-                success: true,
-                message: "Review updated successfully",
-                data: result
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to update review",
-                error: error
-            });
-        }
-    },
+        // Review management
+        getCourseReviews: async (req: Request, res: Response) => {
+            try {
+                const { courseID } = req.body;
+                const result = await ReviewRepository.getCourseReviews(courseID);
+                res.status(200).json({
+                    success: true,
+                    message: "Course reviews retrieved successfully",
+                    data: result
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "Failed to get course reviews",
+                    error: error
+                });
+            }
+        },
 
-    deleteReview: async (req: Request, res: Response) => {
-        try {
-            const { reviewID } = req.body;
-            const result = await ReviewRepository.deleteReview(reviewID);
-            res.status(200).json({
-                success: true,
-                message: "Review deleted successfully",
-                data: result
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to delete review",
-                error: error
-            });
+        // Review management
+        createReview: async (req: Request, res: Response) => {
+            try {
+                const { comment, rating, studentID, courseID } = req.body;
+                const result = await ReviewRepository.createReview(
+                    comment,
+                    rating,
+                    studentID,
+                    courseID
+                );
+                res.status(201).json({
+                    success: true,
+                    message: "Review created successfully",
+                    data: result
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "Failed to create review",
+                    error: error
+                });
+            }
+        },
+
+        updateReview: async (req: Request, res: Response) => {
+            try {
+                const { reviewID, comment, rating } = req.body;
+                const result = await ReviewRepository.updateReview(
+                    reviewID,
+                    comment,
+                    rating
+                );
+                res.status(200).json({
+                    success: true,
+                    message: "Review updated successfully",
+                    data: result
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "Failed to update review",
+                    error: error
+                });
+            }
+        },
+
+        deleteReview: async (req: Request, res: Response) => {
+            try {
+                const { reviewID } = req.body;
+                const result = await ReviewRepository.deleteReview(reviewID);
+                res.status(200).json({
+                    success: true,
+                    message: "Review deleted successfully",
+                    data: result
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "Failed to delete review",
+                    error: error
+                });
+            }
         }
     }
 };

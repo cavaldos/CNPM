@@ -46,6 +46,50 @@ const LessonController = {
         }
     },
 
+    createLessonDocument: async (req: Request, res: Response) => {
+        try {
+            const { title, duration, complexityLevel, lessonType, ordinal, documentContent, courseID } = req.body;
+            const result = await LessonRepository.createLessonDocument(
+                title,
+                duration,
+                complexityLevel,
+                lessonType,
+                ordinal,
+                documentContent,
+                courseID
+            );
+            res.status(201).json({
+                success: true,
+                message: "Lesson document created successfully",
+                data: result
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to create lesson document",
+                error: error
+            });
+        }
+    },
+
+    updateLessonDocument: async (req: Request, res: Response) => {
+        try {
+            const { lessonDocumentID, documentContent } = req.body;
+            const result = await LessonRepository.updateLessonDocument(lessonDocumentID, documentContent);
+            res.status(200).json({
+                success: true,
+                message: "Lesson document updated successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to update lesson document",
+                error: error
+            });
+        }
+    },
     deleteLesson: async (req: Request, res: Response) => {
         try {
             const { lessonID } = req.body;
@@ -64,14 +108,16 @@ const LessonController = {
         }
     },
 
-    getAllLessons: async (_req: Request, res: Response) => {
+    getAllLessonsByCourseID: async (req: Request, res: Response) => {
         try {
-            const result = await LessonRepository.getAllLessons();
+            const { courseID } = req.body;
+            const result = await LessonRepository.getAllLessons(courseID);
             res.status(200).json({
                 success: true,
-                message: "All lessons retrieved successfully",
+                message: "Lessons retrieved successfully",
                 data: result
             });
+
         } catch (error) {
             res.status(500).json({
                 success: false,
@@ -97,7 +143,28 @@ const LessonController = {
                 error: error
             });
         }
+    },
+    sortLessons: async (req: Request, res: Response) => {
+        try {
+            const { lessonID, ordinal } = req.body;
+            const result = await LessonRepository.sortLessons(lessonID, ordinal);
+            res.status(200).json({
+                success: true,
+                message: "Lessons sorted successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to sort lessons",
+                error: error
+            });
+        }
     }
+
+
+
+
 };
 
 export default LessonController;

@@ -99,41 +99,6 @@ const ForumController = {
         }
     },
 
-    getLatestMessages: async (req: Request, res: Response) => {
-        try {
-            const { limit } = req.body;
-            const result = await ForumRepository.getLatestMessages(limit);
-            res.status(200).json({
-                success: true,
-                message: "Latest forum messages retrieved successfully",
-                data: result
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to get latest forum messages",
-                error: error
-            });
-        }
-    },
-
-    getMessageCount: async (req: Request, res: Response) => {
-        try {
-            const { courseID } = req.body;
-            const result = await ForumRepository.getMessageCount(courseID);
-            res.status(200).json({
-                success: true,
-                message: "Forum message count retrieved successfully",
-                data: result
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to get forum message count",
-                error: error
-            });
-        }
-    },
 
     getAllMessages: async (_req: Request, res: Response) => {
         try {

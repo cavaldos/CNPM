@@ -1,25 +1,20 @@
 import DataConnect from '../../config/DataConnect';
 
 const LearnProgressRepository = {
-    async createLearnProgress(studentID: number, lessonID: number, processStatus: string, startTime?: Date, completionTime?: Date) {
-        const proc = 'create_learn_progress';
+    async startLearnProgress(lessonID: number, studentID: number) {
+        const proc = 'start_learn_progress';
         const params = {
-            StudentID: studentID,
             LessonID: lessonID,
-            ProcessStatus: processStatus,
-            StartTime: startTime,
-            CompletionTime: completionTime
+            StudentID: studentID
         };
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async updateLearnProgress(progressID: number, processStatus: string, startTime?: Date, completionTime?: Date) {
+    async updateLearnProgress(progressID: number, processStatus: string) {
         const proc = 'update_learn_progress';
         const params = {
             ProgressID: progressID,
-            ProcessStatus: processStatus,
-            StartTime: startTime,
-            CompletionTime: completionTime
+            ProcessStatus: processStatus
         };
         return await DataConnect.executeProcedure(proc, params);
     },
@@ -32,35 +27,59 @@ const LearnProgressRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async getAllLearnProgress() {
+    async getAllLessonInProgress(enrollmentID: number) {
         const query = `
-            SELECT lp.*,
-                   u.FullName as StudentName,
-                   l.Title as LessonName,
-                   c.Title as CourseName
-            FROM [LearnProgress] lp
-            INNER JOIN [User] u ON lp.StudentID = u.UserID
-            INNER JOIN [Lessons] l ON lp.LessonID = l.LessonID
-            INNER JOIN [Course] c ON l.CourseID = c.CourseID
-            ORDER BY lp.StartTime DESC
+                SELECT
+                e.EnrollmentID,
+                l.LessonID,
+                l.Ordinal,
+                l.LessonType,
+                l.Title,
+                l.Duration,
+                lp.ProgressID,
+                COALESCE(lp.ProcessStatus, 'NotStarted') AS ProcessStatus,
+                lp.StartTime,
+                lp.CompletionTime
+            FROM
+                Enrollment e
+                INNER JOIN Course c ON e.CourseID = c.CourseID
+                INNER JOIN Lessons l ON c.CourseID = l.CourseID
+                LEFT JOIN LearnProgress lp ON l.LessonID = lp.LessonID
+                    AND lp.StudentID = e.StudentID
+            WHERE
+                e.EnrollmentID = ${enrollmentID}
+            ORDER BY
+                l.Ordinal;
         `;
         return await DataConnect.execute(query);
     },
 
-    async getLearnProgressByStudent(studentID: number) {
+
+    async getAllCourseProgress(studentID: number) {
         const query = `
-            SELECT lp.*,
-                   l.Title as LessonName,
-                   c.Title as CourseName
-            FROM [LearnProgress] lp
-            INNER JOIN [Lessons] l ON lp.LessonID = l.LessonID
-            INNER JOIN [Course] c ON l.CourseID = c.CourseID
-            WHERE lp.StudentID = @StudentID
-            ORDER BY lp.StartTime DESC
+                SELECT
+                U.UserID AS StudentID,
+                U.FullName AS StudentName,
+                C.CourseID,
+                C.Title AS CourseTitle,
+                C.Topic,
+                C.Price,
+                E.EnrollDate,
+                E.EnrollmentID,
+                E.EnrollmentStatus
+            FROM
+                Enrollment E
+            INNER JOIN
+                [User] U ON E.StudentID = U.UserID
+            INNER JOIN
+                Course C ON E.CourseID = C.CourseID
+            WHERE StudentID = ${studentID};
         `;
-        const params = { StudentID: studentID };
-        return await DataConnect.executeWithParams(query, params);
+        return await DataConnect.execute(query);
     }
+
+
+
 };
 
 export default LearnProgressRepository;

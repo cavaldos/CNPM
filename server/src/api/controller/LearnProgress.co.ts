@@ -2,15 +2,12 @@ import { Request, Response } from "express";
 import LearnProgressRepository from "../repositories/learn_progress";
 
 const LearnProgressController = {
-    createLearnProgress: async (req: Request, res: Response) => {
+    startLearnProgress: async (req: Request, res: Response) => {
         try {
-            const { studentID, lessonID, processStatus, startTime, completionTime } = req.body;
-            const result = await LearnProgressRepository.createLearnProgress(
-                studentID,
+            const { lessonID, studentID } = req.body;
+            const result = await LearnProgressRepository.startLearnProgress(
                 lessonID,
-                processStatus,
-                startTime,
-                completionTime
+                studentID
             );
             res.status(201).json({
                 success: true,
@@ -28,20 +25,28 @@ const LearnProgressController = {
 
     updateLearnProgress: async (req: Request, res: Response) => {
         try {
-            const { progressID, processStatus, startTime, completionTime } = req.body;
+            const { progressID, processStatus } = req.body;
+
+            // Validate processStatus
+            const validStatuses = ["NotStarted", "InProcess", "Done"];
+            if (!validStatuses.includes(processStatus)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid processStatus. Must be NotStarted, InProcess, or Done"
+                });
+            }
+
             const result = await LearnProgressRepository.updateLearnProgress(
                 progressID,
                 processStatus,
-                startTime,
-                completionTime
             );
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: "Learn progress updated successfully",
                 data: result
             });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message: "Failed to update learn progress",
                 error: error
@@ -66,37 +71,56 @@ const LearnProgressController = {
             });
         }
     },
-
-    getAllLearnProgress: async (_req: Request, res: Response) => {
+    getAllLessonInProgress: async (req: Request, res: Response) => {
         try {
-            const result = await LearnProgressRepository.getAllLearnProgress();
-            res.status(200).json({
-                success: true,
-                message: "All learn progress records retrieved successfully",
-                data: result
-            });
-        } catch (error) {
+            const { enrollmentID } = req.body;
+            const result = await LearnProgressRepository.getAllLessonInProgress(enrollmentID);
+            
+            // Calculate completion percentage
+            if (result && result[0] && Array.isArray(result[0])) {
+                const totalLessons = result[0].length;
+                const completedLessons = result[0].filter(lesson => 
+                    lesson.ProcessStatus === "Done").length;
+                const completionPercentage = totalLessons > 0 ? 
+                    Math.round((completedLessons / totalLessons) * 100) : 0;
+                
+                res.status(200).json({
+                    success: true,
+                    message: "All lessons in progress retrieved successfully",
+                    data: result,
+                    completionPercentage: completionPercentage
+                });
+            } else {
+                res.status(200).json({
+                    success: true,
+                    message: "All lessons in progress retrieved successfully",
+                    data: result,
+                    completionPercentage: 0
+                });
+            }
+        }
+        catch (error) {
             res.status(500).json({
                 success: false,
-                message: "Failed to get all learn progress records",
+                message: "Failed to get all lessons in progress",
                 error: error
             });
         }
-    },
+    } ,
 
-    getLearnProgressByStudent: async (req: Request, res: Response) => {
+    getAllCourseProgressEnrolled: async (req: Request, res: Response) => {
         try {
             const { studentID } = req.body;
-            const result = await LearnProgressRepository.getLearnProgressByStudent(studentID);
+            const result = await LearnProgressRepository.getAllCourseProgress(studentID);
             res.status(200).json({
                 success: true,
-                message: "Student's learn progress records retrieved successfully",
-                data: result
+                message: "All course progress records retrieved successfully",
+                data: result[0]
             });
         } catch (error) {
             res.status(500).json({
                 success: false,
-                message: "Failed to get student's learn progress records",
+                message: "Failed to get all course progress records",
                 error: error
             });
         }
