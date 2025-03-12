@@ -7,6 +7,7 @@ export default defineConfig({
   entry: "./src/index.js",
   server: {
     host: "0.0.0.0", // default: 'localhost'
+    allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
   
   },
   preview: {
