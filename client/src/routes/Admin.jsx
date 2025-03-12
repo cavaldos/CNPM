@@ -10,13 +10,6 @@ const AdminRouter = [
     component: HomeAdmin,
     Layout: AdminLayout,
   },
-  {
-    name: "Home",
-    icon: "",
-    path: "/",
-    component: HomeAdmin,
-    Layout: AdminLayout,
-  },
 
 ];
 
