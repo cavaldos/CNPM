@@ -1,22 +1,61 @@
 import axiosinstance from "./axios.config";
 
 const PublicService = {
-    guest: {
-        getAllUsers: async () => {
-            const response = await axiosinstance.get("/admin/users");
+    user: {
+        createUser: async (userData) => {
+            const response = await axiosinstance.post("/public/user/create", userData);
             return response;
         },
-        getUserById: async (id) => {
-            const response = await axiosinstance.get(`/admin/users/${id}`);
+
+        updateUser: async (userData) => {
+            const response = await axiosinstance.post("/public/user/update", userData);
+            return response;
+        },
+
+        deleteUser: async (userID) => {
+            const response = await axiosinstance.post("/public/user/delete", { userID });
+            return response;
+        },
+
+        getAllUsers: async () => {
+            const response = await axiosinstance.post("/public/user/getAll");
+            return response;
+        },
+
+        getUserByID: async (userID) => {
+            const response = await axiosinstance.post("/public/user/get", { userID });
             return response;
         }
-    }
-    ,
+    },
+
     course: {
-        getAllCourses: async () => {
-            const response = await axiosinstance.get("/admin/users");
+        autoComplete: async (searchTerm) => {
+            const response = await axiosinstance.post("/public/course/autocompelete", { searchTerm });
+            return response;
+        },
+
+        searchCourse: async (searchTerm) => {
+            const response = await axiosinstance.post("/public/course/search", { searchTerm });
+            return response;
+        }
+    },
+
+    forum: {
+        createMessage: async (message) => {
+            const response = await axiosinstance.post("/public/forum/create", message);
+            return response;
+        },
+
+        deleteMessage: async (messageID) => {
+            const response = await axiosinstance.post("/public/forum/delete", { messageID });
+            return response;
+        },
+
+        getMessagesByCourse: async (courseID) => {
+            const response = await axiosinstance.post("/public/forum/course", { courseID });
             return response;
         }
     }
 }
+
 export default PublicService;

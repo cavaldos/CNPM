@@ -13,7 +13,14 @@ InstructorRouter.post("/course/getAll", CourseController.getAllCourses);
 // Lesson management
 InstructorRouter.post("/lesson/video/create", LessonController.createLessonVideo);
 InstructorRouter.post("/lesson/video/update", LessonController.updateLessonVideo);
+InstructorRouter.post("/lesson/document/create", LessonController.createLessonDocument);
+InstructorRouter.post("/lesson/document/update", LessonController.updateLessonDocument);
 InstructorRouter.post("/lesson/delete", LessonController.deleteLesson);
+InstructorRouter.post("/lesson/get-all-lesson-course-id", LessonController.getLessonByID);
+InstructorRouter.post("/lesson/get-lesson-by-id", LessonController.getLessonByID);
+InstructorRouter.post("/lesson/sort", LessonController.sortLessons);
+InstructorRouter.post("/lesson/get-lesson-by-id", LessonController.getLessonByID);
+InstructorRouter.post("/lesson/sort", LessonController.sortLessons);
 
 
 
