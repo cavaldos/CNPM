@@ -1,22 +1,19 @@
-// khach hang
-
 import { lazy } from "react";
 
 const StudentLayout = lazy(() =>
-  import("~/components/Layout/student/StudentLayout")
+  import("../components/Layout/student/StudentLayout")
 );
-const HomeStudent = lazy(() => import("~/pages/student/index"));
-const MyLearningPage = lazy(() => import("~/pages/student/MyLearning"));
-const HelpCenterPage = lazy(() => import("~/pages/student/HelpCenter"));
-const CourseDetailPage = lazy(() => import("~/pages/student/CourseDetail"));
-const LearningPage = lazy(() => import("~/pages/student/Learning"));
-const CourseInfoPage = lazy(() => import("~/pages/student/CourseInfo"));
-
-import CourseMaterialPage from "../pages/student/CourseMaterial";
-import DiscussionForumsPage from "../pages/student/DiscussionForum";
-import MessagesPage from "../pages/student/Messages";
-import CourseInfo from "../pages/student/CourseInfo";
-import TestPage from "../pages/student/test";
+const HomeStudent = lazy(() => import("../pages/student/index"));
+const MyLearningPage = lazy(() => import("../pages/student/MyLearning"));
+const HelpCenterPage = lazy(() => import("../pages/student/HelpCenter"));
+const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
+const LearningPage = lazy(() => import("../pages/student/Learning"));
+const CourseInfoPage = lazy(() => import("../pages/student/CourseInfo"));
+const CourseMaterialPage = lazy(() => import("../pages/student/CourseMaterial"));
+const DiscussionForumsPage = lazy(() => import("../pages/student/DiscussionForum"));
+const MessagesPage = lazy(() => import("../pages/student/Messages"));
+const CourseInfo = lazy(() => import("../pages/student/CourseInfo"));
+const TestPage = lazy(() => import("../pages/student/test"));
 
 const StudentRouter = [
   {
@@ -40,7 +37,6 @@ const StudentRouter = [
     Layout: StudentLayout,
     key: "header",
   },
-
   {
     name: "Learning",
     path: "/learning",
@@ -55,7 +51,6 @@ const StudentRouter = [
     Layout: StudentLayout,
     key: "",
   },
-
   {
     name: "Discussion Forums",
     path: "/learning/discussion-forums",
@@ -77,23 +72,27 @@ const StudentRouter = [
     Layout: StudentLayout,
     key: "",
   },
-
   {
     name: "Help Center",
     path: "/help-center",
     component: HelpCenterPage,
     Layout: null,
     key: "" // This route won't appear in the header
-  }
-,
+  },
   {
     name: "Tesst",
     path: "/test",
     component: TestPage,
     Layout: StudentLayout,
     key: "header" // This route won't appear in the header
-  }
-
+  },
+  {
+    name: "Discussion Forum",
+    path: "/discussion-forum/:courseId",
+    component: DiscussionForumsPage,
+    Layout: StudentLayout,
+    key: "",
+  },
 ];
 
 export default StudentRouter;

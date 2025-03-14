@@ -9,6 +9,7 @@ InstructorRouter.post("/course/create", CourseController.createCourse);
 InstructorRouter.post("/course/update", CourseController.updateCourse);
 InstructorRouter.post("/course/get", CourseController.getCourseByID);
 InstructorRouter.post("/course/getAll", CourseController.getAllCourses);
+InstructorRouter.post("/course/set-hidden", CourseController.setHidenCourse);
 
 // Lesson management
 InstructorRouter.post("/lesson/video/create", LessonController.createLessonVideo);

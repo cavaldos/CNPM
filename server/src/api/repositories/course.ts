@@ -30,20 +30,19 @@ const CourseRepository = {
         return await DataConnect.execute(query);
     },
 
-    async createCourse(title: string, topic: string, description: string, image: string, price: number, instructorID: number) {
+    async createCourse(title: string, topic: string, description: string, image: string, instructorID: number) {
         const proc = 'create_course'
         const params = {
             Title: title,
             Topic: topic,
             Description: description,
             Image: image,
-            Price: price,
             InstructorID: instructorID,
         };
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async updateCourse(courseID: number, title: string, topic: string, description: string, image: string, price: number, instructorID: number) {
+    async updateCourse(courseID: number, title: string, topic: string, description: string, image: string, instructorID: number) {
         const proc = 'update_course';
         const params = {
             CourseID: courseID,
@@ -51,7 +50,6 @@ const CourseRepository = {
             Topic: topic,
             Description: description,
             Image: image,
-            Price: price,
             InstructorID: instructorID,
         };
         return await DataConnect.executeProcedure(proc, params);
@@ -64,6 +62,13 @@ const CourseRepository = {
         };
         return await DataConnect.executeProcedure(proc, params);
     },
+    async setHidenCourse(courseID: number, isHidden: boolean) {
+        const query = `UPDATE [Course]
+                        SET IsHidden = ${isHidden}
+                        WHERE CourseID = ${courseID}`;
+
+        return await DataConnect.execute(query);
+    }
 };
 
 export default CourseRepository;

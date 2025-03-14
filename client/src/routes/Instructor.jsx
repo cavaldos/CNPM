@@ -8,6 +8,7 @@ const ManageCourses = lazy(() => import("../pages/instructor/ManageCourses"));
 const Messages = lazy(() => import("../pages/instructor/Messages"));
 const Profile = lazy(() => import("../pages/instructor/Profile"));
 const AddLessons = lazy(() => import("../pages/instructor/AddLessons"));
+const DiscussionForum = lazy(() => import("../pages/instructor/DiscussionForum"));
 
 const InstructorRouter = [
   {
@@ -50,6 +51,13 @@ const InstructorRouter = [
     icon: "",
     path: "/profile",
     component: Profile,
+    Layout: InstructorLayout,
+  },
+  {
+    name: "Discussion Forum",
+    icon: "",
+    path: "/discussion-forum/:courseId",
+    component: DiscussionForum,
     Layout: InstructorLayout,
   },
 ];

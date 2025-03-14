@@ -40,13 +40,12 @@ const CourseController = {
 
     createCourse: async (req: Request, res: Response) => {
         try {
-            const { title, topic, description, image, price, instructorID } = req.body;
+            const { title, topic, description, image, instructorID } = req.body;
             const result = await CourseRepository.createCourse(
                 title,
                 topic,
                 description,
                 image,
-                price,
                 instructorID
             );
             res.status(201).json({
@@ -65,14 +64,13 @@ const CourseController = {
 
     updateCourse: async (req: Request, res: Response) => {
         try {
-            const { courseID, title, topic, description, image, price, instructorID } = req.body;
+            const { courseID, title, topic, description, image, instructorID } = req.body;
             const result = await CourseRepository.updateCourse(
                 courseID,
                 title,
                 topic,
                 description,
                 image,
-                price,
                 instructorID
             );
             res.status(200).json({
@@ -140,7 +138,32 @@ const CourseController = {
             });
         }
     },
-
+    setHidenCourse: async (req: Request, res: Response) => {
+        try {
+            const { courseID, isHidden } = req.body;
+            
+            // Validate isHidden value
+            if (isHidden !== 0 && isHidden !== 1) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid value for isHidden. Must be 0 or 1"
+                });
+            }
+     
+            const result = await CourseRepository.setHidenCourse(courseID, isHidden);
+            return res.status(200).json({
+                success: true,
+                message: "Course visibility updated successfully",
+                data: result
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to update course visibility",
+                error: error
+            });
+        }
+    },
     review: {
 
         // Review management

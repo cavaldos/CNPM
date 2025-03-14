@@ -8,14 +8,18 @@ const InstructorService = {
             topic,
             description,
             image,
-            price: 0,
             instructorID
         });
         return response;
     },
 
-    updateCourse: async (courseData) => {
+    updateCourse: async (courseID, title, topic, description, image, instructorID) => {
+        const courseData = { courseID, title, topic, description, image, instructorID };
         const response = await axiosinstance.post("/instructor/course/update", courseData);
+        return response;
+    },
+    setHiddenCourse: async (courseID, isHidden) => {
+        const response = await axiosinstance.post("/instructor/course/set-hidden", { courseID, isHidden });
         return response;
     },
 

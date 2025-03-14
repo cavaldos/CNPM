@@ -32,6 +32,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import PublicIcon from "@mui/icons-material/Public";
+import ForumIcon from "@mui/icons-material/Forum";
 
 const ManageCourses = () => {
     const navigate = useNavigate();
@@ -176,6 +177,10 @@ const ManageCourses = () => {
 
     const handleSortChange = (sortOption) => {
         setSortBy(sortOption);
+    };
+
+    const handleGoToDiscussion = (courseId) => {
+        navigate(`/discussion-forum/${courseId}`);
     };
 
     return (
@@ -360,6 +365,18 @@ const ManageCourses = () => {
                                                 </Box>
                                             </>
                                         )}
+
+                                        {/* Add Discussion Button */}
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<ForumIcon />}
+                                            size="small"
+                                            fullWidth
+                                            className="mt-3"
+                                            onClick={() => handleGoToDiscussion(course.id)}
+                                        >
+                                            Diễn đàn thảo luận
+                                        </Button>
                                     </div>
 
                                     {course.visibility && (
