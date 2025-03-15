@@ -1,12 +1,20 @@
 import React from "react";
-import { Avatar } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ForumIcon from '@mui/icons-material/Forum';
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+
 const CourseDetail = () => {
+  const navigate = useNavigate();
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const menuRef = useRef(null);
+
+  // Mock course ID for demonstration
+  const courseId = "1";
+
   useEffect(() => {
     const handleScroll = () => {
       if (menuRef.current) {
@@ -27,6 +35,11 @@ const CourseDetail = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const handleGoToDiscussion = () => {
+    navigate(`/discussion-forum/${courseId}`);
+  };
+
   return (
     <div className=" max-w-6xl mx-auto py-6 px-4 bg-gray-50 min-h-screen relative">
       {/* Header Section */}
@@ -81,15 +94,19 @@ const CourseDetail = () => {
           <button
             variant="contained"
             color="primary"
-            className="normal-case"
+            className="normal-case bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 px-4"
             onClick={() => setIsEnrolled(false)}
           >
             Go To Course
           </button>
-          <button variant="outlined" color="primary" className="normal-case">
-            Already enrolled
-          </button>
-          <span className="text-sm text-gray-600">Financial aid available</span>
+          <Button
+            variant="outlined"
+            startIcon={<ForumIcon />}
+            onClick={handleGoToDiscussion}
+          >
+            Diễn đàn thảo luận
+          </Button>
+          <span className="text-sm text-gray-600 self-center">Financial aid available</span>
         </div>
       ) : (
         <div className="flex space-x-4 mb-6 ">
@@ -160,11 +177,10 @@ const CourseDetail = () => {
       {/* Navigation Tabs */}
       <div ref={menuRef} className="mb-6">
         <nav
-          className={`w-full p-4 text-gray-800 bg-gray-100  font-semibold border-b-2 border-gray-200 space-x-10 transition-all duration-300 ${
-            isSticky
+          className={`w-full p-4 text-gray-800 bg-gray-100  font-semibold border-b-2 border-gray-200 space-x-10 transition-all duration-300 ${isSticky
               ? "fixed top-[120px] z-40 left-0 w-full shadow-lg"
               : "bg-inherit"
-          }`}
+            }`}
         >
           <div className="flex justify-left ml-10 gap-6">
             <a className="" href="#about">

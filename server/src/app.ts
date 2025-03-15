@@ -8,18 +8,14 @@ import './test';
 DataConnect.open();
 const app = express();
 
+
 app.use(
   cors({
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization, Origin, X-Requested-With, Accept' + 'Content-Type',
-      'Authorization',
-      'Origin',
-      'X-Requested-With',
-      'Accept',
-    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: '*',
+    exposedHeaders: ['Content-Length', 'X-Requested-With', 'Authorization'],
   }),
 );
 app.use(json());

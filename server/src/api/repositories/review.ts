@@ -36,7 +36,16 @@ const ReviewRepository = {
             CourseID: courseID
         };
         return await DataConnect.executeProcedure(proc, params);
+    },
+    async selectAVGRating(courseID: number) {
+        const query = `select AVG(Rating) from Review where CourseID = ${courseID}`;
+
+        return await DataConnect.execute(query);
+    },
+    async selectRatingCount(courseID: number) {
+        const query = `select COUNT(Rating) from Review where CourseID = ${courseID}`;
+        return await DataConnect.execute(query);
     }
-};
+}
 
 export default ReviewRepository;

@@ -8,8 +8,9 @@ const InstructorRouter = Router();
 InstructorRouter.post("/course/create", CourseController.createCourse);
 InstructorRouter.post("/course/update", CourseController.updateCourse);
 InstructorRouter.post("/course/get", CourseController.getCourseByID);
+InstructorRouter.post("/course/get-all-course-by-instructor", CourseController.getAllCoursesByInstructorID);
+InstructorRouter.post("/course/set-hidden", CourseController.setHiddenCourse);
 InstructorRouter.post("/course/getAll", CourseController.getAllCourses);
-InstructorRouter.post("/course/set-hidden", CourseController.setHidenCourse);
 
 // Lesson management
 InstructorRouter.post("/lesson/video/create", LessonController.createLessonVideo);
@@ -22,7 +23,5 @@ InstructorRouter.post("/lesson/get-lesson-by-id", LessonController.getLessonByID
 InstructorRouter.post("/lesson/sort", LessonController.sortLessons);
 InstructorRouter.post("/lesson/get-lesson-by-id", LessonController.getLessonByID);
 InstructorRouter.post("/lesson/sort", LessonController.sortLessons);
-
-
 
 export default InstructorRouter;

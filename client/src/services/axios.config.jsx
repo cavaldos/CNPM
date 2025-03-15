@@ -1,7 +1,7 @@
 import axios from "axios";
 import GetCookie from "../hooks/GetCookie";
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5001",
   timeout: 5000,
   headers: { "X-Custom-Header": "foobar" },
 });

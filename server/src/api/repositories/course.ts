@@ -30,6 +30,28 @@ const CourseRepository = {
         return await DataConnect.execute(query);
     },
 
+
+    async getAllCoursesByInstructorID(instructorID: number) {
+        const query = `
+            SELECT c.*,
+                   u.FullName as InstructorName,
+                   (SELECT COUNT(*) FROM Review r WHERE r.CourseID = c.CourseID) as ReviewCount,
+                   (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount,
+                   (SELECT AVG(r.Rating) FROM Review r WHERE r.CourseID = c.CourseID) as AvgRating,
+                   (SELECT COUNT(*) FROM Enrollment e WHERE e.CourseID = c.CourseID) as EnrollmentCount
+
+            FROM Course c
+            INNER JOIN [User] u ON c.InstructorID = u.UserID
+            WHERE c.InstructorID = @InstructorID
+            ORDER BY c.CreateTime DESC
+        `;
+        const params = {
+            InstructorID: instructorID
+        };
+        return await DataConnect.executeWithParams(query, params);
+    },
+
+
     async createCourse(title: string, topic: string, description: string, image: string, instructorID: number) {
         const proc = 'create_course'
         const params = {
@@ -62,12 +84,17 @@ const CourseRepository = {
         };
         return await DataConnect.executeProcedure(proc, params);
     },
-    async setHidenCourse(courseID: number, isHidden: boolean) {
+    async setHiddenCourse(courseID: number, isHidden: boolean) {
         const query = `UPDATE [Course]
-                        SET IsHidden = ${isHidden}
-                        WHERE CourseID = ${courseID}`;
+                       SET IsHidden = @IsHidden
+                       WHERE CourseID = @CourseID`;
 
-        return await DataConnect.execute(query);
+        const params = {
+            IsHidden: isHidden,
+            CourseID: courseID
+        };
+
+        return await DataConnect.executeWithParams(query, params);
     }
 };
 

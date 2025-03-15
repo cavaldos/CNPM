@@ -5,6 +5,7 @@ const InstructorLayout = lazy(() => import("../components/Layout/instructor/Inst
 const HomeInstructor = lazy(() => import("../pages/instructor/index"));
 const CreateCourse = lazy(() => import("../pages/instructor/CreateCourse"));
 const ManageCourses = lazy(() => import("../pages/instructor/ManageCourses"));
+const UpdateCourse = lazy(() => import("../pages/instructor/UpdateCourse"));
 const Messages = lazy(() => import("../pages/instructor/Messages"));
 const Profile = lazy(() => import("../pages/instructor/Profile"));
 const AddLessons = lazy(() => import("../pages/instructor/AddLessons"));
@@ -37,6 +38,13 @@ const InstructorRouter = [
     icon: "",
     path: "/my-courses",
     component: ManageCourses,
+    Layout: InstructorLayout,
+  },
+  {
+    name: "Edit Course",
+    icon: "",
+    path: "/edit-course/:courseId",
+    component: UpdateCourse,
     Layout: InstructorLayout,
   },
   {

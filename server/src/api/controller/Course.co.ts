@@ -37,6 +37,23 @@ const CourseController = {
             });
         }
     },
+    getAllCoursesByInstructorID: async (req: Request, res: Response) => {
+        try {
+            const { instructorID } = req.body;
+            const result = await CourseRepository.getAllCoursesByInstructorID(instructorID);
+            res.status(200).json({
+                success: true,
+                message: "Courses retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get courses",
+                error: error
+            });
+        }
+    },
 
     createCourse: async (req: Request, res: Response) => {
         try {
@@ -138,19 +155,19 @@ const CourseController = {
             });
         }
     },
-    setHidenCourse: async (req: Request, res: Response) => {
+    setHiddenCourse: async (req: Request, res: Response) => {
         try {
             const { courseID, isHidden } = req.body;
-            
+
             // Validate isHidden value
-            if (isHidden !== 0 && isHidden !== 1) {
+            if (isHidden !== 0 && isHidden !== 1 && isHidden !== true && isHidden !== false) {
                 return res.status(400).json({
                     success: false,
                     message: "Invalid value for isHidden. Must be 0 or 1"
                 });
             }
-     
-            const result = await CourseRepository.setHidenCourse(courseID, isHidden);
+
+            const result = await CourseRepository.setHiddenCourse(courseID, isHidden);
             return res.status(200).json({
                 success: true,
                 message: "Course visibility updated successfully",

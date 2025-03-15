@@ -2,7 +2,7 @@ import axiosinstance from "./axios.config";
 
 const InstructorService = {
     // Course management
-    createCourse: async ( title, topic, description, image, instructorID ) => {
+    createCourse: async (title, topic, description, image, instructorID) => {
         const response = await axiosinstance.post("/instructor/course/create", {
             title,
             topic,
@@ -28,9 +28,10 @@ const InstructorService = {
         return response;
     },
 
-    getAllCourses: async () => {
-        const response = await axiosinstance.post("/instructor/course/getAll");
+    getAllCoursesByInstructorID: async (instructorID) => {
+        const response = await axiosinstance.post("/instructor/course/get-all-course-by-instructor", { instructorID });
         return response;
+
     },
 
     // Lesson management
