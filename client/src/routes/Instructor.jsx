@@ -1,4 +1,13 @@
 import { lazy } from "react";
+import {
+  HomeIcon,
+  PlusCircleIcon,
+  LayersIcon,
+  EditIcon,
+  MessageCircleIcon,
+  UserIcon,
+  MessageSquareIcon
+} from "lucide-react";
 
 // Sử dụng đường dẫn tương đối thay vì alias (~)
 const InstructorLayout = lazy(() => import("../components/Layout/instructor/InstructorLayout"));
@@ -14,57 +23,64 @@ const DiscussionForum = lazy(() => import("../pages/instructor/DiscussionForum")
 const InstructorRouter = [
   {
     name: "Home",
-    icon: "",
+    icon: HomeIcon,
     path: "/",
+    key: "sidebar",
     component: HomeInstructor,
     Layout: InstructorLayout,
   },
   {
     name: "Create Course",
-    icon: "",
+    icon: PlusCircleIcon,
     path: "/create-course",
+    key: "sidebar",
     component: CreateCourse,
     Layout: InstructorLayout,
   },
   {
     name: "Add Lessons",
-    icon: "",
+    icon: LayersIcon,
     path: "/courses/:courseId/add-lessons",
+    key: "",
     component: AddLessons,
     Layout: InstructorLayout,
   },
   {
     name: "My Courses",
-    icon: "",
+    icon: LayersIcon,
     path: "/my-courses",
+    key: "sidebar",
     component: ManageCourses,
     Layout: InstructorLayout,
   },
   {
     name: "Edit Course",
-    icon: "",
+    icon: EditIcon,
     path: "/edit-course/:courseId",
     component: UpdateCourse,
     Layout: InstructorLayout,
   },
   {
     name: "Messages",
-    icon: "",
+    icon: MessageCircleIcon,
     path: "/messages",
+    key: "sidebar",
     component: Messages,
     Layout: InstructorLayout,
   },
   {
     name: "Profile",
-    icon: "",
+    icon: UserIcon,
     path: "/profile",
+    key: "sidebar",
     component: Profile,
     Layout: InstructorLayout,
   },
   {
     name: "Discussion Forum",
-    icon: "",
+    icon: MessageSquareIcon,
     path: "/discussion-forum/:courseId",
+    key: "",
     component: DiscussionForum,
     Layout: InstructorLayout,
   },
