@@ -29,7 +29,7 @@ const InstructorRouter = [
   {
     name: "Add Lessons",
     icon: "",
-    path: "/courses/:courseId/lessons",
+    path: "/courses/:courseId/add-lessons",
     component: AddLessons,
     Layout: InstructorLayout,
   },

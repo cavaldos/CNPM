@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add"; // Import the Add icon
 import InstructorService from "../../services/instructor.service";
 import { uploadImage } from "../../hooks/uploadImage";
 
@@ -168,19 +169,35 @@ const UpdateCourse = () => {
     navigate("/my-courses");
   };
 
+  // Chuyển đến trang thêm bài học
+  const handleAddLessons = () => {
+    navigate(`/courses/${courseId}/add-lessons`);
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       <Box className="flex justify-between items-center mb-6">
         <Typography variant="h4" component="h1">
           Chỉnh sửa khóa học
         </Typography>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={handleBack}
-        >
-          Quay lại
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<AddIcon />}
+            onClick={handleAddLessons}
+            className="mr-4"
+          >
+            Thêm bài học
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<ArrowBackIcon />}
+            onClick={handleBack}
+          >
+            Quay lại
+          </Button>
+        </div>
       </Box>
 
       {loading ? (
