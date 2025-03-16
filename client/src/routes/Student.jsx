@@ -8,11 +8,8 @@ const MyLearningPage = lazy(() => import("../pages/student/MyLearning"));
 const HelpCenterPage = lazy(() => import("../pages/student/HelpCenter"));
 const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
 const LearningPage = lazy(() => import("../pages/student/Learning"));
-const CourseInfoPage = lazy(() => import("../pages/student/CourseInfo"));
-const CourseMaterialPage = lazy(() => import("../pages/student/CourseMaterial"));
-const DiscussionForumsPage = lazy(() => import("../pages/student/DiscussionForum"));
+const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
 const MessagesPage = lazy(() => import("../pages/student/Messages"));
-const CourseInfo = lazy(() => import("../pages/student/CourseInfo"));
 const TestPage = lazy(() => import("../pages/student/test"));
 
 const StudentRouter = [
@@ -53,18 +50,12 @@ const StudentRouter = [
   },
   {
     name: "Learning",
-    path: "/learning/:courseId",
+    path: "/learning/:lessonId",
     component: LearningPage,
     Layout: StudentLayout,
     key: "",
   },
-  {
-    name: "Course Material",
-    path: "/course-material",
-    component: CourseMaterialPage,
-    Layout: StudentLayout,
-    key: "",
-  },
+
   {
     name: "Discussion Forums",
     path: "/learning/discussion-forums",
@@ -76,13 +67,6 @@ const StudentRouter = [
     name: "Messages",
     path: "/learning/messages",
     component: MessagesPage,
-    Layout: StudentLayout,
-    key: "",
-  },
-  {
-    name: "Course Info",
-    path: "/learning/info",
-    component: CourseInfo,
     Layout: StudentLayout,
     key: "",
   },

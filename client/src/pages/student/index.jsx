@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import CourseCard from "../../components/course/CourseCard";
+import CourseCard from "../../components/ui/course/CourseCard";
 import PublicService from "../../services/public.service";
 
 const StudentPage = () => {

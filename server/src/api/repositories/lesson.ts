@@ -92,6 +92,12 @@ const LessonRepository = {
                     L.LessonID,
                     L.Title AS LessonTitle,
                     L.LessonType,
+                    L.Duration,
+                    L.ComplexityLevel,
+                    L.Ordinal,
+                    L.CreatedTime,
+                    L.UpdatedTime,
+      
                     CASE
                         WHEN L.LessonType = 'Video' THEN LV.URL
                         WHEN L.LessonType = 'Document' THEN LD.Content

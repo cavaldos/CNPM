@@ -1,7 +1,7 @@
 
 
 
-import LearningLayout from "../../components/Layout/student/LearningLayout";
+import LearningLayout from "../../components/ui/Learning/LearningLayout";
 const MessagesPage = () => {
     return (
         <LearningLayout>

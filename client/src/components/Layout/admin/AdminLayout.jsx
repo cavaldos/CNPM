@@ -3,8 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import AdminRouter from "../../../routes/Admin";
-import { AdminAccount } from "../AccountCpn";
-import Bread from "../Breadcrum";
+// import Bread from "../Breadcrum";
 const NavbarItem = ({ name, togglemenu, icon, path }) => {
   const navigate = useNavigate();
   const handleClick = (path) => {
@@ -66,11 +65,11 @@ const Header = ({ togglemenu, toggleSidebar }) => {
         </button>
         <div className="flex">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <Bread className={"pt-1"} />
+          {/* <Bread className={"pt-1"} /> */}
         </div>
       </div>
       <div className="flex items-center space-x-4 mr-4">
-        <AdminAccount />
+        {/* <AdminAccount /> */} avata
       </div>
     </div>
   );

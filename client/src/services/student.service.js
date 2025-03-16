@@ -33,43 +33,6 @@ const StudentService = {
                 data: response.data,
                 message: "Course progress retrieved successfully"
 
-                /**
-                 * "data": [
-        {
-            "StudentID": 1,
-            "StudentName": "John Doe",
-            "CourseID": 1,
-            "CourseTitle": "SQL Basics",
-            "Topic": "Database",
-            "Price": 49.99,
-            "EnrollDate": "2025-01-01T14:00:00.000Z",
-            "EnrollmentID": 1,
-            "EnrollmentStatus": "Enrolled"
-        },
-        {
-            "StudentID": 1,
-            "StudentName": "John Doe",
-            "CourseID": 7,
-            "CourseTitle": "Machine Learning",
-            "Topic": "AI",
-            "Price": 89.99,
-            "EnrollDate": "2025-01-07T20:00:00.000Z",
-            "EnrollmentID": 7,
-            "EnrollmentStatus": "Completed"
-        },
-        {
-            "StudentID": 1,
-            "StudentName": "John Doe",
-            "CourseID": 10,
-            "CourseTitle": "Database Design",
-            "Topic": "Database",
-            "Price": 59.99,
-            "EnrollDate": "2025-01-10T23:00:00.000Z",
-            "EnrollmentID": 10,
-            "EnrollmentStatus": "Completed"
-        }
-    ]
-                 */
             };
         } catch (error) {
             console.error("Error retrieving course progress:", error);
@@ -77,6 +40,28 @@ const StudentService = {
                 success: false,
                 message: error.response?.data?.message || "Failed to retrieve course progress"
             };
+        }
+    },
+    lesson: {
+        getAllLessons: async (courseID) => {
+            try {
+                const response = await axiosinstance.post(`/student/lesson/get-all-lessons`, { courseID });
+                return {
+                    success: true,
+                    data: response.data,
+                    message: "Lessons retrieved successfully"
+                };
+            } catch (error) {
+                console.error("Error fetching lessons:", error);
+                return {
+                    success: false,
+                    message: error.response?.data?.message || "Failed to get lessons"
+                };
+            }
+        },
+        getLessonById: async (lessonID) => {
+            const response = await axiosinstance.post(`/student/lesson/get-lesson-by-id`, { lessonID });
+            return response;
         }
     },
     checkEnrollment: async (courseId) => {
