@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import LearnProgressRepository from "../repositories/learn_progress";
+import LearnProgressRepository from "../repositories/learnProgress";
 
 const LearnProgressController = {
     startLearnProgress: async (req: Request, res: Response) => {
@@ -75,15 +75,15 @@ const LearnProgressController = {
         try {
             const { enrollmentID } = req.body;
             const result = await LearnProgressRepository.getAllLessonInProgress(enrollmentID);
-            
+
             // Calculate completion percentage
             if (result && result[0] && Array.isArray(result[0])) {
                 const totalLessons = result[0].length;
-                const completedLessons = result[0].filter(lesson => 
+                const completedLessons = result[0].filter(lesson =>
                     lesson.ProcessStatus === "Done").length;
-                const completionPercentage = totalLessons > 0 ? 
+                const completionPercentage = totalLessons > 0 ?
                     Math.round((completedLessons / totalLessons) * 100) : 0;
-                
+
                 res.status(200).json({
                     success: true,
                     message: "All lessons in progress retrieved successfully",
@@ -106,7 +106,7 @@ const LearnProgressController = {
                 error: error
             });
         }
-    } ,
+    },
 
     getAllCourseProgressEnrolled: async (req: Request, res: Response) => {
         try {
@@ -124,7 +124,26 @@ const LearnProgressController = {
                 error: error
             });
         }
-    }
+    },
+    getAllCourseProgress: async (req: Request, res: Response) => {
+        try {
+            const { studentID } = req.body;
+            const result = await LearnProgressRepository.getAllCourseProgress(studentID);
+            res.status(200).json({
+                success: true,
+                message: "All course progress records retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get all course progress records",
+                error: error
+            });
+        }
+     },
+
+
 };
 
 export default LearnProgressController;

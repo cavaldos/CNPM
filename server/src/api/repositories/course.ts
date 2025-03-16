@@ -51,7 +51,31 @@ const CourseRepository = {
         return await DataConnect.executeWithParams(query, params);
     },
 
+    async totalPages() {
+        const query = `
+            SELECT COUNT(*) as TotalCourses
+            FROM Course
+        `;
+        const result = await DataConnect.execute(query);
+        return Math.ceil(result[0].TotalCourses / 10); // Assuming page size is 10
+    },
 
+
+    async getAllCoursesPagination(offSet: number, pageSize: number) {
+        const proc = 'get_all_course';
+        const params = {
+            OffSet: offSet,
+            PageSize: pageSize
+        }
+        const courses = await DataConnect.executeProcedure(proc, params);
+        const total = await this.totalPages();
+        return {
+            courses,
+            total,
+        };
+    },
+
+    
     async createCourse(title: string, topic: string, description: string, image: string, instructorID: number) {
         const proc = 'create_course'
         const params = {

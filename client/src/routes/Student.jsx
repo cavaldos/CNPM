@@ -31,6 +31,13 @@ const StudentRouter = [
     key: "header",
   },
   {
+    name: "Course Detail",
+    path: "/course-detail/:courseId",
+    component: CourseDetailPage,
+    Layout: StudentLayout,
+    key: "",
+  },
+  {
     name: "My Learning",
     path: "/my-learning-progress",
     component: MyLearningPage,
@@ -43,6 +50,13 @@ const StudentRouter = [
     component: LearningPage,
     Layout: StudentLayout,
     key: "header",
+  },
+  {
+    name: "Learning",
+    path: "/learning/:courseId",
+    component: LearningPage,
+    Layout: StudentLayout,
+    key: "",
   },
   {
     name: "Course Material",

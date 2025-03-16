@@ -37,7 +37,18 @@ const PublicService = {
         searchCourse: async (searchTerm) => {
             const response = await axiosinstance.post("/public/course/search", { searchTerm });
             return response;
-        }
+        },
+        getAllCourses: async (page, pageSize) => {
+            const response = await axiosinstance.post("/public/course/get-all-course-pagination",{
+                page,
+                pageSize
+            });
+            return response;
+        },
+        getCourseDetail: async (courseID) => {
+            const response = await axiosinstance.post("/public/course/get-course-detail", { courseID });
+            return response;
+        },
     },
 
     forum: {

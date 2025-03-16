@@ -12,8 +12,10 @@ PublicRouter.post("/user/getAll", UserController.getAllUsers);
 PublicRouter.post("/user/get", UserController.getUserByID);
 
 // Course routes
-PublicRouter.post("/course/autocompelete", CourseController.autoComplete);
+PublicRouter.post("/course/get-all-course-pagination", CourseController.getAllCoursesPagination);
+PublicRouter.post("/course/autocomplete", CourseController.autoComplete);
 PublicRouter.post("/course/search", CourseController.searchCourse);
+PublicRouter.post("/course/get-course-detail", CourseController.getCourseDetail);
 
 // Forum interaction
 PublicRouter.post("/forum/create", ForumController.createMessage);
@@ -22,3 +24,4 @@ PublicRouter.post("/forum/course", ForumController.getMessagesByCourse);
 
 
 export default PublicRouter;
+    

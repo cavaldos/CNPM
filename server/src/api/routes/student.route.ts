@@ -3,8 +3,9 @@ import CourseController from "../controller/Course.co";
 import LearnProgressController from "../controller/LearnProgress.co";
 import EnrollmentController from "../controller/Enrollment.co";
 import LessonController from "../controller/Lesson.co";
-
 const StudentRouter = Router();
+
+StudentRouter.post("/course/get-all-course", CourseController.getAllCourses);
 
 // Course reviews
 StudentRouter.post("/course/review/create", CourseController.review.createReview);
@@ -12,6 +13,9 @@ StudentRouter.post("/course/review/update", CourseController.review.updateReview
 StudentRouter.post("/course/review/delete", CourseController.review.deleteReview);
 StudentRouter.post("/course/reviews", CourseController.review.getCourseReviews);
 
+
+
+StudentRouter.post("/progress/get-all", LearnProgressController.getAllCourseProgress);
 
 
 // Learning progress

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import CourseRepository from "../repositories/course";
 import ReviewRepository from "../repositories/review";
+import LessonRepository from "../repositories/lesson";
 import { datasearch, paginationData } from "../../fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
@@ -27,6 +28,7 @@ const CourseController = {
             res.status(200).json({
                 success: true,
                 message: "Courses retrieved successfully",
+                total: result.length,
                 data: result
             });
         } catch (error) {
@@ -37,6 +39,36 @@ const CourseController = {
             });
         }
     },
+    getAllCoursesPagination: async (req: Request, res: Response) => {
+        try {
+            const page = parseInt(req.body.page as string) || 1;
+            const pageSize = parseInt(req.body.pageSize as string) || 10;
+            // const offset = (page - 1) * pageSize;
+
+            const result = await CourseRepository.getAllCoursesPagination(
+                page,
+                pageSize
+            );
+            res.status(200).json({
+                success: true,
+                message: "Courses retrieved successfully",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    totalPage: result.total,
+                    result: result.courses,
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get courses",
+                error: error
+            });
+        }
+    },
+
+
     getAllCoursesByInstructorID: async (req: Request, res: Response) => {
         try {
             const { instructorID } = req.body;
@@ -142,15 +174,26 @@ const CourseController = {
         try {
             const { searchTerm } = req.body;
             console.log("searchTerm", searchTerm);
+            const page = 1;
+            const pageSize = 10;
+            const result = await CourseRepository.getAllCoursesPagination(
+                page,
+                pageSize
+            );
             res.status(200).json({
                 success: true,
-                message: "Auto-complete results retrieved successfully",
-                data: paginationData,
+                message: "Search results retrieved successfully",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    totalPage: result.total,
+                    result: result.courses,
+                }
             });
         } catch (error) {
             res.status(500).json({
                 success: false,
-                message: "Failed to get auto-complete results",
+                message: "Failed to search courses",
                 error: error
             });
         }
@@ -181,6 +224,29 @@ const CourseController = {
             });
         }
     },
+    getCourseDetail: async (req: Request, res: Response) => {
+        try {
+            const { courseID } = req.body;
+            const CourseInfo = await CourseRepository.getCourseByID(courseID);
+            const lesson = await LessonRepository.getAllLessons(courseID);
+            res.status(200).json({
+                success: true,
+                message: "Course detail retrieved successfully",
+                data: {
+                    CourseInfo: CourseInfo[0],
+                    lessons: lesson
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get course detail",
+                error: error
+            });
+        }
+    },
+
+
     review: {
 
         // Review management
