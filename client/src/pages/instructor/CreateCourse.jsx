@@ -1,0 +1,303 @@
+import React, { useState } from "react";
+import {
+    Button,
+    TextField,
+    Typography,
+    Paper,
+    Grid,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Select,
+    Box,
+    Card,
+    Tabs,
+    Tab,
+    IconButton
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import LinkIcon from "@mui/icons-material/Link";
+import { useNavigate } from "react-router-dom";
+import InstructorService from "../../services/instructor.service";
+import { styled } from "@mui/material/styles";
+
+// Styled component cho input file
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
+
+const CreateCourse = () => {
+    const navigate = useNavigate();
+    const [courseTitle, setCourseTitle] = useState("");
+    const [courseDescription, setCourseDescription] = useState("");
+    const [courseCategory, setCourseCategory] = useState("");
+    const [customCategory, setCustomCategory] = useState("");
+    const [isCustomCategory, setIsCustomCategory] = useState(false);
+
+    // Thumbnail states
+    const [thumbnailType, setThumbnailType] = useState(0); // 0: URL, 1: Upload
+    const [thumbnailUrl, setThumbnailUrl] = useState("");
+    const [thumbnailFile, setThumbnailFile] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState("");
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        if (value === "custom") {
+            setIsCustomCategory(true);
+            setCourseCategory("");
+        } else {
+            setIsCustomCategory(false);
+            setCourseCategory(value);
+        }
+    };
+
+    const handleCustomCategoryChange = (e) => {
+        const value = e.target.value;
+        setCustomCategory(value);
+        setCourseCategory(value); // Cập nhật giá trị courseCategory để sử dụng khi submit
+    };
+
+    const handleThumbnailTabChange = (event, newValue) => {
+        setThumbnailType(newValue);
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setThumbnailFile(file);
+            // Tạo URL tạm thời để hiển thị preview
+            const objectUrl = URL.createObjectURL(file);
+            setThumbnailPreview(objectUrl);
+
+            // Ở đây trong một ứng dụng thực, bạn có thể tải file lên server và nhận về URL
+            // Trong bản demo này chúng ta chỉ hiển thị preview
+        }
+    };
+
+    const handleSubmit = async () => {
+        // Xác thực dữ liệu đầu vào
+        if (!courseTitle || !courseDescription || !(courseCategory || (isCustomCategory && customCategory))) {
+            alert("Vui lòng điền đầy đủ thông tin cơ bản của khóa học!");
+            return;
+        }
+
+        // Sử dụng giá trị danh mục tùy chỉnh nếu người dùng chọn tùy chọn này
+        const finalCategory = isCustomCategory ? customCategory : courseCategory;
+
+        // Xác định thumbnail được sử dụng
+        let finalThumbnail = "";
+        if (thumbnailType === 0) { // URL
+            finalThumbnail = thumbnailUrl;
+        } else { // Upload
+            // Trong ứng dụng thực tế, tại đây bạn sẽ tải file lên server và nhận về URL
+            // Hiện tại chúng ta chỉ dùng URL preview tạm thời cho demo
+            finalThumbnail = thumbnailPreview;
+        }
+
+        setIsLoading(true);
+        try {
+            // Gọi API tạo khóa học từ service
+            const response = await InstructorService.createCourse(
+                courseTitle,
+                finalCategory,
+                courseDescription,
+                finalThumbnail || "",
+                "instructor-id-placeholder" // Trong thực tế, lấy ID từ user đăng nhập
+            );
+
+            if (response && response.data) {
+                alert("Khóa học đã được tạo thành công!");
+                // Chuyển hướng đến trang thêm bài học với ID khóa học vừa tạo
+                navigate(`/instructor/courses/${response.data.courseId}/lessons`);
+            } else {
+                throw new Error("Không nhận được phản hồi từ server");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tạo khóa học:", error);
+            alert("Đã xảy ra lỗi khi tạo khóa học. Vui lòng thử lại sau!");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="max-w-7xl mx-auto p-6">
+            <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(-1)}
+                className="mb-6"
+            >
+                Quay lại
+            </Button>
+
+            <Typography variant="h4" component="h1" className="mb-8">
+                Tạo khóa học mới
+            </Typography>
+
+            <Paper elevation={3} className="p-6 mb-6">
+                <Box className="space-y-6">
+                    <TextField
+                        label="Tiêu đề khóa học"
+                        variant="outlined"
+                        fullWidth
+                        required
+                        value={courseTitle}
+                        onChange={(e) => setCourseTitle(e.target.value)}
+                        placeholder="Ví dụ: Nhập môn lập trình Python"
+                    />
+
+                    <TextField
+                        label="Mô tả khóa học"
+                        variant="outlined"
+                        fullWidth
+                        required
+                        multiline
+                        rows={4}
+                        value={courseDescription}
+                        onChange={(e) => setCourseDescription(e.target.value)}
+                        placeholder="Mô tả ngắn gọn về khóa học của bạn"
+                    />
+
+                    <FormControl fullWidth variant="outlined" required>
+                        <InputLabel>Danh mục</InputLabel>
+                        <Select
+                            value={isCustomCategory ? "custom" : courseCategory}
+                            onChange={handleCategoryChange}
+                            label="Danh mục"
+                        >
+                            <MenuItem value="programming">Lập trình</MenuItem>
+                            <MenuItem value="data-science">Khoa học dữ liệu</MenuItem>
+                            <MenuItem value="web-development">Phát triển web</MenuItem>
+                            <MenuItem value="mobile-development">Phát triển ứng dụng di động</MenuItem>
+                            <MenuItem value="design">Thiết kế</MenuItem>
+                            <MenuItem value="business">Kinh doanh</MenuItem>
+                            <MenuItem value="language">Ngoại ngữ</MenuItem>
+                            <MenuItem value="custom">Danh mục khác (tự nhập)</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    {isCustomCategory && (
+                        <TextField
+                            label="Nhập danh mục mới"
+                            variant="outlined"
+                            fullWidth
+                            required
+                            value={customCategory}
+                            onChange={handleCustomCategoryChange}
+                            placeholder="Nhập tên danh mục khóa học của bạn"
+                        />
+                    )}
+
+                    {/* Thumbnail section with tabs */}
+                    <Box sx={{ width: '100%' }}>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Ảnh thumbnail khóa học
+                        </Typography>
+                        <Tabs value={thumbnailType} onChange={handleThumbnailTabChange}>
+                            <Tab icon={<LinkIcon />} label="Nhập URL" />
+                            <Tab icon={<CloudUploadIcon />} label="Tải lên" />
+                        </Tabs>
+
+                        {/* URL Input */}
+                        {thumbnailType === 0 && (
+                            <Box sx={{ mt: 2 }}>
+                                <TextField
+                                    label="Link ảnh thumbnail"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={thumbnailUrl}
+                                    onChange={(e) => setThumbnailUrl(e.target.value)}
+                                    placeholder="Nhập URL hình ảnh thumbnail cho khóa học"
+                                    helperText="Khuyến nghị sử dụng ảnh với tỷ lệ 16:9, kích thước đề xuất 1280x720 pixels"
+                                />
+                                {thumbnailUrl && (
+                                    <Box sx={{ mt: 2, maxWidth: '300px', mx: 'auto' }}>
+                                        <Typography variant="caption" display="block" gutterBottom>
+                                            Xem trước:
+                                        </Typography>
+                                        <img
+                                            src={thumbnailUrl}
+                                            alt="Thumbnail preview"
+                                            style={{ width: '100%', borderRadius: '8px' }}
+                                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/1280x720?text=Invalid+URL'; }}
+                                        />
+                                    </Box>
+                                )}
+                            </Box>
+                        )}
+
+                        {/* File Upload */}
+                        {thumbnailType === 1 && (
+                            <Box sx={{ mt: 2, textAlign: 'center' }}>
+                                <Button
+                                    component="label"
+                                    variant="contained"
+                                    startIcon={<CloudUploadIcon />}
+                                >
+                                    Chọn file ảnh
+                                    <VisuallyHiddenInput
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
+                                </Button>
+                                <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                                    Khuyến nghị sử dụng ảnh với tỷ lệ 16:9, kích thước đề xuất 1280x720 pixels
+                                </Typography>
+
+                                {thumbnailPreview && (
+                                    <Box sx={{ mt: 2, maxWidth: '300px', mx: 'auto' }}>
+                                        <Typography variant="caption" display="block" gutterBottom>
+                                            Xem trước:
+                                        </Typography>
+                                        <img
+                                            src={thumbnailPreview}
+                                            alt="Thumbnail preview"
+                                            style={{ width: '100%', borderRadius: '8px' }}
+                                        />
+                                        <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                                            {thumbnailFile?.name} ({Math.round(thumbnailFile?.size / 1024)} KB)
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+                        )}
+                    </Box>
+
+                    <Card className="p-4 bg-blue-50 border border-blue-200">
+                        <Typography variant="subtitle1" className="font-medium text-blue-800">
+                            Lưu ý:
+                        </Typography>
+                        <Typography variant="body2" className="text-blue-700">
+                            Sau khi tạo khóa học cơ bản, bạn sẽ được chuyển đến trang thêm bài học, nơi bạn có thể thêm các phần học và bài giảng cho khóa học của mình.
+                        </Typography>
+                    </Card>
+                </Box>
+            </Paper>
+
+            <div className="flex justify-end">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Đang xử lý..." : "Tạo khóa học và thêm bài học"}
+                </Button>
+            </div>
+        </div>
+    );
+};
+
+export default CreateCourse;
