@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const GuestPage = () => {
+const SearchCoursePage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,4 +29,4 @@ const GuestPage = () => {
   );
 };
 
-export default GuestPage;
+export default SearchCoursePage;

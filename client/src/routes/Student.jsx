@@ -10,7 +10,7 @@ const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
 const LearningPage = lazy(() => import("../pages/student/Learning"));
 const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
 const MessagesPage = lazy(() => import("../pages/student/Messages"));
-const TestPage = lazy(() => import("../pages/student/test"));
+const TestPage = lazy(() => import("../pages/test"));
 
 const StudentRouter = [
   {

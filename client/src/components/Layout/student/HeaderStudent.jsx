@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SearchBar from "./SearchBar";
+import SearchBar from "../SearchBar";
 import AccountControll from "./AccountControll";
 import StudentRouter from "../../../routes/Student";
 import { Button } from "@mui/material";

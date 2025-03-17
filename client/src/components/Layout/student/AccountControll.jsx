@@ -5,7 +5,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 const AccountControll = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
-
     // Array of menu items with name and path
     const menuItems = [
         { name: "Profile", path: "/profile" },
@@ -20,7 +19,6 @@ const AccountControll = () => {
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
-
     const handleClickOutside = (e) => {
         if (isDropdownOpen && !e.target.closest(".account-dropdown")) {
             setIsDropdownOpen(false);

@@ -1,6 +1,5 @@
- 
-
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for recently viewed and popular items (replace with API data if needed)
 const recentlyViewed = [
@@ -26,6 +25,7 @@ const popularItems = ["machine learning", "project management", "cybersecurity"]
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -33,12 +33,23 @@ const SearchBar = () => {
         setIsDropdownOpen(value.length > 0); // Show dropdown when input has text
     };
 
-    const handleSearch = (e) => {
-        if (e.key === "Enter" && searchTerm) {
-            // Handle search logic here (e.g., navigate or filter)
-            console.log("Searching for:", searchTerm);
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
+            navigate(`/search/${encodeURIComponent(searchTerm)}`);
             setIsDropdownOpen(false); // Hide dropdown after search
         }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            handleSearch();
+        }
+    };
+
+    // Handle selecting an item from autocomplete
+    const handleSelectItem = (text) => {
+        setSearchTerm(text);
+        setIsDropdownOpen(false);
     };
 
     return (
@@ -50,18 +61,13 @@ const SearchBar = () => {
                     className="border rounded-full px-4 py-2 w-[500px] focus:outline-none focus:ring-2 focus:ring-blue-600"
                     value={searchTerm}
                     onChange={handleInputChange}
-                    onKeyPress={handleSearch}
+                    onKeyPress={handleKeyPress}
                     onFocus={() => setIsDropdownOpen(true)} // Show dropdown on focus
                     onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)} // Hide after losing focus with delay
                 />
                 <button
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 rounded-full p-2 text-white"
-                    onClick={() => {
-                        if (searchTerm) {
-                            console.log("Searching for:", searchTerm);
-                            setIsDropdownOpen(false);
-                        }
-                    }}
+                    onClick={handleSearch}
                 >
                     <svg
                         className="w-4 h-4"
@@ -92,6 +98,7 @@ const SearchBar = () => {
                             <div
                                 key={index}
                                 className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                                onClick={() => handleSelectItem(item.title)}
                             >
                                 <img
                                     src={item.image}
@@ -115,6 +122,7 @@ const SearchBar = () => {
                             <div
                                 key={index}
                                 className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                                onClick={() => handleSelectItem(item)}
                             >
                                 <span className="text-blue-600">🔍</span>
                                 <p className="text-sm">{item}</p>

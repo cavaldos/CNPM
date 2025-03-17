@@ -1,5 +1,6 @@
 import { lazy } from "react";
-const GuestLayout = lazy(() => import("~/components/Layout/GuestLayout"));
+const GuestLayout = lazy(() => import("~/components/Layout/guest/GuestLayout"));
+
 const HomeGuest = lazy(() => import("~/pages/guest/index"));
 const GuestRouter = [
   {
@@ -7,6 +8,7 @@ const GuestRouter = [
     path: "/",
     component: HomeGuest,
     Layout: GuestLayout,
+    key: "header",
   },
 ];
 

@@ -9,7 +9,7 @@ const StudentLayout = ({ children }) => {
   const isLearningPage =
     location.pathname.includes("/learning") ||
     location.pathname.includes("/careers");
-
+ 
   return (
     <div className="min-h-screen flex flex-col">
       <header className="fixed w-full h-[120px] z-50">
@@ -23,6 +23,7 @@ const StudentLayout = ({ children }) => {
       )}
       
       {/* ChatAI component that appears in the bottom right corner */}
+    
       <ChatAI />
     </div>
   );
