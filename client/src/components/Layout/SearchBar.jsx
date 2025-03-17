@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PublicService from "../../services/public.service";
 
 // Mock data for recently viewed and popular items (replace with API data if needed)
 const recentlyViewed = [
@@ -26,6 +27,32 @@ const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const [results, setResults] = useState([]);
+    const [recent, setRecent] = useState([]);
+
+    const fetchAutoComplete = async (searchTerm) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await PublicService.course.autoComplete(searchTerm);
+
+            setResults(response.data.results || []);
+            setRecent(response.data.recent || []);
+            if (response.data && response.data.result) {
+                setResults(response.data.result);
+                setRecent(response.data.recent);
+            } else {
+                throw new Error("Dữ liệu trả về không hợp lệ");
+            }
+        }
+        catch (error) {
+            console.error("Error fetching courses:", error);
+        }
+    }
+    useEffect(() => {
+        fetchAutoComplete(searchTerm);
+    }, [searchTerm]);
+
 
     const handleInputChange = (e) => {
         const value = e.target.value;
