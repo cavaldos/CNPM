@@ -17,8 +17,6 @@
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
     "@mui/styled-engine-sc": "^6.4.6",
-    "@okta/okta-auth-js": "^7.11.1",
-    "@okta/okta-react": "^6.9.0",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "^5.24.2",
@@ -37,7 +35,6 @@
     "recharts": "^2.15.1",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
-    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.15",
     "swr": "^2.2.2"
   },

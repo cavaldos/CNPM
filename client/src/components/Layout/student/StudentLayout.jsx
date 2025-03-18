@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import HeaderStudent from "./HeaderStudent";
-import FooterStudent from "../../ui/Footer";
+import FooterStudent from "../../ui/utilize/Footer";
 import ChatAI from "./ChatAI";
 
 const StudentLayout = ({ children }) => {

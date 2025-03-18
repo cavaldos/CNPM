@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard";
 import PublicService from "../../../services/public.service";
 
-const CourseHome = () => {
+const HomeCourse = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -152,4 +152,4 @@ const CourseHome = () => {
     );
 };
 
-export default CourseHome;
+export default HomeCourse;

@@ -21,6 +21,13 @@ const GuestRouter = [
   },
   {
     name: "Search",
+    path: "/search",
+    component: HomeGuest,
+    Layout: GuestLayout,
+    key: "",
+  },
+  {
+    name: "Search",
     path: "/search/:searchTerm",
     component: HomeGuest,
     Layout: GuestLayout,

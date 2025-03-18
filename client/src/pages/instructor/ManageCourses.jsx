@@ -27,7 +27,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import Chip from "@mui/material/Chip";
 import InstructorService from "../../services/instructor.service";
-import CourseInstructorView from "../../components/course/CourseInsView";
+import CourseInstructorView from "../../components/ui/course/CourseInsView";
 
 const ManageCourses = () => {
     const navigate = useNavigate();

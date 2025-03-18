@@ -21,6 +21,20 @@ const StudentRouter = [
     key: "header",
   },
   {
+    name: "Search",
+    path: "/search",
+    component: HomeStudent,
+    Layout: StudentLayout,
+    key: "",
+  },
+  {
+    name: "Search",
+    path: "/search/:searchTerm",
+    component: HomeStudent,
+    Layout: StudentLayout,
+    key: "",
+  },
+  {
     name: "Course Detail",
     path: "/course-detail",
     component: CourseDetailPage,
