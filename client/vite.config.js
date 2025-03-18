@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react(), reactRefresh()],
   entry: "./src/index.js",
   server: {
+    port: 5173,
     host: "0.0.0.0", // default: 'localhost'
     allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
   

@@ -37,6 +37,7 @@
     "recharts": "^2.15.1",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.15",
     "swr": "^2.2.2"
   },

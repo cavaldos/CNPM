@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import ContactsList  from './ContactList'
-import  ChatWindow  from './ChatWindow'
+import ContactsList from './ContactList'
+import ChatWindow from './ChatWindow'
+import SimpleChat from './SimpleChat'
 import { MessageCircleIcon } from 'lucide-react'
 
 // Mock data types
@@ -139,6 +140,7 @@ const mockConversations = {
 const ChatInterface = () => {
     const [selectedContact, setSelectedContact] = useState(mockContacts[0])
     const [messages, setMessages] = useState(mockConversations[mockContacts[0].id])
+    const [activeChatType, setActiveChatType] = useState('simple') // 'simple' or 'contacts'
 
     const handleContactSelect = (contact) => {
         setSelectedContact(contact)
@@ -160,26 +162,48 @@ const ChatInterface = () => {
         setMessages((prev) => [...prev, newMessage])
     }
 
+    const toggleChatType = () => {
+        setActiveChatType(activeChatType === 'simple' ? 'contacts' : 'simple')
+    }
+
     return (
         <div className="flex flex-col h-[80vh] bg-white">
+            <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
+                <h1 className="text-xl font-bold">Hệ thống tin nhắn</h1>
+                <div>
+                    <button
+                        onClick={toggleChatType}
+                        className="bg-white text-blue-600 px-4 py-1 rounded-md text-sm font-medium hover:bg-blue-50"
+                    >
+                        {activeChatType === 'simple' ? 'Chuyển sang danh bạ' : 'Chuyển sang nhắn trực tiếp'}
+                    </button>
+                </div>
+            </div>
+
             <div className="flex flex-1 overflow-hidden">
-                <ContactsList
-                    contacts={mockContacts}
-                    selectedContactId={selectedContact?.id || ''}
-                    onSelectContact={handleContactSelect}
-                />
-                {selectedContact ? (
-                    <ChatWindow
-                        contact={selectedContact}
-                        messages={messages}
-                        onSendMessage={handleSendMessage}
-                    />
+                {activeChatType === 'simple' ? (
+                    <SimpleChat />
                 ) : (
-                    <div className="flex-1 flex items-center justify-center bg-gray-50">
-                        <p className="text-gray-500">
-                            Chọn một liên hệ để bắt đầu trò chuyện
-                        </p>
-                    </div>
+                    <>
+                        <ContactsList
+                            contacts={mockContacts}
+                            selectedContactId={selectedContact?.id || ''}
+                            onSelectContact={handleContactSelect}
+                        />
+                        {selectedContact ? (
+                            <ChatWindow
+                                contact={selectedContact}
+                                messages={messages}
+                                onSendMessage={handleSendMessage}
+                            />
+                        ) : (
+                            <div className="flex-1 flex items-center justify-center bg-gray-50">
+                                <p className="text-gray-500">
+                                    Chọn một liên hệ để bắt đầu trò chuyện
+                                </p>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>
