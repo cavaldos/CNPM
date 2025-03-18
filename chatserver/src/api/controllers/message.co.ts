@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import Message from "../../model/message.model";
-import mongoose from "mongoose";
+import MessageRepo from "../repository/message.repo";
 
 export const sendMessage = async (req: Request, res: Response) => {
   try {
@@ -14,22 +13,15 @@ export const sendMessage = async (req: Request, res: Response) => {
       });
     }
 
-    // Validate ObjectIDs
-    if (!mongoose.Types.ObjectId.isValid(sender) || !mongoose.Types.ObjectId.isValid(receiver)) {
+    // Validate sender ObjectID only
+    if (!MessageRepo.isValidObjectId(sender)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid sender or receiver ID",
+        message: "Invalid sender ID",
       });
     }
 
-    const newMessage = new Message({
-      sender,
-      receiver,
-      content,
-      isRead: false,
-    });
-
-    await newMessage.save();
+    const newMessage = await MessageRepo.createMessage(sender, receiver, content);
 
     return res.status(201).json({
       success: true,
@@ -47,23 +39,18 @@ export const sendMessage = async (req: Request, res: Response) => {
 
 export const getConversation = async (req: Request, res: Response) => {
   try {
-    const { user1Id, user2Id } = req.params;
+    const { user1Id, user2Id } = req.body;
 
-    // Validate ObjectIDs
-    if (!mongoose.Types.ObjectId.isValid(user1Id) || !mongoose.Types.ObjectId.isValid(user2Id)) {
+    // Validate sender ObjectID only
+    if (!MessageRepo.isValidObjectId(user1Id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid user IDs",
+        message: "Invalid user1Id",
       });
     }
 
     // Get messages between these two users
-    const messages = await Message.find({
-      $or: [
-        { sender: user1Id, receiver: user2Id },
-        { sender: user2Id, receiver: user1Id },
-      ],
-    }).sort({ createdAt: 1 });
+    const messages = await MessageRepo.getConversation(user1Id, user2Id);
 
     return res.status(200).json({
       success: true,
@@ -81,10 +68,10 @@ export const getConversation = async (req: Request, res: Response) => {
 
 export const getUserMessages = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.body;
 
-    // Validate ObjectID
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    // Validate sender ObjectID only
+    if (!MessageRepo.isValidObjectId(userId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid user ID",
@@ -92,9 +79,7 @@ export const getUserMessages = async (req: Request, res: Response) => {
     }
 
     // Get all messages where user is sender or receiver
-    const messages = await Message.find({
-      $or: [{ sender: userId }, { receiver: userId }],
-    }).sort({ createdAt: -1 });
+    const messages = await MessageRepo.getUserMessages(userId);
 
     return res.status(200).json({
       success: true,
@@ -112,21 +97,17 @@ export const getUserMessages = async (req: Request, res: Response) => {
 
 export const markAsRead = async (req: Request, res: Response) => {
   try {
-    const { messageId } = req.params;
+    const { messageId } = req.body;
 
     // Validate ObjectID
-    if (!mongoose.Types.ObjectId.isValid(messageId)) {
+    if (!MessageRepo.isValidObjectId(messageId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid message ID",
       });
     }
 
-    const message = await Message.findByIdAndUpdate(
-      messageId,
-      { isRead: true },
-      { new: true }
-    );
+    const message = await MessageRepo.markMessageAsRead(messageId);
 
     if (!message) {
       return res.status(404).json({
@@ -151,20 +132,17 @@ export const markAsRead = async (req: Request, res: Response) => {
 
 export const getUnreadMessageCount = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.body;
 
     // Validate ObjectID
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!MessageRepo.isValidObjectId(userId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid user ID",
       });
     }
 
-    const count = await Message.countDocuments({
-      receiver: userId,
-      isRead: false,
-    });
+    const count = await MessageRepo.getUnreadCount(userId);
 
     return res.status(200).json({
       success: true,
@@ -175,6 +153,34 @@ export const getUnreadMessageCount = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Failed to get unread message count",
+      error: error.message,
+    });
+  }
+};
+
+export const getConversationPartners = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body;
+
+    // Validate ObjectID
+    if (!MessageRepo.isValidObjectId(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
+
+    const partners = await MessageRepo.getConversationPartners(userId);
+
+    return res.status(200).json({
+      success: true,
+      data: partners,
+    });
+  } catch (error) {
+    console.error("Error getting conversation partners:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get conversation partners",
       error: error.message,
     });
   }

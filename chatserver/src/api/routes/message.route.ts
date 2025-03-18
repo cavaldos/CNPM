@@ -4,24 +4,28 @@ import {
   getConversation,
   getUserMessages,
   markAsRead,
-  getUnreadMessageCount
+  getUnreadMessageCount,
+  getConversationPartners
 } from "../controllers/message.co";
 
 const MessageRouter = express.Router();
 
 // Send a new message
-MessageRouter.post("/", sendMessage);
+MessageRouter.post("/send", sendMessage);
 
 // Get conversation between two users
-MessageRouter.post("/conversation/:user1Id/:user2Id", getConversation);
+MessageRouter.post("/conversation", getConversation);
 
 // Get all messages for a user
-MessageRouter.post("/user/:userId", getUserMessages);
+MessageRouter.post("/user", getUserMessages);
 
 // Mark a message as read
-MessageRouter.post("/read/:messageId", markAsRead);
+MessageRouter.post("/read", markAsRead);
 
 // Get unread message count for a user
-MessageRouter.post("/unread/:userId", getUnreadMessageCount);
+MessageRouter.post("/unread", getUnreadMessageCount);
+
+// Get list of users that have exchanged messages with the given user
+MessageRouter.post("/partners", getConversationPartners);
 
 export default MessageRouter;
