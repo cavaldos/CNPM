@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CourseDetail from "../../components/ui/course/CourseDetail";
 
-const CourseDetail = () => {
+const CourseDetailPage = () => {
 
 
   return (
@@ -10,4 +10,4 @@ const CourseDetail = () => {
     </>);
 };
 
-export default CourseDetail;
+export default CourseDetailPage;
