@@ -17,7 +17,7 @@ function App() {
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
-            {InstructorRouter.map((route, index) => {
+            {GuestRouter.map((route, index) => {
               const Layout = route.Layout === null ? Fragment : route.Layout;
               const Page = route.component;
               return (

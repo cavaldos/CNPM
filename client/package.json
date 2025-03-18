@@ -19,6 +19,8 @@
     "@mui/styled-engine-sc": "^6.4.6",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.5",
+    "@firebase/auth": "^1.8.2",
+    "firebase": "^11.2.0",
     "antd": "^5.24.2",
     "axios": "^1.6.2",
     "js-cookie": "^3.0.5",
