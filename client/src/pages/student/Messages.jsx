@@ -1,13 +1,11 @@
-
-
+import React from 'react';
+import ChatInterface from '../../components/ui/chat/ChatInterface';
 
 import LearningLayout from "../../components/ui/Learning/LearningLayout";
 const MessagesPage = () => {
     return (
         <LearningLayout>
-            <div className="flex flex-col gap-4">
-                messs
-            </div>
+            <ChatInterface />
         </LearningLayout>
     );
 }
