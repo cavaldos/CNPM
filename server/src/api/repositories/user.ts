@@ -1,13 +1,14 @@
 import DataConnect from '../../config/DataConnect';
 
 const UserRepository = {
-    async createUser(userName: string, email: string, fullName: string, role: string) {
+    async createUser(userName: string, email: string, fullName: string, role: string, password?: string) {
         const proc = 'create_user';
         const params = {
             UserName: userName,
             Email: email,
             FullName: fullName,
-            Role: role
+            Role: role,
+            Password: password || null
         };
         return await DataConnect.executeProcedure(proc, params);
     },
@@ -48,6 +49,25 @@ const UserRepository = {
             SELECT * FROM [User] WHERE UserID = @UserID
         `;
         const params = { UserID: userID };
+        return await DataConnect.executeWithParams(query, params);
+    },
+
+    async getUserByEmail(email: string) {
+        const query = `
+            SELECT * FROM [User] WHERE Email = @Email
+        `;
+        const params = { Email: email };
+        return await DataConnect.executeWithParams(query, params);
+    },
+
+    async updatePassword(userID: number, hashedPassword: string) {
+        const query = `
+            UPDATE [User] SET Password = @Password WHERE UserID = @UserID
+        `;
+        const params = {
+            UserID: userID,
+            Password: hashedPassword
+        };
         return await DataConnect.executeWithParams(query, params);
     }
 };
