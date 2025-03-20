@@ -10,7 +10,6 @@ const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
 const LearningPage = lazy(() => import("../pages/student/Learning"));
 const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
 const MessagesPage = lazy(() => import("../pages/student/Messages"));
-const TestPage = lazy(() => import("../pages/test"));
 
 const StudentRouter = [
   {
@@ -90,13 +89,6 @@ const StudentRouter = [
     component: HelpCenterPage,
     Layout: null,
     key: "" // This route won't appear in the header
-  },
-  {
-    name: "Tesst",
-    path: "/test",
-    component: TestPage,
-    Layout: StudentLayout,
-    key: "header" // This route won't appear in the header
   },
   {
     name: "Discussion Forum",
