@@ -21,7 +21,5 @@ InstructorRouter.post("/lesson/delete", LessonController.deleteLesson);
 InstructorRouter.post("/lesson/get-all-lesson-course-id", LessonController.getAllLessonsByCourseID);
 InstructorRouter.post("/lesson/get-lesson-by-id", LessonController.getLessonByID);
 InstructorRouter.post("/lesson/sort", LessonController.sortLessons);
-InstructorRouter.post("/lesson/get-lesson-by-id", LessonController.getLessonByID);
-InstructorRouter.post("/lesson/sort", LessonController.sortLessons);
 
 export default InstructorRouter;
