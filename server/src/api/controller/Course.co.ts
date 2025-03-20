@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import CourseRepository from "../repositories/course";
 import ReviewRepository from "../repositories/review";
 import LessonRepository from "../repositories/lesson";
-import { datasearch, paginationData } from "../../fakedata/course";
+import { datasearch } from "../../fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
         try {
