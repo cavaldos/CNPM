@@ -5,7 +5,6 @@ import {
   InstructorRouter,
 } from "./routes";
 
-
 import React, { Fragment, Suspense, lazy } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -17,7 +16,7 @@ function App() {
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
-            {GuestRouter.map((route, index) => {
+            {InstructorRouter.map((route, index) => {
               const Layout = route.Layout === null ? Fragment : route.Layout;
               const Page = route.component;
               return (
