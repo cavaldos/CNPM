@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "../../ui/course/SearchBar";
 import { Button } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import LoginComponent from "../../auth/firebase/LoginModal";
 const AccountControll = () => {
   const navigate = useNavigate();
 
@@ -32,12 +32,13 @@ const AccountControll = () => {
       </a>
 
       {/* Log In and Join for Free Buttons */}
-      <button
+      {/* <button
         onClick={handleLogin}
         className="border border-[#0056D2] text-[#0056D2] font-semibold py-1.5 px-4 rounded hover:bg-[#0056D2] hover:text-white transition-colors"
       >
         Log In
-      </button>
+      </button> */}
+      <LoginComponent/>
       <button
         onClick={handleRegister}
         className="bg-[#0056D2] text-white font-semibold py-1.5 px-4 rounded hover:bg-[#003087] transition-colors"
