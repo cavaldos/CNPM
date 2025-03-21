@@ -21,7 +21,7 @@ const ErrorPage = () => {
     }, [navigate]);
 
     const handleHomeClick = () => {
-        navigate("/");
+        navigate(-1);
     };
 
     return (

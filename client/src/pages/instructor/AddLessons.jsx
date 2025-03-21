@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaVideo, FaFileAlt, FaTrash, FaGripVertical, FaArrowLeft, FaSave, FaUpload, FaLink } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Popconfirm } from 'antd';
 
 import InstructorService from '../../services/instructor.service';
 import { useSelector } from 'react-redux';
@@ -28,6 +29,9 @@ const AddLessons = () => {
     const [dragActive, setDragActive] = useState(false);
     const [videoFile, setVideoFile] = useState(null);
     const fileInputRef = useRef(null);
+
+    // Ref for lesson list scrolling
+    const lessonListRef = useRef(null);
 
     // Fetch course data when component loads
     useEffect(() => {
@@ -65,6 +69,13 @@ const AddLessons = () => {
         };
         fetchLessons();
     }, [courseId]);
+
+    // Scroll to the bottom of lesson list after adding a new lesson
+    useEffect(() => {
+        if (lessonListRef.current) {
+            lessonListRef.current.scrollTop = lessonListRef.current.scrollHeight;
+        }
+    }, [lessons.length]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -158,17 +169,10 @@ const AddLessons = () => {
 
             // If we're in upload mode, we need to upload the file first
             if (formData.type === 'video' && uploadMode === 'upload' && videoFile) {
-                // Here you would upload the video file to your server or cloud storage
-                // and get back a URL to the uploaded video
-                // Example:
-                // const uploadResponse = await uploadVideoService.upload(videoFile);
-                // videoUrl = uploadResponse.url;
 
                 // For now, we'll just pretend we have a URL
                 videoUrl = `https://example.com/videos/${videoFile.name}`;
 
-                // In a real implementation, you would replace the above with actual upload logic
-                // and then use the returned URL for your lesson
             }
 
             if (formData.type === 'video') {
@@ -195,25 +199,23 @@ const AddLessons = () => {
                 );
             }
 
-            if (response.data) {
-                // Add the new lesson to the lessons array
-                setLessons(prev => [...prev, response.data]);
+            console.log("Lesson created successfully:", response);
 
-                // Reset form
-                setFormData({
-                    title: '',
-                    type: 'video',
-                    content: '',
-                    description: '',
-                    complexity: 'Easy',
-                    duration: 30
-                });
-                setVideoFile(null);
-                setError(null);
+            // Reset form
+            setFormData({
+                title: '',
+                type: 'video',
+                content: '',
+                description: '',
+                complexity: 'Easy',
+                duration: 30
+            });
+            setVideoFile(null);
+            setError(null);
 
-                // Fetch the updated list of lessons to ensure we have the latest data
-                refreshLessonList();
-            }
+            // Fetch the updated list of lessons to ensure we have the latest data
+            await refreshLessonList();
+
         } catch (error) {
             console.error("Error creating lesson:", error);
             setError("Failed to create lesson");
@@ -235,18 +237,16 @@ const AddLessons = () => {
     };
 
     const handleDelete = async (lessonId) => {
-        if (window.confirm("Are you sure you want to delete this lesson?")) {
-            setIsLoading(true);
-            try {
-                await InstructorService.deleteLesson(lessonId);
-                // Refresh lesson list after deletion
-                refreshLessonList();
-            } catch (error) {
-                console.error("Error deleting lesson:", error);
-                setError("Failed to delete lesson");
-            } finally {
-                setIsLoading(false);
-            }
+        setIsLoading(true);
+        try {
+            await InstructorService.deleteLesson(lessonId);
+            // Refresh lesson list after deletion
+            refreshLessonList();
+        } catch (error) {
+            console.error("Error deleting lesson:", error);
+            setError("Failed to delete lesson");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -279,19 +279,16 @@ const AddLessons = () => {
         }
     };
 
-    // Save all lessons
-    const handleSaveAllLessons = () => {
-        navigate(-1);
-    };
 
     // Go back to course edit page
     const handleBackToCourse = () => {
-        navigate(`/instructor/courses`);
+        navigate(-1);
+
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50 p-6 flex-col">
-            <div className="flex justify-between items-center mb-6">
+        <div className="flex min-h-[70vh] bg-gray-50 p-6 flex-col ">
+            <div className="flex justify-between items-center mb-2">
                 <div>
                     <h1 className="text-2xl font-bold">Add Lessons to Course</h1>
                     <p className="text-gray-600">{courseName}</p>
@@ -302,13 +299,6 @@ const AddLessons = () => {
                         className="px-4 py-2 flex items-center gap-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
                     >
                         <FaArrowLeft /> Back to Course
-                    </button>
-                    <button
-                        onClick={handleSaveAllLessons}
-                        className="px-4 py-2 flex items-center gap-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                        disabled={isLoading}
-                    >
-                        <FaSave /> {isLoading ? 'Saving...' : 'Save All Lessons'}
                     </button>
                 </div>
             </div>
@@ -397,8 +387,8 @@ const AddLessons = () => {
                                         type="button"
                                         onClick={() => toggleUploadMode('link')}
                                         className={`flex-1 py-2 px-4 rounded-md flex items-center justify-center gap-2 ${uploadMode === 'link'
-                                                ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                                                : 'bg-gray-100 text-gray-700 border border-gray-300'
+                                            ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                                            : 'bg-gray-100 text-gray-700 border border-gray-300'
                                             }`}
                                     >
                                         <FaLink /> Enter URL
@@ -407,8 +397,8 @@ const AddLessons = () => {
                                         type="button"
                                         onClick={() => toggleUploadMode('upload')}
                                         className={`flex-1 py-2 px-4 rounded-md flex items-center justify-center gap-2 ${uploadMode === 'upload'
-                                                ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                                                : 'bg-gray-100 text-gray-700 border border-gray-300'
+                                            ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                                            : 'bg-gray-100 text-gray-700 border border-gray-300'
                                             }`}
                                     >
                                         <FaUpload /> Upload Video
@@ -428,8 +418,8 @@ const AddLessons = () => {
                                 ) : (
                                     <div
                                         className={`border-2 border-dashed rounded-md p-6 text-center ${dragActive
-                                                ? 'border-blue-500 bg-blue-50'
-                                                : 'border-gray-300 hover:border-gray-400'
+                                            ? 'border-blue-500 bg-blue-50'
+                                            : 'border-gray-300 hover:border-gray-400'
                                             }`}
                                         onDragEnter={handleDrag}
                                         onDragLeave={handleDrag}
@@ -536,9 +526,15 @@ const AddLessons = () => {
                             <Droppable droppableId="lessons">
                                 {(provided) => (
                                     <div
-                                        className="space-y-3"
+                                        className="space-y-3 max-h-[500px] overflow-y-auto pr-2"
                                         {...provided.droppableProps}
-                                        ref={provided.innerRef}
+                                        ref={(el) => {
+                                            provided.innerRef(el);
+                                            lessonListRef.current = el;
+                                        }}
+                                        style={{
+                                            scrollBehavior: 'smooth'
+                                        }}
                                     >
                                         {lessons.length === 0 && (
                                             <p className="text-gray-500 text-center py-4">
@@ -579,14 +575,21 @@ const AddLessons = () => {
                                                                 {lesson.Duration} min | {lesson.ComplexityLevel || 'Easy'}
                                                             </p>
                                                         </div>
-                                                        <button
-                                                            onClick={() => handleDelete(lesson.LessonID)}
-                                                            className="flex-shrink-0 text-red-500 hover:text-red-700"
-                                                            aria-label="Delete lesson"
-                                                            title="Delete"
+                                                        <Popconfirm
+                                                            title="Delete the lesson"
+                                                            description="Are you sure you want to delete this lesson?"
+                                                            onConfirm={() => handleDelete(lesson.LessonID)}
+                                                            okText="Yes"
+                                                            cancelText="No"
                                                         >
-                                                            <FaTrash />
-                                                        </button>
+                                                            <button
+                                                                className="flex-shrink-0 text-red-500 hover:text-red-700"
+                                                                aria-label="Delete lesson"
+                                                                title="Delete"
+                                                            >
+                                                                <FaTrash />
+                                                            </button>
+                                                        </Popconfirm>
                                                     </div>
                                                 )}
                                             </Draggable>

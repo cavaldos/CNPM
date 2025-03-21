@@ -4,16 +4,10 @@ import {
     TextField,
     Typography,
     Paper,
-    Grid,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Select,
     Box,
     Card,
     Tabs,
     Tab,
-    IconButton
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -40,8 +34,7 @@ const CreateCourse = () => {
     const [courseTitle, setCourseTitle] = useState("");
     const [courseDescription, setCourseDescription] = useState("");
     const [courseCategory, setCourseCategory] = useState("");
-    const [customCategory, setCustomCategory] = useState("");
-    const [isCustomCategory, setIsCustomCategory] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Thumbnail states
     const [thumbnailType, setThumbnailType] = useState(0); // 0: URL, 1: Upload
@@ -49,23 +42,8 @@ const CreateCourse = () => {
     const [thumbnailFile, setThumbnailFile] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState("");
 
-    const [isLoading, setIsLoading] = useState(false);
-
     const handleCategoryChange = (e) => {
-        const value = e.target.value;
-        if (value === "custom") {
-            setIsCustomCategory(true);
-            setCourseCategory("");
-        } else {
-            setIsCustomCategory(false);
-            setCourseCategory(value);
-        }
-    };
-
-    const handleCustomCategoryChange = (e) => {
-        const value = e.target.value;
-        setCustomCategory(value);
-        setCourseCategory(value); // Cập nhật giá trị courseCategory để sử dụng khi submit
+        setCourseCategory(e.target.value);
     };
 
     const handleThumbnailTabChange = (event, newValue) => {
@@ -87,13 +65,10 @@ const CreateCourse = () => {
 
     const handleSubmit = async () => {
         // Xác thực dữ liệu đầu vào
-        if (!courseTitle || !courseDescription || !(courseCategory || (isCustomCategory && customCategory))) {
+        if (!courseTitle || !courseDescription || !courseCategory) {
             alert("Vui lòng điền đầy đủ thông tin cơ bản của khóa học!");
             return;
         }
-
-        // Sử dụng giá trị danh mục tùy chỉnh nếu người dùng chọn tùy chọn này
-        const finalCategory = isCustomCategory ? customCategory : courseCategory;
 
         // Xác định thumbnail được sử dụng
         let finalThumbnail = "";
@@ -110,7 +85,7 @@ const CreateCourse = () => {
             // Gọi API tạo khóa học từ service
             const response = await InstructorService.createCourse(
                 courseTitle,
-                finalCategory,
+                courseCategory,
                 courseDescription,
                 finalThumbnail || "",
                 "instructor-id-placeholder" // Trong thực tế, lấy ID từ user đăng nhập
@@ -169,35 +144,15 @@ const CreateCourse = () => {
                         placeholder="Mô tả ngắn gọn về khóa học của bạn"
                     />
 
-                    <FormControl fullWidth variant="outlined" required>
-                        <InputLabel>Danh mục</InputLabel>
-                        <Select
-                            value={isCustomCategory ? "custom" : courseCategory}
-                            onChange={handleCategoryChange}
-                            label="Danh mục"
-                        >
-                            <MenuItem value="programming">Lập trình</MenuItem>
-                            <MenuItem value="data-science">Khoa học dữ liệu</MenuItem>
-                            <MenuItem value="web-development">Phát triển web</MenuItem>
-                            <MenuItem value="mobile-development">Phát triển ứng dụng di động</MenuItem>
-                            <MenuItem value="design">Thiết kế</MenuItem>
-                            <MenuItem value="business">Kinh doanh</MenuItem>
-                            <MenuItem value="language">Ngoại ngữ</MenuItem>
-                            <MenuItem value="custom">Danh mục khác (tự nhập)</MenuItem>
-                        </Select>
-                    </FormControl>
-
-                    {isCustomCategory && (
-                        <TextField
-                            label="Nhập danh mục mới"
-                            variant="outlined"
-                            fullWidth
-                            required
-                            value={customCategory}
-                            onChange={handleCustomCategoryChange}
-                            placeholder="Nhập tên danh mục khóa học của bạn"
-                        />
-                    )}
+                    <TextField
+                        label="Chủ đề"
+                        variant="outlined"
+                        fullWidth
+                        required
+                        value={courseCategory}
+                        onChange={handleCategoryChange}
+                        placeholder="Nhập chủ đề của khóa học"
+                    />
 
                     {/* Thumbnail section with tabs */}
                     <Box sx={{ width: '100%' }}>
