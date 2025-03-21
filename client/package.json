@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.14.0",
     "@firebase/auth": "^1.8.2",
     "@hello-pangea/dnd": "^18.0.1",
+    "@iamtraction/google-translate": "^2.0.1",
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
     "@mui/styled-engine-sc": "^6.4.6",
