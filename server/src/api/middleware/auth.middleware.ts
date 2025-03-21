@@ -1,74 +1,65 @@
-/*
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import admin from 'firebase-admin';
+import { Request, Response, NextFunction } from "express";
+import { initializeApp } from 'firebase-admin/app';
+import serviceAccount from '../../../firebase.json';
+import dotenv from 'dotenv';
+dotenv.config();
 
-interface JwtPayload {
-  id: number;
-  email: string;
-  role: string;
-  iat: number;
-  exp: number;
-}
 
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      user?: {
+        uid: string;
+        [key: string]: any;
+      };
     }
   }
 }
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+try {
+  initializeApp({
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+  });
+  console.log('Firebase Admin initialized successfully');
+} catch (error) {
+  console.error('Firebase Admin initialization error:', error);
+}
+
+const verifyIdToken = async (idToken: string): Promise<string> => {
   try {
-    // Get token from header
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        message: 'Access denied. No token provided.',
-      });
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    return uid;
+  } catch (error) {
+    console.error('Token verification error:', error);
+    throw new Error('Unauthorized: Invalid token');
+  }
+};
+
+
+
+const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const idToken = req.headers.authorization?.split('Bearer ')[1];
+    if (!idToken) {
+      throw new Error('No token provided');
     }
-
-    const token = authHeader.split(' ')[1];
-    const secretKey = process.env.JWT_SECRET || 'your_default_jwt_secret_key';
-
-    // Verify token
-    const decoded = jwt.verify(token, secretKey) as JwtPayload;
-
-    // Add user info to request
-    req.user = decoded;
-
+    const uid = await verifyIdToken(idToken);
+    req.user = { uid }; 
+    console.log('User authenticated. UID:', uid);
     next();
   } catch (error) {
     console.error('Authentication error:', error);
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
-      message: 'Invalid token',
-      error: error,
+      message: error instanceof Error ? error.message : 'Unauthorized'
     });
   }
 };
 
-// Middleware to check if user has required role
-export const authorize = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Authentication required',
-      });
-    }
+export { verifyIdToken };
 
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access forbidden. You do not have permission to access this resource.',
-      });
-    }
-
-    next();
-  };
-};
-*/
-
-// Middleware không được sử dụng vì đang dùng xác thực từ bên thứ 3
+export default authMiddleware;
