@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // import FireBaseLoginPage from '../../components/auth/firebase/LoginPage';
-// import OktaLoginPage from '../../components/auth/okta/LoginPage';
+import OktaLoginPage from '../../components/auth/okta/LoginPage';
 import AuthService from '../../services/auth.service';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../redux/features/authSlice';
@@ -80,7 +80,7 @@ const LoginPage = () => {
           {/* <FireBaseLoginPage /> */}
         </div>
         <div className="w-1/2">
-          {/* <OktaLoginPage /> */}
+          <OktaLoginPage />
         </div>
       </div>
     </div>
