@@ -4,7 +4,7 @@ const GuestLayout = lazy(() => import("~/components/Layout/guest/GuestLayout"));
 const HomeGuest = lazy(() => import("~/pages/guest/index"));
 const CourseDetail = lazy(() => import("~/pages/guest/CourseDetail"));
 import LoginPage from "../pages/guest/Login";
-
+import TestChatPage from "../pages/TestChatPage";
 const GuestRouter = [
   {
     name: "Home",
@@ -47,6 +47,14 @@ const GuestRouter = [
     Layout: GuestLayout,
     key: "",
   },
+  {
+
+    name: "New Route",
+    path: "/test",
+    component: TestChatPage,
+    Layout: GuestLayout,
+    key: "new-route",
+  }
 ];
 
 export default GuestRouter;

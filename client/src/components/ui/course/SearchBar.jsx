@@ -29,7 +29,8 @@ const SearchBar = () => {
     const navigate = useNavigate();
     const [results, setResults] = useState([]);
     const [recent, setRecent] = useState([]);
-
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const fetchAutoComplete = async (searchTerm) => {
         setLoading(true);
         setError(null);

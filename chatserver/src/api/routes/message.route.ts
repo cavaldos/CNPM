@@ -1,31 +1,15 @@
 import express from "express";
-import {
-  sendMessage,
-  getConversation,
-  getUserMessages,
-  markAsRead,
-  getUnreadMessageCount,
-  getConversationPartners
-} from "../controllers/message.co";
+import { sendMessage, getConversation, deleteMessage } from "../controllers/message.co";
 
 const MessageRouter = express.Router();
 
-// Send a new message
+// Gửi tin nhắn mới
 MessageRouter.post("/send", sendMessage);
 
-// Get conversation between two users
+// Lấy cuộc trò chuyện giữa hai người dùng
 MessageRouter.post("/conversation", getConversation);
 
-// Get all messages for a user
-MessageRouter.post("/user", getUserMessages);
-
-// Mark a message as read
-MessageRouter.post("/read", markAsRead);
-
-// Get unread message count for a user
-MessageRouter.post("/unread", getUnreadMessageCount);
-
-// Get list of users that have exchanged messages with the given user
-MessageRouter.post("/partners", getConversationPartners);
+// Xóa tin nhắn (chỉ xóa được tin nhắn của mình)
+MessageRouter.post("/delete", deleteMessage);
 
 export default MessageRouter;
