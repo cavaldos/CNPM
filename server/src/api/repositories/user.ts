@@ -1,14 +1,13 @@
 import DataConnect from '../../config/DataConnect';
 
 const UserRepository = {
-    async createUser(userName: string, email: string, fullName: string, role: string, password?: string) {
+    async createUser(userName: string, email: string, fullName: string, role: string) {
         const proc = 'create_user';
         const params = {
             UserName: userName,
             Email: email,
             FullName: fullName,
-            Role: role,
-            Password: password || null
+            Role: role
         };
         return await DataConnect.executeProcedure(proc, params);
     },

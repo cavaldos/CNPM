@@ -7,25 +7,52 @@ import {
     onAuthStateChanged,
     signOut
 } from "firebase/auth";
-
-
+import { setUser } from "../../redux/features/authSlice";
+import AuthService from "../../services/auth.service";
+import useCookie from '../../hooks/useCookie';
+import { useNavigate } from 'react-router-dom';
 const LoginService = () => {
     const [email, setEmail] = useState("");
     const dispatch = useDispatch();
+    const [userFirebase, setUserFirebase] = useState(null);
+    const [selectedRole, setSelectedRole] = useState('');
+    const [cookieValue, setCookie, removeCookie] = useCookie('token', null);
+    const navigate = useNavigate();
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            setUserFirebase(currentUser);
         });
         return () => unsubscribe();
     }, []);
+    const checkUser = async (email) => {
+        try {
+            const response = await AuthService.checkUser(email);
+            if (response.data) {
+                navigate('/');
+                await loginServer();
+                return;
+            }
+            else {
+                navigate('/set-role');
+            }
+        } catch (err) {
+            console.error('Lỗi khi lấy thông tin người dùng:', err);
+        }
+    }
+
+    useEffect(() => {
+        if (userFirebase) {
+            checkUser(userFirebase.email);
+        }
+    }, [userFirebase]);
 
     const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
-        console.log(provider)
         try {
             const result = await signInWithPopup(auth, provider);
-            setUser(result.user);
-            console.log(result.user);
+            setUserFirebase(result.user);
+            setCookie(result.user.accessToken);
+            setEmail(result.user.email);
         } catch (error) {
             console.error("Error signing in with Google", error);
         }
@@ -33,16 +60,15 @@ const LoginService = () => {
     const signOutGoogle = async () => {
         try {
             await signOut(auth);
-            setUser(null);
+            setUserFirebase(null);
         } catch (error) {
             console.error("Error signing out with Google", error);
         }
     };
-    const getInfo = async () => {
+    const loginServer = async () => {
         try {
 
-            const response = await AuthService.getInfo(email);
-            console.log('Response from server:', response.data.UserID);
+            const response = await AuthService.signin(selectedRole);
             dispatch(setUser({
                 UserID: response.data.UserID,
                 UserName: response.data.UserName,
@@ -57,13 +83,14 @@ const LoginService = () => {
             console.error('Lỗi khi lấy thông tin người dùng:', err);
         }
     };
-
     return {
         email,
         setEmail,
         signInWithGoogle,
         signOutGoogle,
-        getInfo,
+        loginServer,
+        selectedRole,
+        setSelectedRole,
     }
 }
 

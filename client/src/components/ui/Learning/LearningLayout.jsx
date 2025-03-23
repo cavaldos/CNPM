@@ -35,7 +35,7 @@ const LearningPage = ({ children }) => {
     return (
         <div className="flex gap-[20px] h-[82vh] text-black ml-10">
 
-            <div className="w-[20%] p-3 overflow-y-auto max-h-[82vh]">
+            <div className="w-[25%] p-3 overflow-y-auto max-h-[82vh]">
                 <LessonList />
                 {tabs.map(tab => (
                     <div
@@ -50,7 +50,7 @@ const LearningPage = ({ children }) => {
             <div className="grow overflow-y-auto max-h-[82vh]">
                 {children}
             </div>
-            <div className="w-[22%] overflow-y-auto max-h-[calc(100vh-100px)]">
+            <div className="w-[20%] overflow-y-auto max-h-[calc(100vh-100px)]">
                 {/* Future content can be added here */}
             </div>
         </div>

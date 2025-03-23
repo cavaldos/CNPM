@@ -3,7 +3,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import AdminRouter from "../../../routes/Admin";
-// import Bread from "../Breadcrum";
+import Bread from "../../ui/utilize/Breadcrum";
+import { useDispatch } from "react-redux";
+import { clearUser } from "../../../redux/features/authSlice";
 const NavbarItem = ({ name, togglemenu, icon, path }) => {
   const navigate = useNavigate();
   const handleClick = (path) => {
@@ -29,9 +31,8 @@ const NavbarItem = ({ name, togglemenu, icon, path }) => {
 const Sidebar = ({ togglemenu }) => {
   return (
     <div
-      className={`fixed top-0 left-0 bottom-0 transition-all duration-300 bg-white border-r mt-headerh ${
-        togglemenu ? "w-64" : "w-20"
-      }`}
+      className={`fixed top-0 left-0 bottom-0 transition-all duration-300 bg-white border-r mt-headerh ${togglemenu ? "w-64" : "w-20"
+        }`}
     >
       <nav className="p-5 overflow-y-auto h-full">
         {AdminRouter.map((item, index) => {
@@ -50,6 +51,49 @@ const Sidebar = ({ togglemenu }) => {
   );
 };
 
+const AdminAccount = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+
+    dispatch(clearUser());
+    navigate('/');
+  };
+
+  return (
+    <div className="relative">
+      <div
+        className="flex items-center space-x-4 cursor-pointer"
+        onClick={toggleDropdown}
+      >
+        <a href="#" className="text-gray-600">
+          English
+        </a>
+        <a href="#" className="text-gray-600">
+          Admin
+        </a>
+      </div>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+          <button
+            onClick={handleLogout}
+            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 const Header = ({ togglemenu, toggleSidebar }) => {
   const location = useLocation();
 
@@ -65,11 +109,11 @@ const Header = ({ togglemenu, toggleSidebar }) => {
         </button>
         <div className="flex">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          {/* <Bread className={"pt-1"} /> */}
+          <Bread className={"pt-1"} />
         </div>
       </div>
       <div className="flex items-center space-x-4 mr-4">
-        {/* <AdminAccount /> */} avata
+        <AdminAccount />
       </div>
     </div>
   );
@@ -85,9 +129,8 @@ const AdminLayout = ({ children }) => {
       <div className="flex-1 flex">
         <Sidebar togglemenu={togglemenu} />
         <main
-          className={`flex-1 p-6 mt-headerh transition-all ${
-            togglemenu ? "ml-64" : "ml-20"
-          } `}
+          className={`flex-1 p-6 mt-headerh transition-all ${togglemenu ? "ml-64" : "ml-20"
+            } `}
         >
           {children}
         </main>

@@ -11,6 +11,8 @@ declare global {
     interface Request {
       user?: {
         uid: string;
+        email?: string;
+        displayName?: string;
         [key: string]: any;
       };
     }
@@ -43,13 +45,25 @@ const verifyIdToken = async (idToken: string): Promise<string> => {
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const idToken = req.headers.authorization?.split('Bearer ')[1];
+    const idToken = req.headers?.authorization?.split('Bearer ')[1];
     if (!idToken) {
       throw new Error('No token provided');
     }
-    const uid = await verifyIdToken(idToken);
-    req.user = { uid }; 
-    console.log('User authenticated. UID:', uid);
+    
+    // Verify the token and get UID
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    
+    const userRecord = await admin.auth().getUser(uid);
+    req.user = { 
+      uid, 
+      idToken,
+      email: userRecord.email,
+      displayName: userRecord.displayName,
+      photoURL: userRecord.photoURL,
+      phoneNumber: userRecord.phoneNumber,
+      metadata: userRecord.metadata,
+    };
     next();
   } catch (error) {
     console.error('Authentication error:', error);

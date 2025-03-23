@@ -5,6 +5,8 @@ const HomeGuest = lazy(() => import("~/pages/guest/index"));
 const CourseDetail = lazy(() => import("~/pages/guest/CourseDetail"));
 import LoginPage from "../pages/guest/Login";
 import TestChatPage from "../pages/TestChatPage";
+import SetRole from "../pages/guest/SetRole";
+import AdminLogin from "../pages/guest/AdminLogin";
 const GuestRouter = [
   {
     name: "Home",
@@ -18,6 +20,12 @@ const GuestRouter = [
     path: "/login",
     component: LoginPage,
     Layout: null,
+  },
+  {
+    name: "Set Role",
+    path: "/set-role",
+    component: SetRole,
+    Layout: null
   },
   {
     name: "Search",
@@ -46,6 +54,13 @@ const GuestRouter = [
     component: CourseDetail,
     Layout: GuestLayout,
     key: "",
+  },
+  {
+    name: "Admin Login",
+    path: "/admin-login",
+    component: AdminLogin,
+    Layout: null,
+    
   },
   {
 
