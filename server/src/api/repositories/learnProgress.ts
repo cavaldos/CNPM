@@ -76,6 +76,24 @@ const LearnProgressRepository = {
             WHERE StudentID = ${studentID};
         `;
         return await DataConnect.execute(query);
+    },
+    async checkProcessStatus(lessonID: number, studentID: number) {
+        const query = `
+               SELECT
+                lp.ProcessStatus,
+                lp.StartTime,
+                lp.CompletionTime,
+                l.Title AS LessonTitle,
+                u.FullName AS StudentName
+            FROM
+                [LearnProgress] lp
+                INNER JOIN [User] u ON lp.StudentID = u.UserID
+                INNER JOIN [Lessons] l ON lp.LessonID = l.LessonID
+            WHERE
+                lp.StudentID = ${studentID}
+                AND lp.LessonID = ${lessonID}
+        `;
+        return await DataConnect.execute(query);
     }
 
 

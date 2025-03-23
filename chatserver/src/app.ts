@@ -4,33 +4,23 @@ import cors from "cors";
 import morgan from "morgan";
 import routers from "./api/routes";
 
-// DataService.checkConnection();
 const app = express();
-// import "./test";
+
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: [
-      "Content-Type",
-      "Content-Type",
-      "Authorization",
-      "Origin",
-      "X-Requested-With",
-      "Accept",
-      "X-HTTP-Method-Override",
-      "x-access-token",
-      "x-custom-header",
-    ],
-  })
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: '*',
+    exposedHeaders: ['Content-Length', 'X-Requested-With', 'Authorization'],
+  }),
 );
 app.use(json());
 app.use(helmet());
-app.use(
-  morgan(":method :url :status :res[content-length] - :response-time ms")
-);
+app.use(morgan('tiny'));
 app.use(routers);
+
 
 app.get("/hello", (req, res) => {
   console.log(req.body);

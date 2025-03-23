@@ -12,9 +12,13 @@ const IP = getIPAddresses.IP();
 
 const PORSERVER: number = process.env.PORT_SERVER
   ? parseInt(process.env.PORT_SERVER)
-  : 3001;
-const host: string = "0.0.0.0";
+  : 5003;
 
+const PORT_SOCKET: number = process.env.PORT_SOCKET
+  ? parseInt(process.env.PORT_SOCKET)
+  : 5004;
+
+const host: string = "0.0.0.0";
 async function startServer() {
   try {
     // Kết nối MongoDB trước khi khởi động server
@@ -30,7 +34,7 @@ async function startServer() {
       );
       console.log(`  🚀  ➜   Local:  `, color.green(`http://${IP}:${PORT}`));
     });
-    startSocketServer(5003);
+    startSocketServer(PORT_SOCKET);
   } catch (err) {
     console.error(`Server startup error: ${err}`);
     process.exit(1);

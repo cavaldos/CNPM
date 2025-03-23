@@ -14,11 +14,11 @@ StudentRouter.post("/course/review/delete", CourseController.review.deleteReview
 StudentRouter.post("/course/reviews", CourseController.review.getCourseReviews);
 
 
+// Learning progress
 
 StudentRouter.post("/progress/get-all", LearnProgressController.getAllCourseProgress);
+StudentRouter.post("/progress/check-status", LearnProgressController.checkProcessStatus);
 
-
-// Learning progress
 StudentRouter.post("/progress/start", LearnProgressController.startLearnProgress);
 StudentRouter.post("/progress/update", LearnProgressController.updateLearnProgress);
 StudentRouter.post("/progress/delete", LearnProgressController.deleteLearnProgress);
@@ -34,6 +34,7 @@ StudentRouter.post("/enrollment/create", EnrollmentController.createEnrollment);
 StudentRouter.post("/enrollment/delete", EnrollmentController.deleteEnrollment);
 StudentRouter.post("/enrollment/update", EnrollmentController.updateEnrollmentStatus);
 StudentRouter.post("/enrollment/get-by-student-id", EnrollmentController.getAllEnrollmentsByStudent);
+StudentRouter.post("/enrollment/get-contacts", EnrollmentController.getContacts);
 
 
 

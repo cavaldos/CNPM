@@ -1,76 +1,54 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5003"); // Cập nhật port cho Socket.io
+const socket = io(import.meta.env.VITE_SOCKET_SERVER_URL || "http://localhost:5004" ) 
 
 const useChatSocket = (userId) => {
-    const [groupMessages, setGroupMessages] = useState([]);
-    const [privateMessages, setPrivateMessages] = useState([]);
+    const [received, setReceived] = useState(false);
+    const [count, setCount] = useState(1);
 
     useEffect(() => {
         if (userId) {
-            socket.emit("register", userId);
+            // Thay đổi 'register' thành 'initialize' để phù hợp với socket server
+            socket.emit("initialize", { id: userId });
         }
 
-        socket.on("privateMessage", (msg) => {
-            setPrivateMessages((prev) => [...prev, msg]);
-        });
+        socket.on("receive", (data) => {
+            setReceived(true);
 
-        socket.on("groupMessage", (msg) => {
-            setGroupMessages((prev) => [...prev, msg]);
+            // Tăng biến count nếu server gửi yêu cầu tăng
+            if (data && data.incrementCount) {
+                setCount(prevCount => prevCount + 1);
+            }
+
+            // Tự động reset sau một khoảng thời gian
+            setTimeout(() => {
+                setReceived(false);
+            }, 5000);
         });
 
         return () => {
-            socket.off("privateMessage");
-            socket.off("groupMessage");
+            socket.off("receive");
         };
     }, [userId]);
 
-    const sendPrivateMessage = (content, receiverId) => {
-        if (content.trim() && userId && receiverId) {
-            const message = {
-                content,
-                senderId: userId,
-                receiverId,
-                timestamp: new Date(),
+    const send = (receiverId) => {
+        if (userId && receiverId) {
+            // Thay đổi cấu trúc data để phù hợp với socket server
+            const data = {
+                recipientId: receiverId
             };
-            socket.emit("privateMessage", message);
-            setPrivateMessages((prev) => [...prev, message]);
-            return message;
+            socket.emit("send", data);
+            return true;
         }
-        return null;
-    };
-
-    const sendGroupMessage = (content, groupId) => {
-        if (content.trim() && userId && groupId) {
-            const message = {
-                content,
-                senderId: userId,
-                groupId,
-                timestamp: new Date(),
-            };
-            socket.emit("groupMessage", message);
-            setGroupMessages((prev) => [...prev, message]);
-            return message;
-        }
-        return null;
-    };
-
-    const joinGroup = (groupId) => {
-        socket.emit("joinGroup", { userId, groupId });
-    };
-
-    const leaveGroup = (groupId) => {
-        socket.emit("leaveGroup", { userId, groupId });
+        return false;
     };
 
     return {
-        privateMessages,
-        groupMessages,
-        sendPrivateMessage,
-        sendGroupMessage,
-        joinGroup,
-        leaveGroup,
+        received,
+        setReceived,
+        send,
+        count
     };
 };
 

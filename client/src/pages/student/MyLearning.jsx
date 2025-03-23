@@ -24,7 +24,7 @@ const MyLearning = () => {
         const fetchCourseProgress = async () => {
             try {
                 setLoading(true);
-                const response = await StudentService.getAllCourseProgress(1); // Replace 1 with actual student ID
+                const response = await StudentService.progress.getAllCourseProgress(1); // Replace 1 with actual student ID
                 if (response.success) {
                     // Map API data to course format
                     const formattedCourses = response.data.map(course => ({

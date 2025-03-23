@@ -16,7 +16,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: [], // Only persist the auth slice
+  whitelist: ['auth'], // Only persist the auth slice
 };
 const rootReducer = combineReducers({
   count: countSlice,

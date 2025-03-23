@@ -49,6 +49,7 @@ const LearningPage = () => {
             setLoading(true);
             try {
                 const response = await StudentService.lesson.getLessonById(lessonId);
+                console.log("response", response.data[0]);
                 if (response.success) {
                     // Lấy bài học đầu tiên từ mảng data (hoặc null nếu không có)
                     setLesson(response.data[0] || null);

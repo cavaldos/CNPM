@@ -119,7 +119,29 @@ const EnrollmentController = {
             console.error("Error retrieving enrollments:", error);
             return res.status(500).json({ message: "Internal server error" });
         }
+    },
+    async getContacts(req: Request, res: Response) {
+        
+        try {
+            const { courseID } = req.body;
+
+            if (!courseID) {
+                return res.status(400).json({ message: "CourseID is required" });
+            }
+
+            const friendsResult = await EnrollmentRepository.getContacts(courseID);
+            console.log("Friends retrieved:", friendsResult);
+
+            return res.status(200).json({
+                message: "Friends retrieved successfully",
+                data: friendsResult
+            });
+        } catch (error) {
+            console.error("Error retrieving friends:", error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
     }
+
 };
 
 export default EnrollmentController;

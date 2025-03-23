@@ -37,7 +37,25 @@ const EnrollmentRepository = {
         `;
         return await DataConnect.execute(query);
     },
-
+    async getContacts(courseID: number) {
+        const query = `
+                  SELECT
+                    u.UserID,
+                    u.UserName,
+                    u.Email,
+                    u.FullName,
+                    e.EnrollmentStatus,
+                    e.EnrollDate
+                FROM
+                    [User] u
+                    INNER JOIN [Enrollment] e ON u.UserID = e.StudentID
+                WHERE
+                    e.CourseID = ${courseID}
+                ORDER BY
+                    e.EnrollDate DESC;      
+        `;
+        return await DataConnect.execute(query);
+    },
 };
 
 export default EnrollmentRepository;

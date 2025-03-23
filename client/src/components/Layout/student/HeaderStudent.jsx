@@ -10,7 +10,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 const NavButton = ({ name, path }) => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const handleClick = () => {
     navigate(path);
   };

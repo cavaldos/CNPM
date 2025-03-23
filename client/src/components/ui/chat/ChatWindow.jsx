@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { SendIcon, PaperclipIcon, SmileIcon } from 'lucide-react'
 
-const ChatWindow = ({ contact, messages, onSendMessage }) => {
+const ChatWindow = ({ contact, messages, onSendMessage, currentUserId }) => {
     const [newMessage, setNewMessage] = useState('')
     const messagesEndRef = useRef(null)
 
@@ -21,6 +21,16 @@ const ChatWindow = ({ contact, messages, onSendMessage }) => {
             onSendMessage(newMessage)
             setNewMessage('')
         }
+    }
+
+    const formatTimestamp = (timestamp) => {
+        if (!timestamp) return '';
+
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
     }
 
     return (
@@ -46,30 +56,45 @@ const ChatWindow = ({ contact, messages, onSendMessage }) => {
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
-                    <div
-                        key={message.id}
-                        className={`flex ${message.senderId === 'me' ? 'justify-end' : 'justify-start'}`}
-                    >
-                        {message.senderId !== 'me' && (
-                            <img
-                                src={contact.avatar}
-                                alt={contact.name}
-                                className="w-8 h-8 rounded-full object-cover mr-2 self-end"
-                            />
-                        )}
+                {messages.map((message) => {
+                    // Cải thiện cách xác định người gửi tin nhắn
+                    // So sánh ID có dạng chuỗi để tránh lỗi khi so sánh số và chuỗi
+                    const isCurrentUser =
+                        String(message.sender) === String(currentUserId) ||
+                        String(message.senderId) === String(currentUserId);
+
+                    return (
                         <div
-                            className={`max-w-[70%] rounded-lg p-3 ${message.senderId === 'me' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'}`}
+                            key={message._id || message.id}
+                            className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
                         >
-                            <p>{message.text}</p>
+                            {/* Hiển thị avatar cho tin nhắn của người khác (bên trái) */}
+                            {!isCurrentUser && (
+                                <img
+                                    src={contact.avatar}
+                                    alt={contact.name}
+                                    className="w-8 h-8 rounded-full object-cover mr-2 self-end"
+                                />
+                            )}
+
+                            {/* Nội dung tin nhắn - style khác nhau dựa trên người gửi */}
                             <div
-                                className={`text-xs mt-1 ${message.senderId === 'me' ? 'text-blue-100' : 'text-gray-500'}`}
+                                className={`max-w-[70%] rounded-lg p-3 ${isCurrentUser
+                                    ? 'bg-blue-600 text-white rounded-br-none ml-auto'
+                                    : 'bg-gray-200 text-gray-800 rounded-bl-none'
+                                    }`}
                             >
-                                {message.timestamp}
+                                <p>{message.content || message.text}</p>
+                                <div
+                                    className={`text-xs mt-1 ${isCurrentUser ? 'text-blue-100' : 'text-gray-500'
+                                        }`}
+                                >
+                                    {formatTimestamp(message.createdAt) || message.timestamp}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
                 <div ref={messagesEndRef} />
             </div>
             <div className="border-t border-gray-200 bg-white p-4">

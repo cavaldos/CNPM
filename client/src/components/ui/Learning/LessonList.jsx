@@ -28,8 +28,8 @@ const LessonList = () => {
 
     useEffect(() => {
         const fetchLessons = async () => {
-            const courseId = 1; // Replace with actual course ID
-            const response = await StudentService.lesson.getAllLessons(courseId);
+            const enrollmentId = 1; // Replace with actual enrollment ID
+            const response = await StudentService.progress.getAllLessonInProgress(enrollmentId);
             if (response.success) {
                 setLessons(response.data);
             } else {
@@ -42,6 +42,22 @@ const LessonList = () => {
     const handleLessonClick = (lessonId) => {
         setActiveLesson(lessonId);
         navigate(`/learning/${lessonId}`);
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Completed':
+                return 'bg-green-500';
+            case 'In Progress':
+                return 'bg-yellow-500';
+            case 'Not Started':
+            default:
+                return 'bg-gray-300';
+        }
+    };
+
+    const getStatusText = (status) => {
+        return status || 'Not Started';
     };
 
     return (
@@ -69,12 +85,18 @@ const LessonList = () => {
                                     }`}
                                 onClick={() => handleLessonClick(lesson.LessonID)}
                             >
-                                <span className="w-3 h-3 bg-gray-300 rounded-full mr-2"></span>
-                                <div>
+                                <span className={`w-3 h-3 ${getStatusColor(lesson.Status)} rounded-full mr-2`}></span>
+                                <div className="flex-grow">
                                     <div className="text-sm">{lesson.Title}</div>
                                     <div className="text-xs text-gray-500">
                                         {lesson.Duration} mins • {lesson.LessonType} • {lesson.ComplexityLevel}
                                     </div>
+                                </div>
+                                <div className={`text-xs px-2 py-1 rounded-full ml-2 ${lesson.Status === 'Completed' ? 'bg-green-100 text-green-800' :
+                                        lesson.Status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800'
+                                    }`}>
+                                    {getStatusText(lesson.ProcessStatus)}
                                 </div>
                             </li>
                         ))}
