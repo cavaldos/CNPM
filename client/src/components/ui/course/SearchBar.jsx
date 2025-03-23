@@ -86,7 +86,7 @@ const SearchBar = () => {
                 <input
                     type="text"
                     placeholder="What do you want to learn?"
-                    className="border rounded-full px-4 py-2 w-[500px] focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="border-gray-300 border-b border-[1px] rounded-full px-4 py-2 w-[500px] focus:outline-none focus:ring-2 focus:ring-blue-600"
                     value={searchTerm}
                     onChange={handleInputChange}
                     onKeyPress={handleKeyPress}

@@ -52,8 +52,8 @@ const AccountControll = () => {
 
 const HeaderGuest = () => {
   return (
-    <div className="w-full px-[65px] bg-white border-b">
-      <div className="shadow-sm px-[48px]">
+    <div className="w-full px-[65px] bg-white border-gray-200 border-b border-[1px]">
+      <div className=" px-[48px]">
         <div className="container mx-auto px-6 py-3 flex justify-between items-center ">
           <div className="flex items-center gap-5">
             <h1 className="text-3xl font-semibold text-[#0156d1]">coursera</h1>
