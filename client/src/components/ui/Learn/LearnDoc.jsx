@@ -1,100 +1,133 @@
-import React from "react";
-import { Tag } from "antd";
-import { List, Card } from "antd";
+import React, { useState } from 'react'
+import {
+    ClockIcon,
+    BarChartIcon,
+    CalendarIcon,
+    BookOpenIcon,
+    ListOrderedIcon,
+    FileTextIcon,
+    BookIcon,
+    CheckCircleIcon
+} from 'lucide-react'
 
-const PageDocumentList = ({ pages }) => {
-    return (
-        <div className="w-full min-h-[250px]">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Page Documents</h2>
-            <List
-                grid={{ gutter: 16, column: 1 }}
-                dataSource={pages}
-                renderItem={(page) => (
-                    <List.Item>
-                        <Card
-                            title={`Page ${page.Page}`}
-                            bordered={false}
-                            className="shadow-md"
-                        >
-                            <p className="text-gray-700">{page.Content}</p>
-                        </Card>
-                    </List.Item>
-                )}
-            />
-        </div>
-    );
-};
+export const DocumentLesson = ({ lesson, onComplete }) => {
+    const [lessonStatus, setLessonStatus] = useState('NotStarted')
 
-function LearnProcessDoc({ lesson, pages }) {
-    // Sử dụng dữ liệu từ props hoặc dùng dữ liệu ví dụ nếu không có
     const lessonData = lesson || {
-        LessonsID: "1",
-        Title: "Introduction to React",
-        Duration: "45 minutes",
-        ComplexityLevel: "Beginner",
-        CreatedTime: "2023-08-01 10:00:00",
-        UpdatedTime: "2023-08-02 12:00:00",
-        LessonType: "Document",
-        Topic: "React Basics",
-        OrderLessons: "1",
-        CourseID: "101",
-    };
+        LessonID: '1',
+        LessonTitle: 'Introduction to React',
+        Duration: '45 minutes',
+        ComplexityLevel: 'Beginner',
+        CreatedTime: '2023-08-01 10:00:00',
+        UpdatedTime: '2023-08-02 12:00:00',
+        LessonType: 'Document',
+        Content: null,
+        ResourceID: '201',
+        Ordinal: 1,
+    }
 
-    // Xử lý hiển thị các thông tin
-    const title = lessonData.Title || lessonData.LessonTitle || "Unknown Title";
-    const topic = lessonData.Topic || "No Topic";
-    const duration = typeof lessonData.Duration === "number"
-        ? `${lessonData.Duration} minutes`
-        : lessonData.Duration || "Unknown Duration";
-    const complexity = lessonData.ComplexityLevel || "Unknown Complexity";
-    const type = lessonData.LessonType || "Document";
+    const formatDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        })
+    }
 
-    // Sử dụng pages từ props hoặc mảng rỗng nếu không có
-    const documentPages = pages || [
-        {
-            PageDocumentID: "1",
-            Content: lessonData.Content || "Nội dung của bài học này hiện chưa được cập nhật.",
-            Page: 1,
+    const handleLessonComplete = () => {
+        setLessonStatus('Completed')
+        if (onComplete) {
+            onComplete(lessonData.LessonID)
         }
-    ];
+    }
 
     return (
-        <div className="w-full min-h-[500px] p-6 bg-white rounded-xl shadow-lg flex flex-col gap-2">
-            <div className="bg-gray-100 rounded-lg p-4">
-                <div className="mb-4">
-                    <div className="flex gap-2 items-center">
-                        <h3 className="text-lg text-gray-900 font-medium">Lesson Title:</h3>
-                        <span className="text-lg font-semibold text-gray-700 italic">
-                            {title}
-                        </span>
+        <div className="bg-gray-50 min-h-screen w-full">
+            <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+                {/* Document header */}
+                <div className="mb-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm text-gray-500 mb-2">
+                            <ListOrderedIcon className="h-4 w-4 mr-1" />
+                            <span>Lesson {lessonData.Ordinal}</span>
+                            <span className="mx-2">•</span>
+                            <FileTextIcon className="h-4 w-4 mr-1" />
+                            <span>{lessonData.LessonType}</span>
+                        </div>
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${lessonStatus === 'Completed'
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                            {lessonStatus === 'Completed' ? 'Completed' : 'Not Started'}
+                        </div>
                     </div>
-                    <div className="flex gap-2 items-center mt-2">
-                        <h3 className="text-lg text-gray-900 font-medium">Topic:</h3>
-                        <span className="text-lg font-semibold text-gray-700 italic">
-                            {topic}
-                        </span>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                        {lessonData.LessonTitle}
+                    </h1>
+                </div>
+                {/* Document content area */}
+                <div className="bg-white rounded-lg shadow-lg mb-6 p-6">
+                    {lessonData.Content ? (
+                        <div className="prose max-w-none">
+                            <div dangerouslySetInnerHTML={{ __html: lessonData.Content }} />
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center min-h-[300px] border-2 border-dashed border-gray-200 rounded-lg">
+                            <div className="text-center p-6">
+                                <BookIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                <h3 className="text-lg font-medium text-gray-900 mb-1">
+                                    Document Content
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                    This is where the document content would be displayed. You can
+                                    add your document content here.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                {/* Simplified lesson metadata */}
+                <div className="bg-white rounded-lg shadow p-6">
+                    <div className="flex justify-between items-center">
+                        <div className="flex space-x-6">
+                            <div className="flex items-center">
+                                <ClockIcon className="h-5 w-5 text-blue-600 mr-2" />
+                                <div>
+                                    <p className="font-medium">{lessonData.Duration}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center">
+                                <BarChartIcon className="h-5 w-5 text-blue-600 mr-2" />
+                                <div>
+                                    <p className="font-medium">{lessonData.ComplexityLevel}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center">
+                                <CalendarIcon className="h-5 w-5 text-blue-600 mr-2" />
+                                <div>
+                                    <p className="font-medium">
+                                        {formatDate(lessonData.UpdatedTime)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleLessonComplete}
+                            disabled={lessonStatus === 'Completed'}
+                            className={`flex items-center px-4 py-2 rounded-md font-medium shadow-sm text-white ${lessonStatus === 'Completed'
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-blue-600 hover:bg-blue-700'
+                                }`}
+                        >
+                            <CheckCircleIcon className="h-5 w-5 mr-2" />
+                            {lessonStatus === 'Completed' ? 'Đã học xong' : 'Đánh dấu đã học xong'}
+                        </button>
                     </div>
                 </div>
-
-                <div className="flex flex-col gap-3 mb-4">
-                    <Tag className="w-auto inline-block max-w-max" color="blue">
-                        {`Duration: ${duration}`}
-                    </Tag>
-                    <Tag className="w-auto inline-block max-w-max" color="green">
-                        {`Complexity: ${complexity}`}
-                    </Tag>
-                    <Tag className="w-auto inline-block max-w-max" color="purple">
-                        {`Type: ${type}`}
-                    </Tag>
-                </div>
-            </div>
-
-            <div className="h-full min-h-[250px] w-full rounded-md bg-gray-100 p-4">
-                <PageDocumentList pages={documentPages} />
             </div>
         </div>
-    );
+    )
 }
 
-
-export default LearnProcessDoc;
+export default DocumentLesson

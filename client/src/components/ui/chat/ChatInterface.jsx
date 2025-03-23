@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import ContactsList from './ContactList'
 import ChatWindow from './ChatWindow'
 import ChatService from '../../../services/chat/chat.service'
-
 // Giữ lại mockContacts để hiển thị danh sách liên hệ (có thể thay đổi sau này)
 const mockContacts = [
     {
@@ -25,32 +24,29 @@ const ChatInterface = () => {
 
     // ID của người dùng hiện tại - sau này nên lấy từ context hoặc redux
     const currentUserId = 1
+    const fetchMessages = async () => {
+        if (!selectedContact) return
+
+        setLoading(true)
+        setError(null)
+        try {
+            const receiverId = selectedContact.id
+            const response = await ChatService.getConversation(currentUserId, 4)
+
+            if (response && response.data) {
+                setMessages(response.data)
+            }
+
+        } catch (err) {
+            console.error('Error fetching messages:', err)
+            setError('Không thể tải tin nhắn. Vui lòng thử lại sau.')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     useEffect(() => {
-        const fetchMessages = async () => {
-            if (!selectedContact) return
-
-            setLoading(true)
-            setError(null)
-
-            try {
-                const receiverId = selectedContact.id
-                const response = await ChatService.getConversation(currentUserId, 4)
-
-                if (response && response.data) {
-                    setMessages(response.data)
-                }
-
-
-
-            } catch (err) {
-                console.error('Error fetching messages:', err)
-                setError('Không thể tải tin nhắn. Vui lòng thử lại sau.')
-            } finally {
-                setLoading(false)
-            }
-        }
-
+ 
         fetchMessages()
     }, [selectedContact])
 
@@ -62,39 +58,10 @@ const ChatInterface = () => {
         if (!selectedContact || !text.trim()) return
 
         try {
-            // Hiển thị tin nhắn tạm thời ngay lập tức để UX tốt hơn
-            const tempMessage = {
-                _id: `temp-${Date.now()}`,
-                sender: currentUserId,
-                receiver: selectedContact.id,
-                content: text,
-                createdAt: new Date().toISOString(),
-                isRead: false
-            }
-
-            setMessages(prev => [...prev, tempMessage])
-
-            // Gửi tin nhắn đến API
-            const response = await ChatService.sendMessage(
-                currentUserId,
-                selectedContact.id,
-                text
-            )
-
-            // Cập nhật tin nhắn với dữ liệu thực từ API
-            if (response && response.data) {
-                setMessages(prev =>
-                    prev.map(msg =>
-                        msg._id === tempMessage._id ? response.data : msg
-                    )
-                )
-            }
-
-            // Cập nhật lastMessage trong danh sách liên hệ (trong ứng dụng thực tế)
-            // updateContactLastMessage(selectedContact.id, text)
+            await ChatService.sendMessage(1, 4, text)
+            await fetchMessages()
         } catch (err) {
             console.error('Error sending message:', err)
-            // Xử lý lỗi - có thể hiển thị thông báo hoặc đánh dấu tin nhắn lỗi
         }
     }
 

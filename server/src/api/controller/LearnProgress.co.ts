@@ -115,7 +115,7 @@ const LearnProgressController = {
             res.status(200).json({
                 success: true,
                 message: "All course progress records retrieved successfully",
-                data: result[0]
+                data: result
             });
         } catch (error) {
             res.status(500).json({
@@ -141,7 +141,27 @@ const LearnProgressController = {
                 error: error
             });
         }
-     },
+    },
+    checkProcessStatus: async (req: Request, res: Response) => {
+        try {
+            const { lessonID, studentID } = req.body;
+            const result = await LearnProgressRepository.checkProcessStatus(
+                lessonID,
+                studentID
+            );
+            res.status(200).json({
+                success: true,
+                message: "Process status retrieved successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get process status",
+                error: error
+            });
+        }
+    },
 
 
 };
