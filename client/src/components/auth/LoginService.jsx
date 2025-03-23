@@ -18,6 +18,7 @@ const LoginService = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const [cookieValue, setCookie, removeCookie] = useCookie('token', null);
     const navigate = useNavigate();
+    
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUserFirebase(currentUser);
