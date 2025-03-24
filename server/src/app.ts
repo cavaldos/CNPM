@@ -21,8 +21,5 @@ app.use(json());
 app.use(helmet());
 app.use(morgan('tiny'));
 app.use(routers);
-app.use('/', (_req, res) => {
-  console.log('API is running');
-  res.send('API is running');
-});
+
 export default app;
