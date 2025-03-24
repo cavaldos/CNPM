@@ -41,3 +41,4 @@ package-lock.json
 .DS_Store
 /.DS_Store
 firebase.json
+bun.lock
