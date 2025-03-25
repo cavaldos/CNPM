@@ -30,7 +30,7 @@ const PublicService = {
 
     course: {
         autoComplete: async (searchTerm) => {
-            const response = await axiosinstance.post("/public/course/autocompelete", { searchTerm });
+            const response = await axiosinstance.post("/public/course/autocomplete", { searchTerm });
             return response;
         },
 
@@ -39,7 +39,7 @@ const PublicService = {
             return response;
         },
         getAllCourses: async (page, pageSize) => {
-            const response = await axiosinstance.post("/public/course/get-all-course-pagination",{
+            const response = await axiosinstance.post("/public/course/get-all-course-pagination", {
                 page,
                 pageSize
             });

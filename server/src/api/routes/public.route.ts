@@ -16,6 +16,7 @@ PublicRouter.post("/course/get-all-course-pagination", CourseController.getAllCo
 PublicRouter.post("/course/autocomplete", CourseController.autoComplete);
 PublicRouter.post("/course/search", CourseController.searchCourse);
 PublicRouter.post("/course/get-course-detail", CourseController.getCourseDetail);
+PublicRouter.post("/course/get-all", CourseController.getAllCourses);
 
 // Forum interaction
 PublicRouter.post("/forum/create", ForumController.createMessage);

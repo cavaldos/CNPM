@@ -10,7 +10,6 @@ export default defineConfig({
   server: {
     host: "0.0.0.0", // default: 'localhost'
     allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
-  
   },
   preview: {
     port: 8080,
