@@ -8,24 +8,32 @@ import {
     ChevronRightIcon
 } from 'lucide-react'
 import InstructorRouter from '../../../routes/Instructor'
-
+import LoginService from '../../auth/LoginService'
+import { useDispatch } from 'react-redux'
+import {clearUser} from '../../../redux/features/authSlice'
+import { useNavigate } from 'react-router-dom'
 const Sidebar = ({ isOpen, setIsOpen }) => {
-    // Add state for collapsed sidebar
     const [collapsed, setCollapsed] = useState(false);
-    
-    // Get current location to determine active link
     const location = useLocation();
-    
-    // Filter routes that should appear in the sidebar
+    const navigate = useNavigate();
     const sidebarRoutes = InstructorRouter.filter(route => route.key === "sidebar");
-
     const navItems = [...sidebarRoutes];
-
-    // Toggle collapsed state
+    const { signOutGoogle } = LoginService();
+    const dispatch = useDispatch();
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
     };
 
+    const handleSignOut = async () => {
+        await signOutGoogle();
+        dispatch(clearUser());
+        setIsOpen(false);
+        navigate('/');
+    };
+
+    const handleOverlayClick = () => {
+        setIsOpen(false);
+    }
     return (
         <>
             {/* Overlay */}
@@ -49,14 +57,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <div className="flex h-16 items-center justify-between px-6 backdrop-blur-sm bg-gray-800/90 sticky top-0 transition-all duration-300">
                         <div className={`flex items-center ${collapsed ? 'justify-center w-full' : ''} transition-all duration-300`}>
                             <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center transition-all duration-300">
-                           I
+                                I
                             </div>
                             {!collapsed && <span className="ml-3 text-xl font-bold transition-opacity duration-300">CourseAdmin</span>}
                         </div>
                         <div className="flex items-center">
                             {/* Toggle collapse button - visible only on large screens */}
-                            <button 
-                                onClick={toggleCollapsed} 
+                            <button
+                                onClick={toggleCollapsed}
                                 className="hidden lg:block text-white hover:bg-blue-600/50 p-1 rounded-md transition-all duration-200"
                             >
                                 {collapsed ? <ChevronRightIcon className="h-5 w-5 transition-transform duration-300" /> : <ChevronLeftIcon className="h-5 w-5 transition-transform duration-300" />}
@@ -75,7 +83,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                             {navItems.map((item, index) => {
                                 // Check if current path matches this item's path
                                 const isActive = location.pathname === item.path;
-                                
+
                                 return (
                                     <li key={item.name} className="transition-all duration-300">
                                         <Link
@@ -115,7 +123,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                     title={collapsed ? 'Đăng xuất' : ''}
                                 >
                                     <LogOutIcon className={`${collapsed ? '' : 'mr-3'} h-5 w-5 transition-all duration-300`} />
-                                    {!collapsed && <span className="transition-opacity duration-300">Đăng xuất</span>}
+                                    {!collapsed && <span
+                                        onClick={handleSignOut}
+
+                                        className="transition-opacity duration-300">Log Out</span>}
                                 </a>
                             </li>
                         </ul>

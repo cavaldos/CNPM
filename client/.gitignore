@@ -19,3 +19,4 @@ package-lock.json
 
 .env
 coverage
+bun.lock
