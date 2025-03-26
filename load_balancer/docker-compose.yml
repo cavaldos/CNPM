@@ -9,5 +9,5 @@ services:
     env_file:
       - .env
     ports:
-      - "5010:5010" 
+      - "8088:8088"
     restart: always

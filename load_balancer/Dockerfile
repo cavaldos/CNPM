@@ -31,7 +31,7 @@ COPY --from=builder /usr/src/app/target/release/load_balancer .
 COPY .env .
 
 # Khai báo cổng nếu ứng dụng cần lắng nghe trên một cổng cụ thể
-EXPOSE 5010
+EXPOSE 8088
 
 # Chạy ứng dụng
 CMD ["./load_balancer"]
