@@ -75,6 +75,20 @@ const CourseRepository = {
         };
     },
 
+    async getCoursesOffset(offSet: number, pageSize: number) {
+        const proc = 'get_courses_offset';
+        const params = {
+            OffSet: offSet,
+            PageSize: pageSize
+        }
+        const courses = await DataConnect.executeProcedure(proc, params);
+        const total = await this.totalPages();
+        return {
+            courses,
+            total,
+        };
+    },
+
     
     async createCourse(title: string, topic: string, description: string, image: string, instructorID: number) {
         const proc = 'create_course'

@@ -13,6 +13,7 @@ PublicRouter.post("/user/get", UserController.getUserByID);
 
 // Course routes
 PublicRouter.post("/course/get-all-course-pagination", CourseController.getAllCoursesPagination);
+PublicRouter.post("/course/get-courses-offset", CourseController.getCoursesOffset);
 PublicRouter.post("/course/autocomplete", CourseController.autoComplete);
 PublicRouter.post("/course/search", CourseController.searchCourse);
 PublicRouter.post("/course/get-course-detail", CourseController.getCourseDetail);

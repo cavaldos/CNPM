@@ -7,7 +7,7 @@ const config: SqlConfig = {
   user: process.env.DB_USER || 'sa',
   password: process.env.DB_PASSWORD || '',
   server: process.env.DB_SERVER || 'localhost',
-  database: process.env.DB_NAME || 'CourseDB',
+  database: process.env.DB_NAME || 'CNPM',
   port: Number(process.env.DB_PORT) || 1433,
   options: {
     encrypt: false,
@@ -106,6 +106,8 @@ class DataConnect {
         throw error;
       }
     } catch (error: any) {
+      
+      console.log(`Query failed: ${error.message}`);
       throw new Error(`Procedure failed: ${error.message}`);
     } finally {
       if (this.pool && this.pool.connected) {

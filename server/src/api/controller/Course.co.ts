@@ -68,6 +68,34 @@ const CourseController = {
         }
     },
 
+    getCoursesOffset: async (req: Request, res: Response) => {
+        try {
+            const page = parseInt(req.body.page as string) || 0;
+            const pageSize = parseInt(req.body.pageSize as string) || 10;
+            // const offset = (page - 1) * pageSize;
+
+            const result = await CourseRepository.getAllCoursesPagination(
+                page,
+                pageSize
+            );
+            res.status(200).json({
+                success: true,
+                message: "Courses retrieved successfully",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    totalPage: result.total,
+                    result: result.courses,
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get courses",
+                error: error
+            });
+        }
+    },
 
     getAllCoursesByInstructorID: async (req: Request, res: Response) => {
         try {

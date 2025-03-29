@@ -1,12 +1,13 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { 
+import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   BarChart, Bar
 } from 'recharts';
 import { CircularProgress, Box } from '@mui/material';
+import CoursesTable from './CoursesTable';
 
 const DashboardContainer = styled.div`
   padding: 20px;
@@ -90,6 +91,7 @@ const activityData = [
 ];
 
 const AdminDashboard = () => {
+
   return (
     <DashboardContainer>
       <Grid>
@@ -163,6 +165,7 @@ const AdminDashboard = () => {
           </ResponsiveContainer>
         </ChartContainer>
       </Grid>
+      <CoursesTable></CoursesTable>
     </DashboardContainer>
   );
 };
