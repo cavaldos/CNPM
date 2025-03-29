@@ -23,13 +23,13 @@ function App() {
     } else {
       return GuestRouter;
     }
-  }
+  };
 
   return (
     <Router>
       <Suspense fallback={<Loading />}>
         <Routes>
-          {verifyRole().map((route, index) => {
+          {AdminRouter.map((route, index) => {
             const Layout = route.Layout === null ? Fragment : route.Layout;
             const Page = route.component;
             return (
