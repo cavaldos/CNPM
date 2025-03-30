@@ -9,5 +9,14 @@ const AdminService = {
         const response = await axiosinstance.get(`/admin/users/${id}`);
         return response;
     }
+    , course: {
+        getCoursesOffset: async (page, pageSize) => {
+            const response = await axiosinstance.post("/public/course/get-courses-offset", {
+                page,
+                pageSize
+            });
+            return response;
+        },
+    }
 }
 export default AdminService;
