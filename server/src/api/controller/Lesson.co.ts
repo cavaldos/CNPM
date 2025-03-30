@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import LessonRepository from "../repositories/lesson";
+import LessonRepository from "../repositories/lesson.repo";
 
 const LessonController = {
     createLessonVideo: async (req: Request, res: Response) => {

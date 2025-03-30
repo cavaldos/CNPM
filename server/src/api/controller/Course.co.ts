@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import CourseRepository from "../repositories/course";
-import ReviewRepository from "../repositories/review";
-import LessonRepository from "../repositories/lesson";
-import EnrollmentRepository from "../repositories/Enrollment";
+import CourseRepository from "../repositories/course.repo";
+import ReviewRepository from "../repositories/review.repo";
+import LessonRepository from "../repositories/lesson.repo";
+import EnrollmentRepository from "../repositories/enrollment.repo";
 import { datasearch } from "../../fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {

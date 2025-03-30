@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserRepository from "../repositories/user";
+import UserRepository from "../repositories/user.repo";
 
 const AuthController = {
 
@@ -43,7 +43,7 @@ const AuthController = {
                 const fullName = displayName || userName;
                 const userRole = role || 'Student'; // Default role if not specified
 
-                 await UserRepository.createUser(userName, email, fullName, userRole);
+                await UserRepository.createUser(userName, email, fullName, userRole);
                 const returnUser = await UserRepository.getUserByEmail(email as string || '');
 
                 return res.status(201).json({

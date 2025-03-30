@@ -44,18 +44,18 @@ const LessonList = () => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Completed':
+            case 'Done':
                 return 'bg-green-500';
-            case 'In Progress':
+            case 'InProcess':
                 return 'bg-yellow-500';
-            case 'Not Started':
+            case 'NotStarted':
             default:
                 return 'bg-gray-300';
         }
     };
 
     const getStatusText = (status) => {
-        return status || 'Not Started';
+        return status || 'NotStarted';
     };
 
     return (
@@ -83,16 +83,16 @@ const LessonList = () => {
                                     }`}
                                 onClick={() => handleLessonClick(lesson.LessonID)}
                             >
-                                <span className={`w-3 h-3 ${getStatusColor(lesson.Status)} rounded-full mr-2`}></span>
+                                <span className={`w-3 h-3 ${getStatusColor(lesson.ProcessStatus)} rounded-full mr-2`}></span>
                                 <div className="flex-grow">
                                     <div className="text-sm">{lesson.Title}</div>
                                     <div className="text-xs text-gray-500">
                                         {lesson.Duration} mins • {lesson.LessonType} • {lesson.ComplexityLevel}
                                     </div>
                                 </div>
-                                <div className={`text-xs px-2 py-1 rounded-full ml-2 ${lesson.Status === 'Completed' ? 'bg-green-100 text-green-800' :
-                                    lesson.Status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                                        'bg-gray-100 text-gray-800'
+                                <div className={`text-xs px-2 py-1 rounded-full ml-2 ${lesson.ProcessStatus === 'Done' ? 'bg-green-100 text-green-800' :
+                                        lesson.ProcessStatus === 'InProcess' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800'
                                     }`}>
                                     {getStatusText(lesson.ProcessStatus)}
                                 </div>

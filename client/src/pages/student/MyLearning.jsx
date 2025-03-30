@@ -3,6 +3,7 @@ import { BookOpen, CheckCircle, Clock, MoreVertical, Loader2 } from "lucide-reac
 import StudentService from "../../services/student.service";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { notification } from "antd"; // Thay đổi từ toast sang notification của antd
 /**
  * @typedef {Object} Course
  * @property {number} id
@@ -20,6 +21,7 @@ const MyLearning = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [completingCourse, setCompletingCourse] = useState(null); // Track which course is being completed
     const user = useSelector((state) => state.auth);
     const navigate = useNavigate();
     useEffect(() => {
@@ -53,6 +55,45 @@ const MyLearning = () => {
 
         fetchCourseProgress();
     }, []);
+
+    const handleCompleteCourse = async (e, enrollmentID) => {
+        e.stopPropagation(); // Prevent navigating to course details
+        try {
+            setCompletingCourse(enrollmentID);
+            const response = await StudentService.progress.completeCourseProgress(enrollmentID);
+
+            if (response.success) {
+                // Update the status of the completed course in state
+                setCourses(prevCourses =>
+                    prevCourses.map(course =>
+                        course.EnrollmentID === enrollmentID
+                            ? { ...course, status: "Completed", progress: 100 }
+                            : course
+                    )
+                );
+                notification.success({
+                    message: "Success",
+                    description: "Course marked as completed!",
+                    placement: "topRight"
+                });
+            } else {
+                notification.error({
+                    message: "Error",
+                    description: response.message || "Failed to complete course",
+                    placement: "topRight"
+                });
+            }
+        } catch (error) {
+            console.error("Error completing course:", error);
+            notification.error({
+                message: "Error",
+                description: "Error completing course",
+                placement: "topRight"
+            });
+        } finally {
+            setCompletingCourse(null);
+        }
+    };
 
     const filteredCourses = courses.filter((course) =>
         activeTab === "enrolled"
@@ -144,9 +185,30 @@ const MyLearning = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="p-2 hover:bg-gray-100 rounded-full">
-                                        <MoreVertical className="w-5 h-5 text-gray-500" />
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        {course.status === "Enrolled" && (
+                                            <button
+                                                className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm font-medium transition-colors"
+                                                onClick={(e) => handleCompleteCourse(e, course.EnrollmentID)}
+                                                disabled={completingCourse === course.EnrollmentID}
+                                            >
+                                                {completingCourse === course.EnrollmentID ? (
+                                                    <span className="flex items-center">
+                                                        <Loader2 className="w-3 h-3 animate-spin mr-1" />
+                                                        Processing...
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center">
+                                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                                        Complete Course
+                                                    </span>
+                                                )}
+                                            </button>
+                                        )}
+                                        <button className="p-2 hover:bg-gray-100 rounded-full">
+                                            <MoreVertical className="w-5 h-5 text-gray-500" />
+                                        </button>
+                                    </div>
                                 </div>
                                 {course.status === "Enrolled" && (
                                     <div className="mt-4">

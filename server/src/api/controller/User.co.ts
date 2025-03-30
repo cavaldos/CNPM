@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserRepository from "../repositories/user";
+import UserRepository from "../repositories/user.repo";
 
 const UserController = {
     createUser: async (req: Request, res: Response) => {

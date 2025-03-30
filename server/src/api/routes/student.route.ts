@@ -17,6 +17,7 @@ StudentRouter.post("/course/reviews", CourseController.review.getCourseReviews);
 
 StudentRouter.post("/progress/get-all", LearnProgressController.getAllCourseProgress);
 StudentRouter.post("/progress/check-status", LearnProgressController.checkProcessStatus);
+StudentRouter.post("/progress/complete", LearnProgressController.completeCourseProgress);
 
 StudentRouter.post("/progress/start", LearnProgressController.startLearnProgress);
 StudentRouter.post("/progress/update", LearnProgressController.updateLearnProgress);

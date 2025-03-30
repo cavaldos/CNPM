@@ -10,10 +10,11 @@ const LearnProgressRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async updateLearnProgress(progressID: number, processStatus: string) {
+    async updateLearnProgress(studentID: number, lessonID: number, processStatus: string) {
         const proc = 'update_learn_progress';
         const params = {
-            ProgressID: progressID,
+            StudentID: studentID,
+            LessonID: lessonID,
             ProcessStatus: processStatus
         };
         return await DataConnect.executeProcedure(proc, params);
@@ -77,6 +78,16 @@ const LearnProgressRepository = {
         `;
         return await DataConnect.execute(query);
     },
+    async updateCourceProgress(enrollmentID: number) {
+        const query = `
+                UPDATE Enrollment
+                SET EnrollmentStatus = 'Completed'
+                WHERE EnrollmentID = ${enrollmentID};
+            `;
+        return await DataConnect.execute(query);
+    },
+
+
     async checkProcessStatus(lessonID: number, studentID: number) {
         const query = `
                SELECT

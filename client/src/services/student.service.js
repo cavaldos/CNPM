@@ -74,10 +74,13 @@ const StudentService = {
         delete: async (enrollmentID) => {
             const response = await axiosinstance.post(`/student/enrollment/delete`, { enrollmentID });
             return response
-        }
-        ,
-        update: async (enrollmentID, Status) => {
-            const response = await axiosinstance.post(`/student/enrollment/update`, { enrollmentID, Status });
+        },
+        update: async (studentID, lessonID, processStatus) => {
+            const validStatuses = ['NotStarted', 'InProcess', 'Done'];
+            if (!validStatuses.includes(processStatus)) {
+                throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+            }
+            const response = await axiosinstance.post(`/student/enrollment/update`, { studentID, lessonID, processStatus });
             return response;
         },
         getAllEnrollmentsByStudent: async (studentID) => {
@@ -127,7 +130,48 @@ const StudentService = {
                     message: error.response?.data?.message || "Failed to retrieve lessons in progress"
                 };
             }
-        }
+        },
+        startLearnProgress: async (studentID, lessonID) => {
+            try {
+                const response = await axiosinstance.post(`/student/progress/start`, { studentID, lessonID });
+                return response;
+            } catch (error) {
+                console.error("Error starting learning progress:", error);
+                return {
+                    success: false,
+                    message: error.response?.data?.message || "Failed to start learning progress"
+                };
+            }
+        },
+        updateLearnProgress: async (studentID, lessonID, processStatus) => {
+            try {
+                const validStatuses = ['NotStarted', 'InProcess', 'Done'];
+                if (!validStatuses.includes(processStatus)) {
+                    throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+                }
+                const response = await axiosinstance.post(`/student/progress/update`, { studentID, lessonID, processStatus });
+                return response;
+            } catch (error) {
+                console.error("Error updating learning progress:", error);
+                return {
+                    success: false,
+                    message: error.response?.data?.message || "Failed to update learning progress"
+                };
+            }
+        },
+        completeCourseProgress: async (enrollmentID) => {
+            try {
+                const response = await axiosinstance.post(`/student/progress/complete`, { enrollmentID });
+                return response;
+            } catch (error) {
+                console.error("Error completing course progress:", error);
+                return {
+                    success: false,
+                    message: error.response?.data?.message || "Failed to complete course progress"
+                };
+            }
+         }
+
     }
     ,
     course: {

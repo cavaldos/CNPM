@@ -5,11 +5,14 @@ const LearningService = () => {
     const { enrollmentId, courseId, lessonId } = useParams();
     const [lessons, setLessons] = useState([]);
     const [lessonId2, setLessonId] = useState(null);
+    const [completionPercentage, setCompletionPercentage] = useState(0);
     const fetchLessons = async (enrollmentID) => {
         try {
             const response = await StudentService.progress.getAllLessonInProgress(enrollmentID);
             if (response.success) {
                 setLessons(response.data);
+                console.log("Lessons:", response.completionPercentage);
+                setCompletionPercentage(response.completionPercentage);
                 const firstLessonID = response.data[0]?.LessonID || null;
                 setLessonId(firstLessonID);
                 return { success: true, data: response.data };
@@ -32,7 +35,7 @@ const LearningService = () => {
         enrollmentId,
         courseId,
         lessonId,
-
+        completionPercentage,
     };
 }
 

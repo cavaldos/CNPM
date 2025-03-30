@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import EnrollmentRepository from "../repositories/Enrollment";
+import EnrollmentRepository from "../repositories/enrollment.repo";
 import _ from "lodash";
 
 const EnrollmentController = {
@@ -69,9 +69,9 @@ const EnrollmentController = {
             });
         } catch (error) {
             console.error("Error updating enrollment:", error);
-            return res.status(500).json({ 
+            return res.status(500).json({
                 success: false,
-                message: "Internal server error" 
+                message: "Internal server error"
             });
         }
     },
@@ -81,9 +81,9 @@ const EnrollmentController = {
             const { studentID } = req.body;
 
             if (!studentID) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    message: "StudentID is required" 
+                    message: "StudentID is required"
                 });
             }
 
@@ -127,21 +127,21 @@ const EnrollmentController = {
             });
         } catch (error) {
             console.error("Error retrieving enrollments:", error);
-            return res.status(500).json({ 
+            return res.status(500).json({
                 success: false,
-                message: "Internal server error" 
+                message: "Internal server error"
             });
         }
     },
     async getContacts(req: Request, res: Response) {
-        
+
         try {
             const { courseID } = req.body;
 
             if (!courseID) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    message: "CourseID is required" 
+                    message: "CourseID is required"
                 });
             }
 
@@ -155,9 +155,9 @@ const EnrollmentController = {
             });
         } catch (error) {
             console.error("Error retrieving friends:", error);
-            return res.status(500).json({ 
+            return res.status(500).json({
                 success: false,
-                message: "Internal server error" 
+                message: "Internal server error"
             });
         }
     }
