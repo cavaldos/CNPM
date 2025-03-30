@@ -129,6 +129,15 @@ const StudentService = {
             }
         }
     }
+    ,
+    course: {
+        checkCourseEnrollment: async (courseID, studentID) => {
+            const response = await axiosinstance.post(`/student/course/check-course-enrolled`, { courseID, studentID });
+            return response;
+
+        }
+
+    }
 };
 
 export default StudentService;

@@ -6,13 +6,12 @@ import {
 } from "./routes";
 
 import { useSelector } from "react-redux";
-import React, { Fragment, Suspense, lazy } from "react";
+import React, { Fragment, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NotfoundError from "./components/ui/utilize/err";
 import Loading from "./components/ui/utilize/Loading";
 function App() {
   const user = useSelector((state) => state.auth);
-  console.log(user);
   const verifyRole = () => {
     if (user.Role === "Student") {
       return StudentRouter;
@@ -27,9 +26,9 @@ function App() {
 
   return (
     <Router>
-      <Suspense fallback={<Loading />}>
+      {/* <Suspense fallback={<Loading />}> */}
         <Routes>
-          {verifyRole().map((route, index) => {
+        {verifyRole().map((route, index) => {
             const Layout = route.Layout === null ? Fragment : route.Layout;
             const Page = route.component;
             return (
@@ -37,11 +36,9 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  <Suspense fallback={<Loading />}>
-                    <Layout>
-                      <Page />
-                    </Layout>
-                  </Suspense>
+                  <Layout>
+                    <Page />
+                  </Layout>
                 }
               />
             );
@@ -55,7 +52,7 @@ function App() {
             }
           />
         </Routes>
-      </Suspense>
+      {/* </Suspense> */}
     </Router>
   );
 }

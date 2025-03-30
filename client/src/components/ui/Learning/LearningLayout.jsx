@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 import LessonList from "./LessonList";
 
 const LearningPage = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { enrollmentId, courseId } = useParams();
     const [activeTab, setActiveTab] = useState(null);
 
     const tabs = [
-        { name: "Discussion Forums", path: "/learning/discussion-forums" },
-        { name: "Messages", path: "/learning/messages" },
+        { name: "Discussion Forums", path: "discussion-forums" },
+        { name: "Messages", path: "messages" },
         // { name: "Course Info", path: "/learning/info" },
     ];
 
@@ -29,7 +30,8 @@ const LearningPage = ({ children }) => {
 
     const handleTabClick = (tab) => {
         setActiveTab(tab.name);
-        navigate(tab.path);
+        // Append the tab path to the enrollmentId and courseId path
+        navigate(`/learning/${enrollmentId}/${courseId}/${tab.path}`);
     };
 
     return (

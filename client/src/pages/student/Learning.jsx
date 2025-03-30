@@ -4,6 +4,7 @@ import LearningLayout from "../../components/ui/Learning/LearningLayout";
 import StudentService from "../../services/student.service";
 import LearnProcessVideo from "../../components/ui/Learn/LearnVideo";
 import LearnProcessDoc from "../../components/ui/Learn/LearnDoc";
+import LearningService from "../../components/ui/Learning/LearningService";
 
 /**
  * 
@@ -38,18 +39,19 @@ import LearnProcessDoc from "../../components/ui/Learn/LearnDoc";
  */
 
 const LearningPage = () => {
+
     const { lessonId } = useParams();
-    const navigate = useNavigate();
     const [lesson, setLesson] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { lessonId2 } = LearningService();
 
     useEffect(() => {
         const fetchLesson = async () => {
             setLoading(true);
             try {
-                const response = await StudentService.lesson.getLessonById(lessonId);
-                console.log("response", response.data[0]);
+                const response = await StudentService.lesson.getLessonById(lessonId || lessonId2);
+                console.log("responsdfafsdgdfse", response.data[0]);
                 if (response.success) {
                     // Lấy bài học đầu tiên từ mảng data (hoặc null nếu không có)
                     setLesson(response.data[0] || null);
@@ -68,6 +70,8 @@ const LearningPage = () => {
             fetchLesson();
         }
     }, [lessonId]);
+
+
 
     // Hiển thị màn hình loading
     if (loading) {

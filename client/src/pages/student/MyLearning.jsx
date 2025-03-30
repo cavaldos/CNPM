@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BookOpen, CheckCircle, Clock, MoreVertical, Loader2 } from "lucide-react";
 import StudentService from "../../services/student.service";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 /**
  * @typedef {Object} Course
  * @property {number} id
@@ -19,21 +20,23 @@ const MyLearning = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const user = useSelector((state) => state.auth);
     const navigate = useNavigate();
     useEffect(() => {
         const fetchCourseProgress = async () => {
             try {
                 setLoading(true);
-                const response = await StudentService.progress.getAllCourseProgress(1); // Replace 1 with actual student ID
+                const response = await StudentService.progress.getAllCourseProgress(user.UserID);
                 if (response.success) {
                     // Map API data to course format
                     const formattedCourses = response.data.map(course => ({
                         id: course.CourseID,
-                        university: course.Topic || "Unknown Topic",
+                        topic: course.Topic || "Unknown Topic",
                         title: course.CourseTitle,
+                        EnrollmentID: course.EnrollmentID,
                         progress: course.EnrollmentStatus === "Completed" ? 100 : 50, // Assuming 50% for enrolled courses
                         status: course.EnrollmentStatus,
-                        imageUrl: defaultImage, // Using a placeholder image
+                        imageUrl: course.imageUrl || defaultImage, // Using a placeholder image
                         enrollDate: new Date(course.EnrollDate).toLocaleDateString()
                     }));
                     setCourses(formattedCourses);
@@ -56,7 +59,6 @@ const MyLearning = () => {
             ? course.status === "Enrolled"
             : course.status === "Completed"
     );
-
     return (
         <div className="min-h-screen w-full px-[120px] bg-gray-50 p-6">
             <div className="max-w-7xl mx-auto">
@@ -116,9 +118,9 @@ const MyLearning = () => {
                     <div className="grid gap-4">
                         {filteredCourses.map((course) => (
                             <div
-                                key={course.id}
+                                key={course.EnrollmentID}
                                 className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-                                onClick={() => navigate(`/learning/${course.id}`)}
+                                onClick={() => navigate(`/learning/${course.EnrollmentID}/${course.id}`)}
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex gap-4">
@@ -129,7 +131,7 @@ const MyLearning = () => {
                                         />
                                         <div>
                                             <p className="text-sm text-gray-600 mb-1">
-                                                {course.university}
+                                                {course.topic}
                                             </p>
                                             <h3 className="text-xl font-semibold mb-2">
                                                 {course.title}

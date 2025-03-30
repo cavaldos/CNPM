@@ -1,15 +1,27 @@
 import { lazy } from "react";
 
-const StudentLayout = lazy(() =>
-  import("../components/Layout/student/StudentLayout")
-);
-const HomeStudent = lazy(() => import("../pages/student/index"));
-const MyLearningPage = lazy(() => import("../pages/student/MyLearning"));
-const HelpCenterPage = lazy(() => import("../pages/student/HelpCenter"));
-const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
-const LearningPage = lazy(() => import("../pages/student/Learning"));
-const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
-const MessagesPage = lazy(() => import("../pages/student/Messages"));
+// const StudentLayout = lazy(() =>
+//   import("../components/Layout/student/StudentLayout")
+// );
+// const HomeStudent = lazy(() => import("../pages/student/index"));
+// const MyLearningPage = lazy(() => import("../pages/student/MyLearning"));
+// const HelpCenterPage = lazy(() => import("../pages/student/HelpCenter"));
+// const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
+// const LearningPage = lazy(() => import("../pages/student/Learning"));
+// const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
+// const MessagesPage = lazy(() => import("../pages/student/Messages"));
+
+import StudentLayout from "../components/Layout/student/StudentLayout";
+import HomeStudent from "../pages/student/index";
+import MyLearningPage from "../pages/student/MyLearning";
+import HelpCenterPage from "../pages/student/HelpCenter";
+import CourseDetailPage from "../pages/student/CourseDetail";
+import LearningPage from "../pages/student/Learning";
+import DiscussionForumsPage from "../pages/student/Forum";
+import MessagesPage from "../pages/student/Messages";
+
+
+
 
 const StudentRouter = [
   {
@@ -33,13 +45,13 @@ const StudentRouter = [
     Layout: StudentLayout,
     key: "",
   },
-  {
-    name: "Course Detail",
-    path: "/course-detail",
-    component: CourseDetailPage,
-    Layout: StudentLayout,
-    key: "header",
-  },
+  // {
+  //   name: "Course Detail",
+  //   path: "/course-detail",
+  //   component: CourseDetailPage,
+  //   Layout: StudentLayout,
+  //   key: "header",
+  // },
   {
     name: "Course Detail",
     path: "/course-detail/:courseId",
@@ -54,16 +66,24 @@ const StudentRouter = [
     Layout: StudentLayout,
     key: "header",
   },
+  // {
+  //   name: "Learning",
+  //   path: "/learning",
+  //   component: LearningPage,
+  //   Layout: StudentLayout,
+  //   key: "header",
+  // },
   {
     name: "Learning",
-    path: "/learning",
+    path: "/learning/:enrollmentId/:courseId",
     component: LearningPage,
     Layout: StudentLayout,
-    key: "header",
+    key: "",
   },
+  
   {
     name: "Learning",
-    path: "/learning/:lessonId",
+    path: "/learning/:enrollmentId/:courseId/lesson/:lessonId",
     component: LearningPage,
     Layout: StudentLayout,
     key: "",
@@ -71,14 +91,14 @@ const StudentRouter = [
 
   {
     name: "Discussion Forums",
-    path: "/learning/discussion-forums",
+    path: "/learning/:enrollmentId/:courseId/discussion-forums",
     component: DiscussionForumsPage,
     Layout: StudentLayout,
     key: "",
   },
   {
     name: "Messages",
-    path: "/learning/messages",
+    path: "/learning/:enrollmentId/:courseId/messages",
     component: MessagesPage,
     Layout: StudentLayout,
     key: "",

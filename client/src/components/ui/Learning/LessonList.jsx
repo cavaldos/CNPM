@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useNavigate, useLocation } from 'react-router-dom';
-import StudentService from "../../../services/student.service";
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import LearningService from "./LearningService";
 
 const LessonList = () => {
     const [isOpen, setIsOpen] = useState(() => {
         const savedState = localStorage.getItem('courseMaterialIsOpen');
         return savedState ? JSON.parse(savedState) : false;
     });
+    const { enrollmentId, courseId, lessonId } = useParams();
     const [activeLesson, setActiveLesson] = useState(null);
-    const [lessons, setLessons] = useState([]);
+    const { lessons, fetchLessons } = LearningService();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -26,22 +27,19 @@ const LessonList = () => {
         localStorage.setItem('courseMaterialIsOpen', JSON.stringify(isOpen));
     }, [isOpen]);
 
+    // Fix: Only fetch lessons when enrollmentId changes, not when fetchLessons changes
     useEffect(() => {
-        const fetchLessons = async () => {
-            const enrollmentId = 1; // Replace with actual enrollment ID
-            const response = await StudentService.progress.getAllLessonInProgress(enrollmentId);
-            if (response.success) {
-                setLessons(response.data);
-            } else {
-                console.error(response.message);
-            }
-        };
-        fetchLessons();
-    }, []);
+        if (enrollmentId) {
+            const loadLessons = async () => {
+                await fetchLessons(enrollmentId);
+            };
+            loadLessons();
+        }
+    }, [enrollmentId]); // Remove fetchLessons from dependency array
 
     const handleLessonClick = (lessonId) => {
         setActiveLesson(lessonId);
-        navigate(`/learning/${lessonId}`);
+        navigate(`/learning/${enrollmentId}/${courseId}/lesson/${lessonId}`);
     };
 
     const getStatusColor = (status) => {
@@ -93,8 +91,8 @@ const LessonList = () => {
                                     </div>
                                 </div>
                                 <div className={`text-xs px-2 py-1 rounded-full ml-2 ${lesson.Status === 'Completed' ? 'bg-green-100 text-green-800' :
-                                        lesson.Status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                                            'bg-gray-100 text-gray-800'
+                                    lesson.Status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-gray-100 text-gray-800'
                                     }`}>
                                     {getStatusText(lesson.ProcessStatus)}
                                 </div>

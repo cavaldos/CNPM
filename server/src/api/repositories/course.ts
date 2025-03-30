@@ -27,8 +27,8 @@ const CourseRepository = {
             FROM Course c
             INNER JOIN [User] u ON c.InstructorID = u.UserID
             ORDER BY c.CreateTime DESC
-            OFFSET 0 ROWS FETCH NEXT 500 ROWS ONLY;
-        `;
+            `;
+            // OFFSET 0 ROWS FETCH NEXT 500 ROWS ONLY;
         return await DataConnect.execute(query);
     },
 

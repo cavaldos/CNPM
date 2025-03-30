@@ -4,9 +4,11 @@ import cors from 'cors';
 import morgan from 'morgan';
 import routers from "./api/routes";
 import DataConnect from './config/DataConnect';
-DataConnect.open();
-const app = express();
 
+// Kết nối MongoDB
+DataConnect.open();
+
+const app = express();
 
 app.use(
   cors({

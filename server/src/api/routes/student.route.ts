@@ -6,13 +6,12 @@ import LessonController from "../controller/Lesson.co";
 const StudentRouter = Router();
 
 StudentRouter.post("/course/get-all-course", CourseController.getAllCourses);
-
+StudentRouter.post("/course/check-course-enrolled", CourseController.checkCourseEnrollment);
 // Course reviews
 StudentRouter.post("/course/review/create", CourseController.review.createReview);
 StudentRouter.post("/course/review/update", CourseController.review.updateReview);
 StudentRouter.post("/course/review/delete", CourseController.review.deleteReview);
 StudentRouter.post("/course/reviews", CourseController.review.getCourseReviews);
-
 
 // Learning progress
 

@@ -9,7 +9,7 @@ const LessonController = {
                 title,
                 duration,
                 complexityLevel,
-                lessonType,
+                lessonType || "Video",
                 ordinal,
                 courseID,
                 url
@@ -53,7 +53,7 @@ const LessonController = {
                 title,
                 duration,
                 complexityLevel,
-                lessonType,
+                lessonType || "Document",
                 ordinal,
                 documentContent,
                 courseID
