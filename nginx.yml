@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest # Sử dụng image Nginx chính thức từ Docker Hub
+    container_name: nginx_server # Tên container
+    ports:
+      - "8080:80" # Ánh xạ cổng 80 của host vào cổng 80 của container
+      - "443:443" # Ánh xạ cổng 443 (HTTPS) nếu cần
+      #    volumes:
+      #- ./nginx/conf.d:/etc/nginx/conf.d # Mount thư mục cấu hình Nginx
+      #- ./html:/usr/share/nginx/html # Mount thư mục chứa file HTML tĩnh
+      #- ./logs:/var/log/nginx # Mount thư mục log của Nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    restart: always # Đảm bảo container luôn khởi động lại khi bị dừng
+
+volumes:
+  nginx_data:
+    driver: local # Sử dụng driver local để lưu trữ dữ liệu
+

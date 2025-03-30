@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import CourseRepository from "../repositories/course";
 import ReviewRepository from "../repositories/review";
 import LessonRepository from "../repositories/lesson";
+import EnrollmentRepository from "../repositories/Enrollment";
 import { datasearch } from "../../fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
@@ -68,6 +69,34 @@ const CourseController = {
         }
     },
 
+    getCoursesOffset: async (req: Request, res: Response) => {
+        try {
+            const page = parseInt(req.body.page as string) || 0;
+            const pageSize = parseInt(req.body.pageSize as string) || 10;
+            // const offset = (page - 1) * pageSize;
+
+            const result = await CourseRepository.getAllCoursesPagination(
+                page,
+                pageSize
+            );
+            res.status(200).json({
+                success: true,
+                message: "Courses retrieved successfully",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    totalPage: result.total,
+                    result: result.courses,
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get courses",
+                error: error
+            });
+        }
+    },
 
     getAllCoursesByInstructorID: async (req: Request, res: Response) => {
         try {
@@ -245,7 +274,31 @@ const CourseController = {
             });
         }
     },
-
+    checkCourseEnrollment: async (req: Request, res: Response) => {
+        try {
+            const { studentID, courseID } = req.body;
+            // Validate input
+            if (!studentID || !courseID) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Missing studentID or courseID in request body"
+                });
+            }
+            const isEnrolled = await EnrollmentRepository.checkEnrollment(studentID, courseID);
+            return res.status(200).json({
+                success: true,
+                message: "Enrollment status retrieved successfully",
+                data: { isEnrolled: isEnrolled }
+            });
+        } catch (error) {
+            console.error("Error checking enrollment status:", error); // Log the error for debugging
+            return res.status(500).json({
+                success: false,
+                message: "Failed to check enrollment status",
+                error: error instanceof Error ? error.message : String(error) // Provide error details
+            });
+        }
+    },
 
     review: {
 
@@ -330,7 +383,9 @@ const CourseController = {
                     error: error
                 });
             }
-        }
+        },
+
+
     }
 };
 

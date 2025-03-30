@@ -8,7 +8,9 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PublicService from "../../../services/public.service";
-
+import StudentService from "../../../services/student.service";
+import { useSelector } from "react-redux";
+import { message } from "antd";
 const CourseDetail = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
@@ -18,6 +20,8 @@ const CourseDetail = () => {
   const menuRef = useRef(null);
   const [courseInfo, setCourseInfo] = useState(null);
   const [lessonsList, setLessonsList] = useState([]);
+  const user = useSelector((state) => state.auth);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -37,24 +41,44 @@ const CourseDetail = () => {
       }
     };
 
+    const checkEnrollmentStatus = async () => {
+      if ( user.UserID && courseId) {
+        try {
+          const response = await StudentService.course.checkCourseEnrollment(courseId, user.UserID);
+          console.log("Enrollment status response:", response);
+          if (response.success) {
+            setIsEnrolled(response.data.isEnrolled);
+          }
+        } catch (err) {
+          console.error("Error checking enrollment status:", err);
+          // Optionally set an error state here
+        }
+      }
+    };
+
     fetchCourseData();
-  }, [courseId]);
+    checkEnrollmentStatus(); // Call the check enrollment function
+  }, [courseId, user.UserID]); // Add user.UserID as a dependency
 
 
   const handleEnrollCourse = async () => {
     try {
-
-    } catch (err) {
+      const response = await StudentService.enrollment.create(user.UserID, courseId);
+      if (response.success === true) {
+        setIsEnrolled(true);
+        messageApi.info('Enrollment successful! You can now access the course.');
+      } else {
+        messageApi.error('Enrollment failed. Please try again.');
+      }
+    } catch (error) {
+      console.error("Enrollment error:", error); // Log the error for debugging
     }
   };
 
   const handleGoToCourse = () => {
-    navigate(`/learning/${courseId}`);
+    navigate(`/my-learning-progress`);
   };
 
-  const handleGoToDiscussion = () => {
-    navigate(`/discussion-forum/${courseId}`);
-  };
 
   if (loading) {
     return (
@@ -76,7 +100,8 @@ const CourseDetail = () => {
   }
 
 
-  return (
+  return (<>
+    {contextHolder}
     <div className="max-w-6xl mx-auto py-6 px-4 bg-gray-50 min-h-screen relative">
 
       <div className="block items-center mb-6 max-w-4xl">
@@ -112,24 +137,21 @@ const CourseDetail = () => {
           >
             Go To Course
           </button>
-          <Button
-            variant="outlined"
-            startIcon={<ForumIcon />}
-            onClick={handleGoToDiscussion}
-          >
-            Discussion Forum
-          </Button>
         </div>
       ) : (
         <div className="flex space-x-4 mb-6">
           <button
-            className="normal-case w-60 bg-blue-600 hover:bg-blue-700 font-semibold text-white rounded-md py-2 px-4"
+            className={`normal-case w-60 font-semibold rounded-md py-2 px-4 ${user.Role === "Student"
+              ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+              : "bg-gray-400 text-gray-700 cursor-not-allowed"
+              }`}
             onClick={handleEnrollCourse}
           >
             Enroll
-            <p className="font-semibold text-sm">Start Learning Today</p>
+            <p className="font-semibold text-sm">
+              {user.Role === "Student" ? "Start Learning Today" : "Login as Student to Enroll"}
+            </p>
           </button>
-   
         </div>
       )}
 
@@ -258,6 +280,7 @@ const CourseDetail = () => {
         </div>
       </div>
     </div>
+  </>
   );
 };
 

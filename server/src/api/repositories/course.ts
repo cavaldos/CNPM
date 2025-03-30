@@ -19,14 +19,16 @@ const CourseRepository = {
 
     async getAllCourses() {
         const query = `
-            SELECT c.*, 
+
+         SELECT c.*,
                    u.FullName as InstructorName,
                    (SELECT COUNT(*) FROM Review r WHERE r.CourseID = c.CourseID) as ReviewCount,
                    (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount
             FROM Course c
             INNER JOIN [User] u ON c.InstructorID = u.UserID
             ORDER BY c.CreateTime DESC
-        `;
+            `;
+            // OFFSET 0 ROWS FETCH NEXT 500 ROWS ONLY;
         return await DataConnect.execute(query);
     },
 
@@ -63,6 +65,20 @@ const CourseRepository = {
 
     async getAllCoursesPagination(offSet: number, pageSize: number) {
         const proc = 'get_all_course';
+        const params = {
+            OffSet: offSet,
+            PageSize: pageSize
+        }
+        const courses = await DataConnect.executeProcedure(proc, params);
+        const total = await this.totalPages();
+        return {
+            courses,
+            total,
+        };
+    },
+
+    async getCoursesOffset(offSet: number, pageSize: number) {
+        const proc = 'get_courses_offset';
         const params = {
             OffSet: offSet,
             PageSize: pageSize

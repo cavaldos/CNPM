@@ -1,27 +1,8 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicService from "../../../services/public.service";
 
 // Mock data for recently viewed and popular items (replace with API data if needed)
-const recentlyViewed = [
-    {
-        title: "MBA in Business Analytics",
-        university: "O.P. Jindal Global University",
-        image: "https://via.placeholder.com/40", // Placeholder image URL
-    },
-    {
-        title: "English and Academic Preparation - Pre-Collegiate",
-        university: "Rice University",
-        image: "https://via.placeholder.com/40",
-    },
-    {
-        title: "Amazon DevOps Guru Getting Started",
-        university: "Amazon Web Services",
-        image: "https://via.placeholder.com/40",
-    },
-];
-
-const popularItems = ["machine learning", "project management", "cybersecurity"];
 
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -31,22 +12,22 @@ const SearchBar = () => {
     const [recent, setRecent] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // Function to truncate text and add ellipsis if it's too long
+    const truncateText = (text, maxLength = 65) => {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
+
     const fetchAutoComplete = async (searchTerm) => {
         setLoading(true);
         setError(null);
         try {
             const response = await PublicService.course.autoComplete(searchTerm);
-
+            console.log(response);
             setResults(response.data.results || []);
             setRecent(response.data.recent || []);
-            if (response.data && response.data.result) {
-                setResults(response.data.result);
-                setRecent(response.data.recent);
-            } else {
-                throw new Error("Dữ liệu trả về không hợp lệ");
-            }
-        }
-        catch (error) {
+        } catch (error) {
             console.error("Error fetching courses:", error);
         }
     }
@@ -116,26 +97,22 @@ const SearchBar = () => {
 
             {/* Dropdown for search results */}
             {isDropdownOpen && (
-                <div className="absolute top-full left-0 w-[480px] mt-2 bg-white border rounded-lg shadow-lg z-40 p-4">
+                <div className="absolute top-full left-0 w-[480px] mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-40 p-4">
                     {/* Recently Viewed Section */}
                     <div className="mb-4">
                         <h3 className="text-sm font-semibold text-gray-600 mb-2">
                             Recently viewed
                         </h3>
-                        {recentlyViewed.map((item, index) => (
+                        {recent.map((item, index) => (
                             <div
                                 key={index}
-                                className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer"
-                                onClick={() => handleSelectItem(item.title)}
+                                className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer p-3"
+                                onClick={() => handleSelectItem(item)}
                             >
-                                <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    className="w-10 h-10 rounded"
-                                />
                                 <div>
-                                    <p className="text-sm font-medium">{item.title}</p>
-                                    <p className="text-xs text-gray-500">{item.university}</p>
+                                    <p className="text-sm font-medium text-ellipsis overflow-hidden">
+                                        {truncateText(item)}
+                                    </p>
                                 </div>
                             </div>
                         ))}
@@ -146,14 +123,14 @@ const SearchBar = () => {
                         <h3 className="text-sm font-semibold text-gray-600 mb-2">
                             Popular right now
                         </h3>
-                        {popularItems.map((item, index) => (
+                        {results.map((item, index) => (
                             <div
                                 key={index}
-                                className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer"
+                                className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer p-3"
                                 onClick={() => handleSelectItem(item)}
                             >
                                 <span className="text-blue-600">🔍</span>
-                                <p className="text-sm">{item}</p>
+                                <p className="text-sm text-ellipsis overflow-hidden">{truncateText(item)}</p>
                             </div>
                         ))}
                     </div>

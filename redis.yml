@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  # Service cho Redis
+  redis:
+    image: redis:latest # Sử dụng image Redis chính thức
+    container_name: redis_server
+    ports:
+      - "6379:6379" # Ánh xạ cổng 6379 của host vào cổng 6379 của container
+    volumes:
+      - ./redis-data:/data # Lưu trữ dữ liệu Redis trên máy chủ (tùy chọn)
+    restart: always

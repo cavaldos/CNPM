@@ -3,10 +3,10 @@ const GuestLayout = lazy(() => import("~/components/Layout/guest/GuestLayout"));
 
 const HomeGuest = lazy(() => import("~/pages/guest/index"));
 const CourseDetail = lazy(() => import("~/pages/guest/CourseDetail"));
-import LoginPage from "../pages/guest/Login";
+const LoginPage = lazy(() => import("~/pages/guest/Login"));
 import TestChatPage from "../pages/TestChatPage";
-import SetRole from "../pages/guest/SetRole";
-import AdminLogin from "../pages/guest/AdminLogin";
+const SetRole = lazy(() => import("~/pages/guest/SetRole"));
+const AdminLogin = lazy(() => import("~/pages/guest/AdminLogin"));
 const GuestRouter = [
   {
     name: "Home",

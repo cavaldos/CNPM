@@ -18,8 +18,11 @@ const HomeCourse = () => {
         try {
             const response = await PublicService.course.getAllCourses(page, pageSize);
             const data = response.data;
-            if (data && data.result) {
-                setCourses(data.result);
+
+            // Check if data exists and has expected structure
+            if (data) {
+                // Set courses to empty array if no results
+                setCourses(data.result || []);
                 setTotalPages(data.totalPage || 0);
                 setCurrentPage(data.page || page);
             } else {
@@ -27,7 +30,7 @@ const HomeCourse = () => {
             }
         } catch (error) {
             const errorMsg = error.response?.data?.message || error.message || "Lỗi không xác định";
-            setError(`Lỗi khi tải khóa học: ${errorMsg}`);
+            setError(`${errorMsg}`);
             console.error("Error fetching courses:", error);
         } finally {
             setLoading(false);
@@ -75,11 +78,11 @@ const HomeCourse = () => {
                     {loading ? (
                         <div className="flex-1 flex justify-center items-center py-10">
                             <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
-                            <p className="mt-2 ml-2">Đang tải khóa học...</p>
                         </div>
                     ) : error ? (
                         <div className="flex-1 flex flex-col justify-center items-center py-10 text-red-600">
-                            <p>{error}</p>
+                            <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+
                             <button
                                 className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md border border-blue-700 hover:bg-blue-700 transition-colors duration-200"
                                 onClick={() => fetchCourses(currentPage)}
@@ -143,7 +146,7 @@ const HomeCourse = () => {
                         </div>
                     ) : (
                         <div className="flex-1 flex justify-center items-center py-10">
-                            <p className="text-gray-600">Không tìm thấy khóa học nào</p>
+                            <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
                         </div>
                     )}
                 </div>
