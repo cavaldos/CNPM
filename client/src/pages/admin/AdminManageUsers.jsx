@@ -18,7 +18,7 @@ import {
   DialogActions,
   DialogContent,
 } from "@mui/material";
-
+import { ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
 const AdminManageUsers = () => {
   // Local state for users
   const [users, setUsers] = useState([
@@ -54,6 +54,9 @@ const AdminManageUsers = () => {
   const [selectedUserIdForRole, setSelectedUserIdForRole] = useState(null);
   const [newRole, setNewRole] = useState("");
 
+  // State for sorting
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
   // Handle role change initiation
   const handleRoleChange = (userId, event) => {
     const role = event.target.value;
@@ -110,7 +113,35 @@ const AdminManageUsers = () => {
     setOpenStatusConfirm(false);
     setSelectedUserIdForStatus(null);
   };
+  // Handle sorting
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // Toggle direction if same column is clicked
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      // Set new column and default to ascending
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
 
+  // Sort users based on current column and direction
+  const sortedUsers = [...users].sort((a, b) => {
+    if (!sortColumn) return 0; // No sorting if no column selected
+
+    const valueA = a[sortColumn].toLowerCase
+      ? a[sortColumn].toLowerCase()
+      : a[sortColumn];
+    const valueB = b[sortColumn].toLowerCase
+      ? b[sortColumn].toLowerCase()
+      : b[sortColumn];
+
+    if (sortDirection === "asc") {
+      return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
+    } else {
+      return valueA < valueB ? 1 : valueA > valueB ? -1 : 0;
+    }
+  });
   return (
     <Box sx={{ p: 4, maxWidth: "1200px", mx: "auto" }}>
       <TableContainer
@@ -125,18 +156,62 @@ const AdminManageUsers = () => {
       >
         <Table sx={{ minWidth: 650 }} aria-label="user management table">
           <TableHead>
-            <TableRow sx={{ bordertop: "" }}>
-              <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                Name
+            <TableRow sx={{ backgroundColor: "white" }}>
+              <TableCell
+                sx={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+                onClick={() => handleSort("name")}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  Name
+                  {sortColumn === "name" &&
+                    (sortDirection === "asc" ? (
+                      <ArrowDropUp sx={{ color: "black", ml: 1 }} />
+                    ) : (
+                      <ArrowDropDown sx={{ color: "black", ml: 1 }} />
+                    ))}
+                </Box>
               </TableCell>
-              <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                Email
+              <TableCell
+                sx={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+                onClick={() => handleSort("email")}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  Email
+                  {sortColumn === "email" &&
+                    (sortDirection === "asc" ? (
+                      <ArrowDropUp sx={{ color: "black", ml: 1 }} />
+                    ) : (
+                      <ArrowDropDown sx={{ color: "black", ml: 1 }} />
+                    ))}
+                </Box>
               </TableCell>
-              <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                Role
+              <TableCell
+                sx={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+                onClick={() => handleSort("role")}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  Role
+                  {sortColumn === "role" &&
+                    (sortDirection === "asc" ? (
+                      <ArrowDropUp sx={{ color: "black", ml: 1 }} />
+                    ) : (
+                      <ArrowDropDown sx={{ color: "black", ml: 1 }} />
+                    ))}
+                </Box>
               </TableCell>
-              <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                Status
+              <TableCell
+                sx={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+                onClick={() => handleSort("status")}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  Status
+                  {sortColumn === "status" &&
+                    (sortDirection === "asc" ? (
+                      <ArrowDropUp sx={{ color: "black", ml: 1 }} />
+                    ) : (
+                      <ArrowDropDown sx={{ color: "black", ml: 1 }} />
+                    ))}
+                </Box>
               </TableCell>
               <TableCell sx={{ color: "black", fontWeight: "bold" }}>
                 Actions
@@ -144,7 +219,7 @@ const AdminManageUsers = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {sortedUsers.map((user) => (
               <TableRow
                 key={user.id}
                 sx={{
@@ -212,6 +287,9 @@ const AdminManageUsers = () => {
         <DialogTitle>
           Are you sure you want to change this user's role to "{newRole}"?
         </DialogTitle>
+        <DialogContent>
+          Are you sure you want to change this user's role to "{newRole}"?
+        </DialogContent>
         <DialogActions>
           <Button onClick={cancelRoleChange} color="primary">
             Cancel
