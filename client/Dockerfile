@@ -8,12 +8,9 @@ RUN apk add --no-cache python3 g++ make
 COPY package.json ./
 RUN yarn install && yarn add --force esbuild
 
-# Copy env file first so it's available during build
+# Copy env file before source for better cache
 COPY .env ./
 COPY . .
-
-# Không cần chỉ định từng biến một, Vite sẽ tự đọc file .env
-# khi build nếu file đã được copy vào container
 
 RUN yarn build
 
@@ -26,16 +23,12 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/yarn.lock ./
 
-# Cài đặt sudo và các dependency cần thiết
-RUN apk add --no-cache sudo
-RUN yarn install --production
+RUN yarn install --production && yarn add --force esbuild
 
-
+# Bạn đang là root, không cần sudo
 EXPOSE 5173
 EXPOSE 8081
 EXPOSE 80
 EXPOSE 81
 
-
-# Sử dụng sudo cho yarn preview
-CMD [ "yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
+CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]

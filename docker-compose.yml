@@ -6,13 +6,13 @@ services:
       # Không cần args vì sẽ dùng file .env trong context
     container_name: client-coursera
     ports:
-      - "81:5173"
+      - "80:5173"
     networks:
       - default
     env_file: "./client/.env"
     environment:
       - NODE_ENV=production
-      - PORT=81
+      - PORT=80
     depends_on:
       - server-coursera
     restart: always
