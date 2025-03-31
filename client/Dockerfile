@@ -8,15 +8,12 @@ RUN apk add --no-cache python3 g++ make
 COPY package.json ./
 RUN yarn install && yarn add --force esbuild
 
-
+# Copy env file first so it's available during build
+COPY .env ./
 COPY . .
 
-# Thiết lập biến môi trường build-time (nếu cần)
-ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
-
-# Increase memory limit for the build process
-ENV NODE_OPTIONS="--max-old-space-size=4096" 
+# Không cần chỉ định từng biến một, Vite sẽ tự đọc file .env
+# khi build nếu file đã được copy vào container
 
 RUN yarn build
 

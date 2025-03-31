@@ -3,6 +3,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      # Không cần args vì sẽ dùng file .env trong context
     container_name: client-coursera
     ports:
       - "80:5173"
@@ -11,7 +12,6 @@ services:
     env_file: "./client/.env"
     environment:
       - NODE_ENV=production
-      - VITE_API_URL=http://coursera.zapto.org:5001
       - PORT=80
     depends_on:
       - server-coursera

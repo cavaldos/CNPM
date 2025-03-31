@@ -12,10 +12,16 @@ export default defineConfig({
     allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
   },
   preview: {
+    host: "0.0.0.0",
     port: 80,
-    allowedHosts: ['bourbon.zapto.org', 'coursera.zapto.org'], // 'bourbon.zapto.org' is present
     strictPort: true,
+    allowedHosts: [
+      'bourbon.zapto.org',
+      'coursera.zapto.org',
+      '.zapto.org' // wildcard subdomains (nếu cần)
+    ],
   },
+
   resolve: {
     alias: [
       {
