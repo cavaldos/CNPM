@@ -32,4 +32,7 @@ EXPOSE 5173
 EXPOSE 8081
 EXPOSE 80
 
+# Đảm bảo chạy dưới quyền root
+USER root
+
 CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
