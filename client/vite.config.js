@@ -15,11 +15,12 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 80,
     strictPort: true,
-    allowedHosts: [
-      'bourbon.zapto.org',
-      'coursera.zapto.org',
-      '.zapto.org' // wildcard subdomains (nếu cần)
-    ],
+    allowedHosts: 'all',
+    // allowedHosts: [
+    //   'bourbon.zapto.org',
+    //   'coursera.zapto.org',
+    //   '.zapto.org' // wildcard subdomains (nếu cần)
+    // ],
   },
 
   resolve: {
