@@ -95,6 +95,8 @@ pipeline {
                             fi
                             
                             echo "Deploying to Production..."
+                            sh ./deploy.sh
+                            echo "Running Tests..."
             
                         '
                     """
