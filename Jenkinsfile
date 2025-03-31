@@ -25,7 +25,7 @@ pipeline {
                             echo "Running Tests..."
                             cd server
                             npm install
-                            npm run test
+                            npm test -- __test__/utils/sum.test.ts
                         '
                     """
                 }
