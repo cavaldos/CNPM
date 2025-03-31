@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: client-coursera
     ports:
-      - "8081:5173"
+      - "5173:8081"
     networks:
       - default
     env_file: "./client/.env"
