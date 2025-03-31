@@ -13,7 +13,7 @@ export default defineConfig({
   },
   preview: {
     host: "0.0.0.0",
-    port: 80,
+    port: 81,
     strictPort: true,
     allowedHosts: [
       'bourbon.zapto.org',

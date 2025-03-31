@@ -36,6 +36,7 @@ RUN echo "root ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/root
 EXPOSE 5173
 EXPOSE 8081
 EXPOSE 80
+EXPOSE 81
 
 # Đảm bảo chạy dưới quyền root
 USER root
