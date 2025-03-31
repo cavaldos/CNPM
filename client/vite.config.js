@@ -12,8 +12,8 @@ export default defineConfig({
     allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
   },
   preview: {
-    port: 8081,
-    allowedHosts: ['bourbon.zapto.org', 'coursera.zapto.org'],
+    port: 80,
+    allowedHosts: ['bourbon.zapto.org', 'coursera.zapto.org'], // 'bourbon.zapto.org' is present
     strictPort: true,
   },
   resolve: {

@@ -33,5 +33,6 @@ RUN yarn install --production
 
 EXPOSE 5173
 EXPOSE 8081
+EXPOSE 80
 
 CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
