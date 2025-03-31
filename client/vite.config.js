@@ -12,7 +12,8 @@ export default defineConfig({
     allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
   },
   preview: {
-    port: 8080,
+    port: 8081,
+    strictPort: true,
   },
   resolve: {
     alias: [

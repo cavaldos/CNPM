@@ -14,6 +14,9 @@ COPY . .
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
 
+# Increase memory limit for the build process
+ENV NODE_OPTIONS="--max-old-space-size=4096" 
+
 RUN yarn build
 
 # Stage 2: Serve the app
@@ -28,6 +31,6 @@ COPY --from=builder /app/yarn.lock ./
 RUN yarn install --production
 
 EXPOSE 5173
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]

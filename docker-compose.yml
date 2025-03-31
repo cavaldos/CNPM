@@ -5,13 +5,14 @@ services:
       dockerfile: Dockerfile
     container_name: client-coursera
     ports:
-      - "8080:5173"
+      - "8081:5173"
     networks:
       - default
     env_file: "./client/.env"
     environment:
       - NODE_ENV=production
       - VITE_API_URL=http://bourbon.zapto.org:5001
+      - PORT=8081
     depends_on:
       - server-coursera
     restart: always
