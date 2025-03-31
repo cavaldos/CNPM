@@ -30,16 +30,12 @@ COPY --from=builder /app/yarn.lock ./
 RUN apk add --no-cache sudo
 RUN yarn install --production
 
-# Cấu hình sudo để không yêu cầu mật khẩu
-RUN echo "root ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/root
 
 EXPOSE 5173
 EXPOSE 8081
 EXPOSE 80
 EXPOSE 81
 
-# Đảm bảo chạy dưới quyền root
-USER root
 
 # Sử dụng sudo cho yarn preview
-CMD ["sudo", "yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
+CMD [ "yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
