@@ -6,7 +6,8 @@ WORKDIR /app
 RUN apk add --no-cache python3 g++ make
 
 COPY package.json ./
-RUN yarn install
+RUN yarn install && yarn add --force esbuild
+
 
 COPY . .
 
