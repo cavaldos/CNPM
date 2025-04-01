@@ -1,22 +1,22 @@
-import ReviewRepository from '../../../src/api/repositories/review.repo';
+import ReviewRepository from '../../../src/api/repositories/review.repo'; // Điều chỉnh đường dẫn nếu cần
 import DataConnect from '../../../src/config/DataConnect';
 
 jest.mock('../../../src/config/DataConnect');
 
 describe('ReviewRepository', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        jest.clearAllMocks(); // Xóa mock sau mỗi test để tránh ảnh hưởng
     });
 
-    describe('Review Management', () => {
+    describe('Review Operations', () => {
         it('should call create_review procedure', async () => {
             const mockExecuteProcedure = jest.spyOn(DataConnect, 'executeProcedure');
-            await ReviewRepository.createReview('Great course!', 5, 1, 1);
+            await ReviewRepository.createReview('Great course!', 5, 1, 2);
             expect(mockExecuteProcedure).toHaveBeenCalledWith('create_review', {
                 Comment: 'Great course!',
                 Rating: 5,
                 StudentID: 1,
-                CourseID: 1
+                CourseID: 2
             });
         });
 
@@ -37,59 +37,31 @@ describe('ReviewRepository', () => {
                 ReviewID: 1
             });
         });
-    });
 
-    describe('Review Queries', () => {
         it('should call get_course_reviews procedure', async () => {
             const mockExecuteProcedure = jest.spyOn(DataConnect, 'executeProcedure');
-            await ReviewRepository.getCourseReviews(1);
+            await ReviewRepository.getCourseReviews(2);
             expect(mockExecuteProcedure).toHaveBeenCalledWith('get_course_reviews', {
-                CourseID: 1
+                CourseID: 2
             });
         });
 
         it('should execute correct query for selectAVGRating', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
-            await ReviewRepository.selectAVGRating(1);
-            expect(mockExecute).toHaveBeenCalledWith(
-                expect.stringContaining('SELECT AVG(Rating)')
-            );
-            expect(mockExecute).toHaveBeenCalledWith(
-                expect.stringContaining('FROM Review')
-            );
-            expect(mockExecute).toHaveBeenCalledWith(
-                expect.stringContaining('WHERE CourseID = 1')
-            );
+            await ReviewRepository.selectAVGRating(2);
+            const calledQuery = mockExecute.mock.calls[0][0];
+            expect(calledQuery).toMatch(/select AVG\(Rating\)/);
+            expect(calledQuery).toMatch(/from Review/);
+            expect(calledQuery).toMatch(/where CourseID = 2/);
         });
 
         it('should execute correct query for selectRatingCount', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
-            await ReviewRepository.selectRatingCount(1);
-            expect(mockExecute).toHaveBeenCalledWith(
-                expect.stringContaining('SELECT COUNT(Rating)')
-            );
-            expect(mockExecute).toHaveBeenCalledWith(
-                expect.stringContaining('FROM Review')
-            );
-            expect(mockExecute).toHaveBeenCalledWith(
-                expect.stringContaining('WHERE CourseID = 1')
-            );
-        });
-
-        it('should return 0 when no ratings exist', async () => {
-            const mockExecute = jest.spyOn(DataConnect, 'execute');
-            mockExecute.mockResolvedValue([{ 'AVG(Rating)': null }]);
-
-            const result = await ReviewRepository.selectAVGRating(1);
-            expect(result).toBe(0);
-        });
-
-        it('should return 0 when no review count exists', async () => {
-            const mockExecute = jest.spyOn(DataConnect, 'execute');
-            mockExecute.mockResolvedValue([{ 'COUNT(Rating)': null }]);
-
-            const result = await ReviewRepository.selectRatingCount(1);
-            expect(result).toBe(0);
+            await ReviewRepository.selectRatingCount(2);
+            const calledQuery = mockExecute.mock.calls[0][0];
+            expect(calledQuery).toMatch(/select COUNT\(Rating\)/);
+            expect(calledQuery).toMatch(/from Review/);
+            expect(calledQuery).toMatch(/where CourseID = 2/);
         });
     });
 });

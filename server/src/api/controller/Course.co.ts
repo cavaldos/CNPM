@@ -212,7 +212,6 @@ const CourseController = {
                 page,
                 pageSize
             );
-
             return res.status(200).json({
                 success: true,
                 message: "Search results retrieved successfully",
