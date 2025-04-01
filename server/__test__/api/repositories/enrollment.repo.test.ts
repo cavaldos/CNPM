@@ -40,35 +40,50 @@ describe('EnrollmentRepository', () => {
         it('should execute correct query for getAllEnrollmentsByStudent', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
             await EnrollmentRepository.getAllEnrollmentsByStudent(1);
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('SELECT'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('FROM Enrollment'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('WHERE StudentID = 1'));
+            const calledQuery = mockExecute.mock.calls[0][0];
+            expect(calledQuery).toMatch(/SELECT/i);
+            expect(calledQuery).toMatch(/FROM\s+\[Enrollment\]\s+e/i);
+            expect(calledQuery).toMatch(/WHERE\s+e\.StudentID\s+=\s+1/i);
+            expect(calledQuery).toMatch(/ORDER\s+BY\s+e\.EnrollDate\s+DESC/i);
         });
 
         it('should execute correct query for getContacts', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
             await EnrollmentRepository.getContacts(1);
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('SELECT'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('FROM User'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('WHERE CourseID = 1'));
+            const calledQuery = mockExecute.mock.calls[0][0];
+            expect(calledQuery).toMatch(/SELECT/i);
+            expect(calledQuery).toMatch(/FROM\s+\[User\]\s+u/i);
+            expect(calledQuery).toMatch(/WHERE\s+e\.CourseID\s+=\s+1/i);
+            expect(calledQuery).toMatch(/ORDER\s+BY\s+e\.EnrollDate\s+DESC/i);
         });
 
-        it('should execute correct query for checkEnrollment', async () => {
+        it('should execute correct query for checkEnrollment and return true when enrolled', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
             mockExecute.mockResolvedValue([{ count: 1 }]);
 
             const result = await EnrollmentRepository.checkEnrollment(1, 1);
 
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('SELECT COUNT(*)'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('FROM Enrollment'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('WHERE StudentID = 1'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('AND CourseID = 1'));
+            const calledQuery = mockExecute.mock.calls[0][0];
+            expect(calledQuery).toMatch(/SELECT\s+COUNT\(\*\)\s+as\s+count/i);
+            expect(calledQuery).toMatch(/FROM\s+\[Enrollment\]/i);
+            expect(calledQuery).toMatch(/WHERE\s+StudentID\s+=\s+1/i);
+            expect(calledQuery).toMatch(/AND\s+CourseID\s+=\s+1/i);
+            expect(calledQuery).toMatch(/AND\s+EnrollmentStatus\s+=\s+'Enrolled'/i);
             expect(result).toBe(true);
         });
 
         it('should return false when no enrollment exists', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
             mockExecute.mockResolvedValue([{ count: 0 }]);
+
+            const result = await EnrollmentRepository.checkEnrollment(1, 1);
+
+            expect(result).toBe(false);
+        });
+
+        it('should return false when result is empty or invalid', async () => {
+            const mockExecute = jest.spyOn(DataConnect, 'execute');
+            mockExecute.mockResolvedValue([]); // Trường hợp không có kết quả
 
             const result = await EnrollmentRepository.checkEnrollment(1, 1);
 

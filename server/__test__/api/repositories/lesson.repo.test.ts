@@ -108,9 +108,10 @@ describe('LessonRepository', () => {
         it('should execute correct query for getAllLessons', async () => {
             const mockExecute = jest.spyOn(DataConnect, 'execute');
             await LessonRepository.getAllLessons(1);
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('SELECT'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('FROM Lessons'));
-            expect(mockExecute).toHaveBeenCalledWith(expect.stringContaining('WHERE CourseID = 1'));
+            const calledQuery = mockExecute.mock.calls[0][0];
+            expect(calledQuery).toMatch(/SELECT/);
+            expect(calledQuery).toMatch(/from Lessons/); // Sửa FROM thành from
+            expect(calledQuery).toMatch(/WHERE c\.CourseID = 1/);
         });
 
         it('should execute correct query for getLessonByID', async () => {
