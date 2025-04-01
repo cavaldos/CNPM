@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard";
 import PublicService from "../../../services/public.service";
+import { useParams } from "react-router-dom";
 
 const HomeCourse = () => {
+    const { searchTerm } = useParams();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -16,7 +18,7 @@ const HomeCourse = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await PublicService.course.getAllCourses(page, pageSize);
+            const response = await PublicService.course.searchCourse(searchTerm || '', page, pageSize);
             const data = response.data;
 
             // Check if data exists and has expected structure
@@ -39,7 +41,7 @@ const HomeCourse = () => {
 
     useEffect(() => {
         fetchCourses(currentPage);
-    }, [currentPage]);
+    }, [currentPage, searchTerm]);
 
     const handlePageChange = (newPage) => {
         if (newPage >= 0 && newPage < totalPages) {
@@ -60,21 +62,11 @@ const HomeCourse = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Categories */}
             <div className="container mx-auto px-4 py-8">
-                <div className="flex flex-wrap gap-3 mb-8">
-                    {categories.map((category) => (
-                        <button
-                            key={category}
-                            className="px-4 py-2 rounded-full bg-white border border-gray-300 hover:bg-blue-50 hover:border-blue-500 transition-colors duration-200 text-gray-700"
-                            onClick={() => handleCategoryClick(category)}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
-
                 {/* Course List */}
                 <div className="flex flex-col min-h-[calc(100vh-200px)]">
-                    <h2 className="text-2xl font-bold mb-6">Khóa học đề xuất cho bạn</h2>
+                    <h2 className="text-2xl font-bold mb-6">
+                        {searchTerm ? `Kết quả tìm kiếm cho "${searchTerm}"` : "Khóa học đề xuất cho bạn"}
+                    </h2>
                     {loading ? (
                         <div className="flex-1 flex justify-center items-center py-10">
                             <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
@@ -145,8 +137,13 @@ const HomeCourse = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex-1 flex justify-center items-center py-10">
-                            <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+                        <div className="flex-1 flex justify-center items-center py-10 flex-col">
+                            <p className="text-gray-500 mb-4">Không tìm thấy khóa học nào</p>
+                            {searchTerm && (
+                                <p className="text-gray-400">
+                                    Không tìm thấy khóa học nào cho từ khóa "{searchTerm}"
+                                </p>
+                            )}
                         </div>
                     )}
                 </div>

@@ -1,24 +1,24 @@
 import { lazy } from "react";
 
-// const StudentLayout = lazy(() =>
-//   import("../components/Layout/student/StudentLayout")
-// );
-// const HomeStudent = lazy(() => import("../pages/student/index"));
-// const MyLearningPage = lazy(() => import("../pages/student/MyLearning"));
-// const HelpCenterPage = lazy(() => import("../pages/student/HelpCenter"));
-// const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
-// const LearningPage = lazy(() => import("../pages/student/Learning"));
-// const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
-// const MessagesPage = lazy(() => import("../pages/student/Messages"));
+const StudentLayout = lazy(() =>
+  import("../components/Layout/student/StudentLayout")
+);
+const HomeStudent = lazy(() => import("../pages/student/index"));
+const MyLearningPage = lazy(() => import("../pages/student/MyLearning"));
+const HelpCenterPage = lazy(() => import("../pages/student/HelpCenter"));
+const CourseDetailPage = lazy(() => import("../pages/student/CourseDetail"));
+const LearningPage = lazy(() => import("../pages/student/Learning"));
+const DiscussionForumsPage = lazy(() => import("../pages/student/Forum"));
+const MessagesPage = lazy(() => import("../pages/student/Messages"));
 
-import StudentLayout from "../components/Layout/student/StudentLayout";
-import HomeStudent from "../pages/student/index";
-import MyLearningPage from "../pages/student/MyLearning";
-import HelpCenterPage from "../pages/student/HelpCenter";
-import CourseDetailPage from "../pages/student/CourseDetail";
-import LearningPage from "../pages/student/Learning";
-import DiscussionForumsPage from "../pages/student/Forum";
-import MessagesPage from "../pages/student/Messages";
+// import StudentLayout from "../components/Layout/student/StudentLayout";
+// import HomeStudent from "../pages/student/index";
+// import MyLearningPage from "../pages/student/MyLearning";
+// import HelpCenterPage from "../pages/student/HelpCenter";
+// import CourseDetailPage from "../pages/student/CourseDetail";
+// import LearningPage from "../pages/student/Learning";
+// import DiscussionForumsPage from "../pages/student/Forum";
+// import MessagesPage from "../pages/student/Messages";
 
 
 

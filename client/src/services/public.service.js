@@ -34,8 +34,14 @@ const PublicService = {
             return response;
         },
 
-        searchCourse: async (searchTerm) => {
-            const response = await axiosinstance.post("/public/course/search", { searchTerm });
+        searchCourse: async (searchTerm, page, pageSize) => {
+            page = page || 0;
+            pageSize = pageSize || 10;
+            const response = await axiosinstance.post("/public/course/search", {
+                searchTerm,
+                page,
+                pageSize
+            });
             return response;
         },
         getAllCourses: async (page, pageSize) => {

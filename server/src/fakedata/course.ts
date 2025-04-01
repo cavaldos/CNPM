@@ -11,7 +11,7 @@ export const datasearch = {
     recent: [
         "HTML",
         "CSS",
-        "Reafsadfsadfasdfsadfasdfasdfsadfasd. ág. àgsjad fjsad fasfjgasdjfg jasdfct",
+        "React",
         "Node.js",
         "Angular",
     ]

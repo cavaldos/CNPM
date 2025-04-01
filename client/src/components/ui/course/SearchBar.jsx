@@ -98,6 +98,23 @@ const SearchBar = () => {
             {/* Dropdown for search results */}
             {isDropdownOpen && (
                 <div className="absolute top-full left-0 w-[480px] mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-40 p-4">
+                    {/* Popular Right Now Section */}
+                    <div>
+                        <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                            Popular right now
+                        </h3>
+                        {results.map((item, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer p-3"
+                                onClick={() => handleSelectItem(item)}
+                            >
+                                <span className="text-blue-600">🔍</span>
+                                <p className="text-sm text-ellipsis overflow-hidden">{truncateText(item)}</p>
+                            </div>
+                        ))}
+                    </div>
+                    
                     {/* Recently Viewed Section */}
                     <div className="mb-4">
                         <h3 className="text-sm font-semibold text-gray-600 mb-2">
@@ -118,22 +135,7 @@ const SearchBar = () => {
                         ))}
                     </div>
 
-                    {/* Popular Right Now Section */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-gray-600 mb-2">
-                            Popular right now
-                        </h3>
-                        {results.map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center space-x-2 py-2 hover:bg-gray-100 rounded cursor-pointer p-3"
-                                onClick={() => handleSelectItem(item)}
-                            >
-                                <span className="text-blue-600">🔍</span>
-                                <p className="text-sm text-ellipsis overflow-hidden">{truncateText(item)}</p>
-                            </div>
-                        ))}
-                    </div>
+        
                 </div>
             )}
         </div>

@@ -28,7 +28,7 @@ const CourseRepository = {
             INNER JOIN [User] u ON c.InstructorID = u.UserID
             ORDER BY c.CreateTime DESC
             `;
-            // OFFSET 0 ROWS FETCH NEXT 500 ROWS ONLY;
+        // OFFSET 0 ROWS FETCH NEXT 500 ROWS ONLY;
         return await DataConnect.execute(query);
     },
 
@@ -77,7 +77,7 @@ const CourseRepository = {
         };
     },
 
-    
+
     async createCourse(title: string, topic: string, description: string, image: string, instructorID: number) {
         const proc = 'create_course'
         const params = {
@@ -121,6 +121,62 @@ const CourseRepository = {
         };
 
         return await DataConnect.executeWithParams(query, params);
+    },
+
+    async autoComplete(search: string) {
+
+        const query = `
+                    WITH SplitWords AS (
+                    SELECT
+                        value AS Word,
+                        Title,
+                        Description
+                    FROM
+                        [Course]
+                    CROSS APPLY
+                        STRING_SPLIT(Title + ' ' + Description, ' ')
+                )
+                SELECT DISTINCT
+                    Word
+                FROM
+                    SplitWords
+                WHERE
+                    Word LIKE '%' + @Search + '%'
+        `;
+
+        const params = {
+            Search: search
+        };
+
+        return await DataConnect.executeWithParams(query, params);
+    },
+    async searchCourse(search: string, page: number, pageSize: number) {
+        const proc = `search_course`;
+
+        // Tính offset từ page và pageSize
+        const offset = (page - 1) * pageSize;
+
+        // Sửa đúng tên tham số là SearchTerm thay vì Search
+        const params = {
+            SearchTerm: search,
+            Offset: offset,
+            PageSize: pageSize
+        };
+
+
+        try {
+            const result = await DataConnect.executeProcedure(proc, params);
+
+            // Kiểm tra kết quả trả về từ stored procedure
+            if (!result) {
+                return { courses: [], total: 0 };
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error in searchCourse repository:', error);
+            throw error;
+        }
     }
 };
 

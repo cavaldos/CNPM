@@ -157,45 +157,78 @@ const CourseController = {
     autoComplete: async (req: Request, res: Response) => {
         try {
             const { searchTerm } = req.body;
-            console.log("searchTerm", searchTerm);
+            let formattedResult: string[] = [];
+            const limitedRecent = datasearch.recent.slice(0, 5); // Limit recent searches
+
+            if (searchTerm && searchTerm.trim() !== "") {
+                const result = await CourseRepository.autoComplete(searchTerm);
+                // Limit results to 5 and format
+                const limitedResult = result.slice(0, 5);
+                formattedResult = limitedResult.map((item: any) => item.Word);
+            }
+
             res.status(200).json({
                 success: true,
                 message: "Auto-complete results retrieved successfully",
-                data: datasearch,
+                data: {
+                    results: formattedResult, // Use the potentially empty or limited array
+                    recent: limitedRecent,
+                },
             });
         } catch (error) {
             res.status(500).json({
                 success: false,
                 message: "Failed to get auto-complete results",
-                error: error
+                error: error,
             });
         }
     },
     searchCourse: async (req: Request, res: Response) => {
         try {
-            const { searchTerm } = req.body;
-            console.log("searchTerm", searchTerm);
-            const page = 1;
-            const pageSize = 10;
-            const result = await CourseRepository.getAllCoursesPagination(
+            const searchTerm = req.body.searchTerm || '';
+            const page = parseInt(req.body.page as string) || 1;
+            const pageSize = parseInt(req.body.pageSize as string) || 10;
+
+            // Debug log
+            console.log(`Searching for: "${searchTerm}", page: ${page}, pageSize: ${pageSize}`);
+
+            // If searchTerm is empty, use getAllCoursesPagination instead
+            if (!searchTerm || searchTerm.trim() === "") {
+                const result = await CourseRepository.getAllCoursesPagination(page, pageSize);
+                return res.status(200).json({
+                    success: true,
+                    message: "All courses retrieved successfully",
+                    data: {
+                        page: page,
+                        pageSize: pageSize,
+                        totalPage: result.total || 0,
+                        result: result.courses || [],
+                    }
+                });
+            }
+
+            const result = await CourseRepository.searchCourse(
+                searchTerm,
                 page,
                 pageSize
             );
+
             res.status(200).json({
                 success: true,
                 message: "Search results retrieved successfully",
                 data: {
                     page: page,
                     pageSize: pageSize,
-                    totalPage: result.total,
-                    result: result.courses,
+                    totalPage: result.total || 0,
+                    result: result || [],
                 }
             });
         } catch (error) {
+            console.error("Search course error:", error);
             res.status(500).json({
                 success: false,
                 message: "Failed to search courses",
-                error: error
+                error: error instanceof Error ? error.message : String(error)
             });
         }
     },
