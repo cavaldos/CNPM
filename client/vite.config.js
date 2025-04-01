@@ -9,13 +9,13 @@ export default defineConfig({
   entry: "./src/index.js",
   server: {
     host: "0.0.0.0", // default: 'localhost'
-    allowedHosts: ['bourbon.zapto.org','coursera.zapto.org'],
+    allowedHosts: true, //['bourbon.zapto.org','coursera.zapto.org'],
   },
   preview: {
     host: "0.0.0.0",
     port: 80,
     strictPort: true,
-    allowedHosts: 'all',
+    allowedHosts: true
     // allowedHosts: [
     //   'bourbon.zapto.org',
     //   'coursera.zapto.org',
