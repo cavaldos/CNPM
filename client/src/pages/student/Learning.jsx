@@ -4,7 +4,8 @@ import LearningLayout from "../../components/ui/Learning/LearningLayout";
 import StudentService from "../../services/student.service";
 import LearnProcessVideo from "../../components/ui/Learn/LearnVideo";
 import LearnProcessDoc from "../../components/ui/Learn/LearnDoc";
-
+import LearningService from "../../components/ui/Learning/LearningService";
+import { Progress } from 'antd';
 /**
  * 
  * @data demo     "data": [
@@ -38,17 +39,18 @@ import LearnProcessDoc from "../../components/ui/Learn/LearnDoc";
  */
 
 const LearningPage = () => {
-    const { lessonId } = useParams();
-    const navigate = useNavigate();
+
+    const { lessonId, enrollmentId } = useParams();
     const [lesson, setLesson] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const { lessonId2, completionPercentage, fetchLessons } = LearningService();
+    console.log("lessonId2", enrollmentId);
     useEffect(() => {
-        const fetchLesson = async () => {
+        const fetchLesson2 = async () => {
             setLoading(true);
             try {
-                const response = await StudentService.lesson.getLessonById(lessonId);
+                const response = await StudentService.lesson.getLessonById(lessonId || lessonId2);
                 if (response.success) {
                     // Lấy bài học đầu tiên từ mảng data (hoặc null nếu không có)
                     setLesson(response.data[0] || null);
@@ -64,9 +66,13 @@ const LearningPage = () => {
         };
 
         if (lessonId) {
-            fetchLesson();
+            fetchLesson2();
         }
     }, [lessonId]);
+
+    useEffect(() => {
+        fetchLessons(enrollmentId);
+    }, []);
 
     // Hiển thị màn hình loading
     if (loading) {
@@ -145,7 +151,18 @@ const LearningPage = () => {
 
     return (
         <LearningLayout>
+
             <div className="p-4">
+                <div className="mb-4">
+                    <Progress
+                        percent={completionPercentage}
+                        status="active"
+                        strokeColor={{
+                            '0%': '#108ee9',
+                            '100%': '#87d068',
+                        }}
+                    />
+                </div>
                 {renderLessonContent()}
             </div>
         </LearningLayout>

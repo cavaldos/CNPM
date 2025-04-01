@@ -1,37 +1,35 @@
 services:
-  client-tp:
+  client-coursera:
     build:
       context: ./client
       dockerfile: Dockerfile
-    container_name: client-tp
+    container_name: client-coursera
     ports:
-      - "5173:5173"
+      - "80:5173"
     networks:
       - default
     env_file: "./client/.env"
     environment:
       - NODE_ENV=production
-      - VITE_API_URL= http://bourbon.zapto.org:3000
+      - VITE_ALLOWED_HOST=coursera.zapto.org
     depends_on:
-      - server-tp
+      - server-coursera
     restart: always
 
-  server-tp:
+  server-coursera:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: server-tp
+    container_name: server-coursera
     ports:
       - "3000:3000"
+      - "5001:5001"
     networks:
       - default
     environment:
       - NODE_ENV=production
     restart: always
 
-
 networks:
   default:
-    driver: bridge 
-    
-    
+    driver: bridge

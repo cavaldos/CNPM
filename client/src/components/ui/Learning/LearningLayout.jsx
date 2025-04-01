@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 import LessonList from "./LessonList";
 
 const LearningPage = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { enrollmentId, courseId } = useParams();
     const [activeTab, setActiveTab] = useState(null);
 
     const tabs = [
-        { name: "Discussion Forums", path: "/learning/discussion-forums" },
-        { name: "Messages", path: "/learning/messages" },
+        { name: "Discussion Forums", path: "discussion-forums" },
+        { name: "Messages", path: "messages" },
         // { name: "Course Info", path: "/learning/info" },
     ];
 
@@ -29,13 +30,14 @@ const LearningPage = ({ children }) => {
 
     const handleTabClick = (tab) => {
         setActiveTab(tab.name);
-        navigate(tab.path);
+        // Append the tab path to the enrollmentId and courseId path
+        navigate(`/learning/${enrollmentId}/${courseId}/${tab.path}`);
     };
 
     return (
         <div className="flex gap-[20px] h-[82vh] text-black ml-10">
 
-            <div className="w-[20%] p-3 overflow-y-auto max-h-[82vh]">
+            <div className="w-[25%] p-3 overflow-y-auto max-h-[82vh]">
                 <LessonList />
                 {tabs.map(tab => (
                     <div
@@ -50,7 +52,7 @@ const LearningPage = ({ children }) => {
             <div className="grow overflow-y-auto max-h-[82vh]">
                 {children}
             </div>
-            <div className="w-[22%] overflow-y-auto max-h-[calc(100vh-100px)]">
+            <div className="w-[20%] overflow-y-auto max-h-[calc(100vh-100px)]">
                 {/* Future content can be added here */}
             </div>
         </div>

@@ -1,6 +1,11 @@
 import React from 'react'
 import { MenuIcon, BellIcon, SearchIcon, UserIcon } from 'lucide-react'
+
 const Header = ({ onMenuClick }) => {
+
+    const handleLogout = () => {
+    }
+
     return (
         <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200">
             <div className="px-4 sm:px-6 lg:px-8">
@@ -34,14 +39,17 @@ const Header = ({ onMenuClick }) => {
                             <BellIcon className="h-6 w-6" />
                         </button>
                         <div className="ml-3 relative">
-                            <div className="flex items-center">
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center hover:bg-gray-100 p-2 rounded-lg transition-colors duration-200 cursor-pointer"
+                            >
                                 <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
                                     <UserIcon className="h-5 w-5" />
                                 </div>
                                 <span className="ml-2 text-sm font-medium text-gray-700 hidden md:block">
-                                    Admin
+                                    Instructor
                                 </span>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>

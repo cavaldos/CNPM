@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import CourseRepository from "../repositories/course";
-import ReviewRepository from "../repositories/review";
-import LessonRepository from "../repositories/lesson";
+import CourseRepository from "../repositories/course.repo";
+import ReviewRepository from "../repositories/review.repo";
+import LessonRepository from "../repositories/lesson.repo";
+import EnrollmentRepository from "../repositories/enrollment.repo";
 import { datasearch } from "../../fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
@@ -245,7 +246,31 @@ const CourseController = {
             });
         }
     },
-
+    checkCourseEnrollment: async (req: Request, res: Response) => {
+        try {
+            const { studentID, courseID } = req.body;
+            // Validate input
+            if (!studentID || !courseID) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Missing studentID or courseID in request body"
+                });
+            }
+            const isEnrolled = await EnrollmentRepository.checkEnrollment(studentID, courseID);
+            return res.status(200).json({
+                success: true,
+                message: "Enrollment status retrieved successfully",
+                data: { isEnrolled: isEnrolled }
+            });
+        } catch (error) {
+            console.error("Error checking enrollment status:", error); // Log the error for debugging
+            return res.status(500).json({
+                success: false,
+                message: "Failed to check enrollment status",
+                error: error instanceof Error ? error.message : String(error) // Provide error details
+            });
+        }
+    },
 
     review: {
 
@@ -330,7 +355,9 @@ const CourseController = {
                     error: error
                 });
             }
-        }
+        },
+
+
     }
 };
 

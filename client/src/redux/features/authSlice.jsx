@@ -12,18 +12,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    UserID: 3,
-    UserName: "peter789",
-    Email: "peter@example.com",
-    FullName: "Peter Johnson",
-    Role: "Instructor",
-    CreatedTime: "2025-01-03 09:15:00.000",
-    UpdateTime: "2025-01-03 09:15:00.000",
+    UserID: 0,
+    UserName: "",
+    Email: "",
+    FullName: "",
+    Role: "Guest",
+    CreatedTime: "",
+    UpdateTime: "",
   },
   reducers: {
     setUser: (state, action) => {
       const { UserID, UserName, Email, FullName, Role, CreatedTime, UpdateTime } = action.payload;
-      console.log('Payload:', action.payload);
       state.UserID = UserID;
       state.UserName = UserName;
       state.Email = Email;

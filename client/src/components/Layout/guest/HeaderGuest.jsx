@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "../../ui/course/SearchBar";
 import { Button } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import LoginComponent from "../../auth/firebase/LoginModal";
 const AccountControll = () => {
   const navigate = useNavigate();
 
@@ -32,12 +32,13 @@ const AccountControll = () => {
       </a>
 
       {/* Log In and Join for Free Buttons */}
-      <button
+      {/* <button
         onClick={handleLogin}
         className="border border-[#0056D2] text-[#0056D2] font-semibold py-1.5 px-4 rounded hover:bg-[#0056D2] hover:text-white transition-colors"
       >
         Log In
-      </button>
+      </button> */}
+      <LoginComponent />
       <button
         onClick={handleRegister}
         className="bg-[#0056D2] text-white font-semibold py-1.5 px-4 rounded hover:bg-[#003087] transition-colors"
@@ -50,12 +51,14 @@ const AccountControll = () => {
 
 
 const HeaderGuest = () => {
+  const navigate = useNavigate();
   return (
-    <div className="w-full px-[65px] bg-white border-b">
-      <div className="shadow-sm px-[48px]">
+    <div className="w-full px-[65px] bg-white border-gray-200 border-b border-[1px]">
+      <div className=" px-[48px]">
         <div className="container mx-auto px-6 py-3 flex justify-between items-center ">
           <div className="flex items-center gap-5">
-            <h1 className="text-3xl font-semibold text-[#0156d1]">coursera</h1>
+            <h1
+              className="text-3xl font-semibold text-[#0156d1] hover:cursor-pointer" onClick={() => navigate('/')}>coursera</h1>
             <Button className="" variant="outlined">
               Explore
               <KeyboardArrowDownIcon className="ml-2" />
@@ -65,7 +68,7 @@ const HeaderGuest = () => {
           <AccountControll />
         </div>
       </div>
-    
+
     </div>
   );
 };

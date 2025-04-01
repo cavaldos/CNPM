@@ -17,7 +17,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogActions,
-    CircularProgress
+    CircularProgress,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
@@ -42,15 +42,18 @@ const ManageCourses = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const user = useSelector((state) => state.auth);
-    
+
     // Fetch courses from API
     useEffect(() => {
         const fetchCourses = async () => {
             try {
                 setLoading(true);
-     
+
                 const instructorID = user.UserID; // Use dynamic instructor ID from user state
-                const response = await InstructorService.getAllCoursesByInstructorID(instructorID);
+                const response =
+                    await InstructorService.getAllCoursesByInstructorID(
+                        instructorID,
+                    );
                 setCourses(response.data || []);
                 setError(null);
             } catch (err) {
@@ -69,9 +72,13 @@ const ManageCourses = () => {
         try {
             await InstructorService.setHiddenCourse(courseId, !currentlyHidden);
             // Update the local state to reflect the change
-            setCourses(courses.map(course =>
-                course.CourseID === courseId ? { ...course, IsHidden: !currentlyHidden } : course
-            ));
+            setCourses(
+                courses.map((course) =>
+                    course.CourseID === courseId
+                        ? { ...course, IsHidden: !currentlyHidden }
+                        : course,
+                ),
+            );
         } catch (err) {
             console.error("Error toggling course visibility:", err);
             // Possibly show an error message to the user
@@ -83,26 +90,39 @@ const ManageCourses = () => {
         let filtered = [...courses];
 
         // Lọc theo tab
-        if (tabValue === 1) { // Published (public)
-            filtered = filtered.filter(course => !course.IsHidden);
-        } else if (tabValue === 2) { // Draft (hidden)
-            filtered = filtered.filter(course => course.IsHidden);
+        if (tabValue === 1) {
+            // Published (public)
+            filtered = filtered.filter((course) => !course.IsHidden);
+        } else if (tabValue === 2) {
+            // Draft (hidden)
+            filtered = filtered.filter((course) => course.IsHidden);
         }
 
         // Lọc theo tìm kiếm
         if (searchQuery) {
-            filtered = filtered.filter(course =>
-                course.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                course.Topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                course.Description.toLowerCase().includes(searchQuery.toLowerCase())
+            filtered = filtered.filter(
+                (course) =>
+                    course.Title.toLowerCase().includes(
+                        searchQuery.toLowerCase(),
+                    ) ||
+                    course.Topic.toLowerCase().includes(
+                        searchQuery.toLowerCase(),
+                    ) ||
+                    course.Description.toLowerCase().includes(
+                        searchQuery.toLowerCase(),
+                    ),
             );
         }
 
         // Sắp xếp
         if (sortBy === "newest") {
-            filtered.sort((a, b) => new Date(b.CreateTime) - new Date(a.CreateTime));
+            filtered.sort(
+                (a, b) => new Date(b.CreateTime) - new Date(a.CreateTime),
+            );
         } else if (sortBy === "oldest") {
-            filtered.sort((a, b) => new Date(a.CreateTime) - new Date(b.CreateTime));
+            filtered.sort(
+                (a, b) => new Date(a.CreateTime) - new Date(b.CreateTime),
+            );
         } else if (sortBy === "rating") {
             filtered.sort((a, b) => (b.AvgRating || 0) - (a.AvgRating || 0));
         }
@@ -129,8 +149,7 @@ const ManageCourses = () => {
 
     const handleEditCourse = () => {
         handleMenuClose();
-        // Điều hướng đến trang chỉnh sửa khóa học
-        navigate(`/edit-course/${selectedCourse.CourseID}`);
+        navigate(`/courses/${selectedCourse.CourseID}/update`);
     };
 
     const handleDeleteClick = () => {
@@ -167,7 +186,7 @@ const ManageCourses = () => {
             </div>
 
             <Card className="mb-6">
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs
                         value={tabValue}
                         onChange={handleChangeTab}
@@ -198,26 +217,41 @@ const ManageCourses = () => {
                         />
 
                         <div className="flex items-center space-x-2">
-                            <Typography variant="body2" className="text-gray-600">
+                            <Typography
+                                variant="body2"
+                                className="text-gray-600"
+                            >
                                 Sắp xếp theo:
                             </Typography>
                             <div className="flex gap-2">
                                 <Chip
                                     label="Mới nhất"
                                     clickable
-                                    color={sortBy === "newest" ? "primary" : "default"}
+                                    color={
+                                        sortBy === "newest"
+                                            ? "primary"
+                                            : "default"
+                                    }
                                     onClick={() => handleSortChange("newest")}
                                 />
                                 <Chip
                                     label="Cũ nhất"
                                     clickable
-                                    color={sortBy === "oldest" ? "primary" : "default"}
+                                    color={
+                                        sortBy === "oldest"
+                                            ? "primary"
+                                            : "default"
+                                    }
                                     onClick={() => handleSortChange("oldest")}
                                 />
                                 <Chip
                                     label="Đánh giá"
                                     clickable
-                                    color={sortBy === "rating" ? "primary" : "default"}
+                                    color={
+                                        sortBy === "rating"
+                                            ? "primary"
+                                            : "default"
+                                    }
                                     onClick={() => handleSortChange("rating")}
                                 />
                             </div>
@@ -230,7 +264,10 @@ const ManageCourses = () => {
                         </Box>
                     ) : error ? (
                         <Box className="text-center py-10">
-                            <Typography variant="h6" className="text-red-500 mb-2">
+                            <Typography
+                                variant="h6"
+                                className="text-red-500 mb-2"
+                            >
                                 {error}
                             </Typography>
                             <Button
@@ -244,36 +281,53 @@ const ManageCourses = () => {
                     ) : (
                         <Grid container spacing={4}>
                             {getFilteredCourses().map((course) => (
-                                <Grid item xs={12} md={6} lg={4} key={course.CourseID}>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={6}
+                                    lg={4}
+                                    key={course.CourseID}
+                                >
                                     <CourseInstructorView
                                         course={course}
                                         onMenuOpen={handleMenuOpen}
-                                        onToggleVisibility={handleToggleVisibility}
+                                        onToggleVisibility={
+                                            handleToggleVisibility
+                                        }
                                     />
                                 </Grid>
                             ))}
                         </Grid>
                     )}
 
-                    {!loading && !error && getFilteredCourses().length === 0 && (
-                        <Box className="text-center py-10">
-                            <Typography variant="h6" className="text-gray-500 mb-2">
-                                Không tìm thấy khóa học
-                            </Typography>
-                            <Typography variant="body1" className="text-gray-400">
-                                Thử tìm kiếm với từ khóa khác hoặc tạo khóa học mới
-                            </Typography>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<AddIcon />}
-                                className="mt-4"
-                                onClick={() => navigate("/create-course")}
-                            >
-                                Tạo khóa học mới
-                            </Button>
-                        </Box>
-                    )}
+                    {!loading &&
+                        !error &&
+                        getFilteredCourses().length === 0 && (
+                            <Box className="text-center py-10">
+                                <Typography
+                                    variant="h6"
+                                    className="text-gray-500 mb-2"
+                                >
+                                    Không tìm thấy khóa học
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    className="text-gray-400"
+                                >
+                                    Thử tìm kiếm với từ khóa khác hoặc tạo khóa
+                                    học mới
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<AddIcon />}
+                                    className="mt-4"
+                                    onClick={() => navigate("/create-course")}
+                                >
+                                    Tạo khóa học mới
+                                </Button>
+                            </Box>
+                        )}
                 </Box>
             </Card>
 
@@ -287,10 +341,12 @@ const ManageCourses = () => {
                     <EditIcon fontSize="small" className="mr-2" /> Chỉnh sửa
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    <VisibilityIcon fontSize="small" className="mr-2" /> Xem trước
+                    <VisibilityIcon fontSize="small" className="mr-2" /> Xem
+                    trước
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                    <ContentCopyIcon fontSize="small" className="mr-2" /> Sao chép
+                    <ContentCopyIcon fontSize="small" className="mr-2" /> Sao
+                    chép
                 </MenuItem>
                 <MenuItem onClick={handleDeleteClick} className="text-red-600">
                     <DeleteIcon fontSize="small" className="mr-2" /> Xóa
@@ -305,12 +361,20 @@ const ManageCourses = () => {
                 <DialogTitle>Xác nhận xóa khóa học</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Bạn có chắc chắn muốn xóa khóa học "{selectedCourse?.Title}"? Hành động này không thể hoàn tác.
+                        Bạn có chắc chắn muốn xóa khóa học "
+                        {selectedCourse?.Title}"? Hành động này không thể hoàn
+                        tác.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>Hủy</Button>
-                    <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+                    <Button onClick={() => setDeleteDialogOpen(false)}>
+                        Hủy
+                    </Button>
+                    <Button
+                        onClick={handleDeleteConfirm}
+                        color="error"
+                        variant="contained"
+                    >
                         Xóa
                     </Button>
                 </DialogActions>

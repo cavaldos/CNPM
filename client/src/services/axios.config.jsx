@@ -1,5 +1,5 @@
 import axios from "axios";
-// import GetCookie from "../hooks/GetCookie";
+import GetCookie from "../hooks/GetCookie";
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5001",
   timeout: 5000,
@@ -8,7 +8,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function (config) {
-    const token = "";
+    const token = GetCookie("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

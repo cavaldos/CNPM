@@ -3,7 +3,7 @@ import { CourseResponseDTO } from '../dto/course.dto';
 export const datasearch = {
     results: [
         "JavaScript",
-        "Python",
+        "Pythfsadf sfh sdh fasfhsahfshfksdhkashfkjasd ádkasdkhfkajsdhfkjasdhfkjon",
         "Java",
         "C++",
         "C#",
@@ -11,7 +11,7 @@ export const datasearch = {
     recent: [
         "HTML",
         "CSS",
-        "React",
+        "Reafsadfsadfasdfsadfasdfasdfsadfasd. ág. àgsjad fjsad fasfjgasdjfg jasdfct",
         "Node.js",
         "Angular",
     ]

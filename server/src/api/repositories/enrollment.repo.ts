@@ -37,7 +37,38 @@ const EnrollmentRepository = {
         `;
         return await DataConnect.execute(query);
     },
-
+    async getContacts(courseID: number) {
+        const query = `
+                  SELECT
+                    u.UserID,
+                    u.UserName,
+                    u.Email,
+                    u.FullName,
+                    e.EnrollmentStatus,
+                    e.EnrollDate
+                FROM
+                    [User] u
+                    INNER JOIN [Enrollment] e ON u.UserID = e.StudentID
+                WHERE
+                    e.CourseID = ${courseID}
+                ORDER BY
+                    e.EnrollDate DESC;      
+        `;
+        return await DataConnect.execute(query);
+    },
+    async checkEnrollment(studentID: number, courseID: number) {
+        const query = `
+            SELECT COUNT(*) as count
+            FROM [Enrollment]
+            WHERE StudentID = ${studentID} AND CourseID = ${courseID} AND EnrollmentStatus = 'Enrolled';
+        `;
+        const result = await DataConnect.execute(query);
+        // Check if the first element and its 'count' property exist
+        if (result && result.length > 0 && result[0].count !== undefined) {
+            return result[0].count > 0; // Return true if count > 0, false otherwise
+        }
+        return false; // Return false if result is empty or count is not found
+    },
 };
 
 export default EnrollmentRepository;

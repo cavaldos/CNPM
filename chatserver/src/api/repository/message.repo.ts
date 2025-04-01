@@ -13,54 +13,26 @@ const MessageRepo = {
         return await newMessage.save();
     },
 
-    async getConversation(user1Id: string, user2Id: string) {
+    async getConversation(sender: string, receiver: string) {
         return await Message.find({
             $or: [
-                { sender: user1Id, receiver: user2Id },
-                { sender: user2Id, receiver: user1Id },
+                { sender: sender, receiver: receiver },
+                { sender: receiver, receiver: sender },
             ],
         }).sort({ createdAt: 1 });
     },
 
-    async getUserMessages(userId: string) {
-        return await Message.find({
-            $or: [{ sender: userId }, { receiver: userId }],
-        }).sort({ createdAt: -1 });
-    },
+    async deleteMessage(messageId: string, userId: string) {
+        // Find message first to verify sender
+        const message = await Message.findById(messageId);
 
-    async markMessageAsRead(messageId: string) {
-        return await Message.findByIdAndUpdate(
-            messageId,
-            { isRead: true },
-            { new: true }
-        );
-    },
+        // If message doesn't exist or user is not the sender, return null
+        if (!message || message.sender.toString() !== userId) {
+            return null;
+        }
 
-    async getUnreadCount(userId: string) {
-        return await Message.countDocuments({
-            receiver: userId,
-            isRead: false,
-        });
-    },
-
-    async getConversationPartners(userId: string) {
-        // Find all messages where the user is either sender or receiver
-        const messages = await Message.find({
-            $or: [{ sender: userId }, { receiver: userId }],
-        });
-
-        // Extract unique user IDs that have communicated with this user
-        const partners = new Set();
-
-        messages.forEach((message) => {
-            if (message.sender.toString() === userId) {
-                partners.add(message.receiver.toString());
-            } else if (message.receiver.toString() === userId) {
-                partners.add(message.sender.toString());
-            }
-        });
-
-        return Array.from(partners);
+        // Delete the message if user is the sender
+        return await Message.findByIdAndDelete(messageId);
     },
 
     isValidObjectId(id: string) {

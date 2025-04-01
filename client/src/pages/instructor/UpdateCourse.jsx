@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  Typography,
-  Card,
-  TextField,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
-  Box,
-  CircularProgress,
-  Alert,
-  Grid,
-  Paper,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AddIcon from "@mui/icons-material/Add"; // Import the Add icon
+import { Save, ArrowLeft, Loader2 } from "lucide-react";
 import InstructorService from "../../services/instructor.service";
 import { uploadImage } from "../../hooks/uploadImage";
-
+import { message } from"antd";
 const UpdateCourse = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
@@ -37,35 +20,16 @@ const UpdateCourse = () => {
   const [success, setSuccess] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [imageInputType, setImageInputType] = useState("file");
 
-  // Các chủ đề có sẵn cho khóa học
-  const topics = [
-    "Programming",
-    "Web Development",
-    "Mobile Development",
-    "Data Science",
-    "Machine Learning",
-    "Artificial Intelligence",
-    "DevOps",
-    "Software Engineering",
-    "Databases",
-    "Cloud Computing",
-    "Cybersecurity",
-    "Game Development",
-    "Networking",
-    "Blockchain",
-    "Other",
-  ];
-
-  // Load thông tin khóa học hiện tại
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
         const response = await InstructorService.getCourseByID(courseId);
-
+        console.log("Course data:", response.data);
         if (response.data) {
-          const courseData = response.data;
+          const courseData = response.data[0];
           setFormData({
             title: courseData.Title || "",
             topic: courseData.Topic || "",
@@ -73,15 +37,14 @@ const UpdateCourse = () => {
             image: courseData.Image || "",
           });
 
-          // Hiển thị preview của ảnh hiện tại
           if (courseData.Image) {
             setImagePreview(
               courseData.Image.startsWith("http")
                 ? courseData.Image
                 : `/images/courses/${courseData.Image}`
             );
+            setImageInputType(courseData.Image.startsWith("http") ? "url" : "file");
           }
-
           setError(null);
         } else {
           setError("Không tìm thấy thông tin khóa học.");
@@ -99,16 +62,18 @@ const UpdateCourse = () => {
     }
   }, [courseId]);
 
-  // Xử lý thay đổi input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+
+    if (name === "image" && imageInputType === "url" && value) {
+      setImagePreview(value);
+    }
   };
 
-  // Xử lý thay đổi file ảnh
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -121,25 +86,30 @@ const UpdateCourse = () => {
     }
   };
 
-  // Xử lý lưu thay đổi
+  const handleImageInputTypeChange = (type) => {
+    setImageInputType(type);
+    if (type === "url") {
+      setImageFile(null);
+    } else {
+      if (!imageFile) {
+        setFormData({ ...formData, image: "" });
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setSaving(true);
       setError(null);
       setSuccess(false);
 
-      // Upload ảnh mới nếu có
       let imageUrl = formData.image;
-      if (imageFile) {
+      if (imageInputType === "file" && imageFile) {
         imageUrl = await uploadImage(imageFile);
       }
 
-      // Lấy ID của giảng viên (trong ứng dụng thực tế, nên lấy từ context hoặc local storage)
-      const instructorID = 3; // Giá trị này nên được thay thế bằng ID thực tế của người dùng
-
-      // Cập nhật thông tin khóa học
+      const instructorID = 3;
       const response = await InstructorService.updateCourse(
         courseId,
         formData.title,
@@ -148,13 +118,9 @@ const UpdateCourse = () => {
         imageUrl,
         instructorID
       );
-
-      if (response && response.data) {
+      if (response || response.data) {
         setSuccess(true);
-        // Có thể chuyển hướng người dùng sau khi cập nhật thành công
-        setTimeout(() => {
-          navigate("/my-courses");
-        }, 2000);
+        message.success("Cập nhật khóa học thành công!");
       }
     } catch (err) {
       console.error("Error updating course:", err);
@@ -164,168 +130,182 @@ const UpdateCourse = () => {
     }
   };
 
-  // Quay lại trang quản lý khóa học
-  const handleBack = () => {
-    navigate("/my-courses");
-  };
-
-  // Chuyển đến trang thêm bài học
-  const handleAddLessons = () => {
-    navigate(`/courses/${courseId}/add-lessons`);
-  };
+  const handleBack = () => navigate("/my-courses");
+  const handleAddLessons = () => navigate(`/courses/${courseId}/add-lessons`);
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <Box className="flex justify-between items-center mb-6">
-        <Typography variant="h4" component="h1">
-          Chỉnh sửa khóa học
-        </Typography>
-        <div>
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<AddIcon />}
-            onClick={handleAddLessons}
-            className="mr-4"
-          >
-            Thêm bài học
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<ArrowBackIcon />}
+
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-semibold">Chỉnh sửa khóa học</h1>
+        <div className="flex gap-4">
+          <button
+            className="flex items-center gap-2 border border-gray-300 px-4 py-2 rounded hover:bg-gray-100"
             onClick={handleBack}
           >
-            Quay lại
-          </Button>
+            <ArrowLeft size={20} /> Quay lại
+          </button>
+          <button
+            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+            onClick={handleAddLessons}
+          >
+            Quản lý bài học
+          </button>
         </div>
-      </Box>
+      </div>
 
       {loading ? (
-        <Box className="flex justify-center items-center py-20">
-          <CircularProgress />
-        </Box>
+        <div className="flex justify-center items-center py-20">
+          <Loader2 size={40} className="animate-spin text-blue-600" />
+        </div>
       ) : error ? (
-        <Alert severity="error" className="mb-4">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
-        </Alert>
+        </div>
       ) : (
-        <form onSubmit={handleSubmit}>
-          <Card className="mb-6 p-6">
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={8}>
-                <TextField
-                  fullWidth
-                  label="Tiêu đề khóa học"
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tiêu đề khóa học *
+                </label>
+                <input
+                  type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  margin="normal"
-                  variant="outlined"
+                  className="w-full p-3 border rounded focus:outline-none"
                 />
+              </div>
 
-                <FormControl fullWidth margin="normal" required>
-                  <InputLabel>Chủ đề</InputLabel>
-                  <Select
-                    name="topic"
-                    value={formData.topic}
-                    onChange={handleInputChange}
-                    label="Chủ đề"
-                  >
-                    {topics.map((topic) => (
-                      <MenuItem key={topic} value={topic}>
-                        {topic}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Chủ đề *
+                </label>
+                <input
+                  type="text"
+                  name="topic"
+                  value={formData.topic}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full p-3 border rounded focus:outline-none"
+                />
+              </div>
 
-                <TextField
-                  fullWidth
-                  label="Mô tả"
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mô tả *
+                </label>
+                <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   required
-                  margin="normal"
-                  variant="outlined"
-                  multiline
                   rows={5}
+                  className="w-full p-3 border rounded focus:outline-none"
                 />
-              </Grid>
+              </div>
+            </div>
 
-              <Grid item xs={12} md={4}>
-                <Paper className="p-4 mb-4">
-                  <Typography variant="subtitle1" gutterBottom>
-                    Hình ảnh khóa học
-                  </Typography>
+            <div className="space-y-4">
+              <div className="bg-white p-4 border rounded">
+                <h3 className="text-lg font-medium mb-4">Hình ảnh khóa học</h3>
+                <div className="mb-4">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Course Preview"
+                      className="w-full h-48 object-cover rounded border"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gray-100 flex items-center justify-center rounded border">
+                      <span className="text-gray-500">Chưa có hình ảnh</span>
+                    </div>
+                  )}
+                </div>
 
-                  <div className="mb-4">
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Course Preview"
-                        className="w-full h-48 object-cover rounded border border-gray-300"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-100 flex items-center justify-center rounded border border-gray-300">
-                        <Typography variant="body2" color="textSecondary">
-                          Chưa có hình ảnh
-                        </Typography>
-                      </div>
-                    )}
-                  </div>
-
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    fullWidth
-                    className="mb-2"
+                <div className="flex gap-2 mb-4">
+                  <button
+                    type="button"
+                    onClick={() => handleImageInputTypeChange("file")}
+                    className={`px-3 py-1 rounded text-sm ${imageInputType === "file"
+                        ? "bg-blue-100 text-blue-800 border border-blue-300"
+                        : "bg-gray-100 text-gray-700 border border-gray-300"
+                      }`}
                   >
-                    Chọn hình ảnh
+                    Tải ảnh lên
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleImageInputTypeChange("url")}
+                    className={`px-3 py-1 rounded text-sm ${imageInputType === "url"
+                        ? "bg-blue-100 text-blue-800 border border-blue-300"
+                        : "bg-gray-100 text-gray-700 border border-gray-300"
+                      }`}
+                  >
+                    Dùng URL
+                  </button>
+                </div>
+
+                {imageInputType === "file" ? (
+                  <label className="block w-full">
+                    <span className="sr-only">Chọn hình ảnh</span>
                     <input
                       type="file"
-                      hidden
                       accept="image/*"
                       onChange={handleImageChange}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     />
-                  </Button>
+                  </label>
+                ) : (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      URL hình ảnh
+                    </label>
+                    <input
+                      type="url"
+                      name="image"
+                      value={formData.image}
+                      onChange={handleInputChange}
+                      placeholder="https://example.com/image.jpg"
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                )}
+                <p className="text-xs text-gray-500 mt-2">
+                  Khuyến nghị: Tỷ lệ 16:9, tối thiểu 1280x720px
+                </p>
+              </div>
+            </div>
+          </div>
 
-                  <Typography variant="caption" color="textSecondary">
-                    Khuyến nghị: Hình ảnh có tỷ lệ 16:9, kích thước tối thiểu 1280x720px
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Card>
-
-          {success && (
-            <Alert severity="success" className="mb-4">
-              Cập nhật khóa học thành công!
-            </Alert>
-          )}
-
-          <Box className="flex justify-end">
-            <Button
+          <div className="flex justify-end gap-4">
+            <button
               type="button"
-              variant="outlined"
               onClick={handleBack}
-              className="mr-4"
               disabled={saving}
+              className="flex items-center gap-2 px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50"
             >
               Hủy
-            </Button>
-
-            <Button
+            </button>
+            <button
               type="submit"
-              variant="contained"
-              color="primary"
-              startIcon={<SaveIcon />}
               disabled={saving}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              {saving ? "Đang lưu..." : "Lưu thay đổi"}
-            </Button>
-          </Box>
+              {saving ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" /> Đang lưu...
+                </>
+              ) : (
+                <>
+                  <Save size={20} /> Lưu thay đổi
+                </>
+              )}
+            </button>
+          </div>
         </form>
       )}
     </div>

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useNavigate, useLocation } from 'react-router-dom';
-import StudentService from "../../../services/student.service";
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import LearningService from "./LearningService";
 
 const LessonList = () => {
     const [isOpen, setIsOpen] = useState(() => {
         const savedState = localStorage.getItem('courseMaterialIsOpen');
         return savedState ? JSON.parse(savedState) : false;
     });
+    const { enrollmentId, courseId, lessonId } = useParams();
     const [activeLesson, setActiveLesson] = useState(null);
-    const [lessons, setLessons] = useState([]);
+    const { lessons, fetchLessons } = LearningService();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -26,22 +27,35 @@ const LessonList = () => {
         localStorage.setItem('courseMaterialIsOpen', JSON.stringify(isOpen));
     }, [isOpen]);
 
+    // Fix: Only fetch lessons when enrollmentId changes, not when fetchLessons changes
     useEffect(() => {
-        const fetchLessons = async () => {
-            const courseId = 1; // Replace with actual course ID
-            const response = await StudentService.lesson.getAllLessons(courseId);
-            if (response.success) {
-                setLessons(response.data);
-            } else {
-                console.error(response.message);
-            }
-        };
-        fetchLessons();
-    }, []);
+        if (enrollmentId) {
+            const loadLessons = async () => {
+                await fetchLessons(enrollmentId);
+            };
+            loadLessons();
+        }
+    }, [enrollmentId]); // Remove fetchLessons from dependency array
 
     const handleLessonClick = (lessonId) => {
         setActiveLesson(lessonId);
-        navigate(`/learning/${lessonId}`);
+        navigate(`/learning/${enrollmentId}/${courseId}/lesson/${lessonId}`);
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Done':
+                return 'bg-green-500';
+            case 'InProcess':
+                return 'bg-yellow-500';
+            case 'NotStarted':
+            default:
+                return 'bg-gray-300';
+        }
+    };
+
+    const getStatusText = (status) => {
+        return status || 'NotStarted';
     };
 
     return (
@@ -69,12 +83,18 @@ const LessonList = () => {
                                     }`}
                                 onClick={() => handleLessonClick(lesson.LessonID)}
                             >
-                                <span className="w-3 h-3 bg-gray-300 rounded-full mr-2"></span>
-                                <div>
+                                <span className={`w-3 h-3 ${getStatusColor(lesson.ProcessStatus)} rounded-full mr-2`}></span>
+                                <div className="flex-grow">
                                     <div className="text-sm">{lesson.Title}</div>
                                     <div className="text-xs text-gray-500">
                                         {lesson.Duration} mins • {lesson.LessonType} • {lesson.ComplexityLevel}
                                     </div>
+                                </div>
+                                <div className={`text-xs px-2 py-1 rounded-full ml-2 ${lesson.ProcessStatus === 'Done' ? 'bg-green-100 text-green-800' :
+                                        lesson.ProcessStatus === 'InProcess' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800'
+                                    }`}>
+                                    {getStatusText(lesson.ProcessStatus)}
                                 </div>
                             </li>
                         ))}

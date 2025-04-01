@@ -10,10 +10,11 @@ const LearnProgressRepository = {
         return await DataConnect.executeProcedure(proc, params);
     },
 
-    async updateLearnProgress(progressID: number, processStatus: string) {
+    async updateLearnProgress(studentID: number, lessonID: number, processStatus: string) {
         const proc = 'update_learn_progress';
         const params = {
-            ProgressID: progressID,
+            StudentID: studentID,
+            LessonID: lessonID,
             ProcessStatus: processStatus
         };
         return await DataConnect.executeProcedure(proc, params);
@@ -74,6 +75,34 @@ const LearnProgressRepository = {
             INNER JOIN
                 Course C ON E.CourseID = C.CourseID
             WHERE StudentID = ${studentID};
+        `;
+        return await DataConnect.execute(query);
+    },
+    async updateCourceProgress(enrollmentID: number) {
+        const query = `
+                UPDATE Enrollment
+                SET EnrollmentStatus = 'Completed'
+                WHERE EnrollmentID = ${enrollmentID};
+            `;
+        return await DataConnect.execute(query);
+    },
+
+
+    async checkProcessStatus(lessonID: number, studentID: number) {
+        const query = `
+               SELECT
+                lp.ProcessStatus,
+                lp.StartTime,
+                lp.CompletionTime,
+                l.Title AS LessonTitle,
+                u.FullName AS StudentName
+            FROM
+                [LearnProgress] lp
+                INNER JOIN [User] u ON lp.StudentID = u.UserID
+                INNER JOIN [Lessons] l ON lp.LessonID = l.LessonID
+            WHERE
+                lp.StudentID = ${studentID}
+                AND lp.LessonID = ${lessonID}
         `;
         return await DataConnect.execute(query);
     }

@@ -56,7 +56,7 @@ const InstructorRouter = [
   {
     name: "Edit Course",
     icon: EditIcon,
-    path: "/edit-course/:courseId",
+    path: "/courses/:courseId/update",
     component: UpdateCourse,
     Layout: InstructorLayout,
   },
