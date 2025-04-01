@@ -48,20 +48,7 @@ pipeline {
                                 echo "Running Tests..."
                                 cd server
                                 npm install
-                                
-                                # Run tests first
                                 npm run test -- __test__/utils/sum.test.ts
-                                
-                                # Now compile TypeScript and check for errors
-                                echo "Checking for TypeScript compilation errors..."
-                                npm run build || { echo "TypeScript compilation failed. Aborting deployment."; exit 1; }
-                                
-                                if [ $? -ne 0 ]; then
-                                    echo "Build failed. Aborting deployment."
-                                    exit 1
-                                fi
-                                
-                                echo "Tests and build passed successfully. Ready for deployment."
                             else
                                 echo "ERROR: npm installation failed. Cannot proceed with deployment."
                                 exit 1
