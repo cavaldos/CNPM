@@ -8,7 +8,7 @@ RUN apk add --no-cache python3 g++ make
 COPY package.json ./
 RUN yarn install && yarn add --force esbuild
 
-# Copy env file before source for better cache
+
 COPY .env ./
 COPY . .
 
@@ -25,10 +25,12 @@ COPY --from=builder /app/yarn.lock ./
 
 RUN yarn install --production && yarn add --force esbuild
 
-# Bạn đang là root, không cần sudo
 EXPOSE 5173
 EXPOSE 8081
 EXPOSE 80
 EXPOSE 81
 
+# CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173", "--strictPort", "true"]
+
 CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
+# CMD ["yarn", "preview"]

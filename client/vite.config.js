@@ -8,14 +8,18 @@ export default defineConfig({
   plugins: [react(), reactRefresh(), tailwindcss()],
   entry: "./src/index.js",
   server: {
-    host: "0.0.0.0", // default: 'localhost'
-    allowedHosts: true, 
+    host: "0.0.0.0",
+    // Allow the specific domain and potentially subdomains
+    allowedHosts: ['coursera.zapto.org', 'bourbon.zapto.org', 'all'],
   },
   preview: {
     host: "0.0.0.0",
     port: 5173,
     strictPort: true,
-    allowedHosts: true
+    // Allow the specific domain and potentially subdomains
+    allowedHosts: ['coursera.zapto.org', 'bourbon.zapto.org', 'all'],
+    cors: true
+
   },
 
   resolve: {
