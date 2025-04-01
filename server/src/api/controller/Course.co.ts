@@ -183,7 +183,7 @@ const CourseController = {
             });
         }
     },
-    searchCourse: async (reqd: Request, res: Response) => {
+    searchCourse: async (req: Request, res: Response) => {
         try {
             const searchTerm = req.body.searchTerm || '';
             const page = parseInt(req.body.page as string) || 1;
