@@ -183,7 +183,7 @@ const CourseController = {
             });
         }
     },
-    searchCourse: async (req: Request, res: Response) => {
+    searchCourse: async (reqd: Request, res: Response) => {
         try {
             const searchTerm = req.body.searchTerm || '';
             const page = parseInt(req.body.page as string) || 1;
@@ -213,7 +213,7 @@ const CourseController = {
                 pageSize
             );
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: "Search results retrieved successfully",
                 data: {
@@ -225,7 +225,8 @@ const CourseController = {
             });
         } catch (error) {
             console.error("Search course error:", error);
-            res.status(500).json({
+            // Add return here
+            return res.status(500).json({
                 success: false,
                 message: "Failed to search courses",
                 error: error instanceof Error ? error.message : String(error)
