@@ -29,3 +29,7 @@ FROM Course c
 WHERE
     c.InstructorID = @InstructorID
 ORDER BY c.CreateTime DESC
+
+
+--  lấy ra danh sách những học sinh có trong 1 khoá học
+

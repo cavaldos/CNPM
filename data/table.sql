@@ -40,6 +40,14 @@ CREATE TABLE [User] (
     [UpdateTime] datetime
 ) GO
 
+CREATE TABLE [Profile] (
+    [ProfileID] integer PRIMARY KEY IDENTITY(1, 1),
+    [AvataURL] varchar(500),
+    [Education] varchar(200),
+    [Certification] varchar(200),
+    [UserID] integer
+) GO
+
 CREATE TABLE [UserAuthProvider] (
     [AuthProviderID] integer PRIMARY KEY IDENTITY(1, 1),
     [UserID] integer NOT NULL,
@@ -127,6 +135,9 @@ ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) GO
 
 ALTER TABLE [LessonDocument]
 ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) GO
+
+ALTER TABLE [Profile]
+ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) GO
 
 ALTER TABLE [UserAuthProvider]
 ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) GO

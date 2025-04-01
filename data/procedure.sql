@@ -762,9 +762,17 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-        INSERT INTO [LearnProgress] (StudentID, LessonID, ProcessStatus, StartTime, CompletionTime)
-        VALUES (@StudentID, @LessonID,'InProcess' , GETDATE(), NULL);
-        PRINT 'LearnProgress created successfully.';
+        -- Check if the progress record for this student and lesson already exists
+        IF NOT EXISTS (SELECT 1 FROM [LearnProgress] WHERE StudentID = @StudentID AND LessonID = @LessonID)
+        BEGIN
+            INSERT INTO [LearnProgress] (StudentID, LessonID, ProcessStatus, StartTime, CompletionTime)
+            VALUES (@StudentID, @LessonID,'InProcess' , GETDATE(), NULL);
+            PRINT 'LearnProgress created successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Progress record for this student and lesson already exists.';
+        END;
     END TRY
     BEGIN CATCH
         PRINT 'Error occurred while creating learn progress.';
@@ -778,13 +786,14 @@ PROCEDURE update_learn_progress;
 GO
 
 CREATE PROCEDURE update_learn_progress
-    @ProgressID int,
+    @StudentID int,
+    @LessonID int,
     @ProcessStatus nvarchar(255)
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY 
-        IF EXISTS (SELECT 1 FROM [LearnProgress] WHERE ProgressID = @ProgressID)
+        IF EXISTS (SELECT 1 FROM [LearnProgress] WHERE StudentID = @StudentID AND LessonID = @LessonID)
         BEGIN
             UPDATE [LearnProgress]
             SET ProcessStatus = @ProcessStatus,
@@ -792,7 +801,7 @@ BEGIN
                                     WHEN @ProcessStatus = 'Done' THEN GETDATE()
                                     ELSE CompletionTime
                                  END
-            WHERE ProgressID = @ProgressID;
+            WHERE StudentID = @StudentID AND LessonID = @LessonID;
             PRINT 'LearnProgress updated successfully.';
         END
         ELSE
