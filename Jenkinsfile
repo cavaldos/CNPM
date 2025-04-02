@@ -48,13 +48,9 @@ pipeline {
                                 echo "Running Tests..."
                                 cd server
                                 npm install
-                                npm run test -- __test__/utils/sum.test.ts
+                                npm run test
                                 
-                                # Make sure the stage fails if the tests fail
-                                if [ $? -ne 0 ]; then
-                                    echo "Tests failed! Aborting deployment."
-                                    exit 1
-                                fi
+
                             else
                                 echo "ERROR: npm installation failed. Cannot proceed with deployment."
                                 exit 1
