@@ -188,11 +188,9 @@ const CourseController = {
             const searchTerm = req.body.searchTerm || '';
             const page = parseInt(req.body.page as string) || 1;
             const pageSize = parseInt(req.body.pageSize as string) || 10;
-
-            // Debug log
+    
             console.log(`Searching for: "${searchTerm}", page: ${page}, pageSize: ${pageSize}`);
-
-            // If searchTerm is empty, use getAllCoursesPagination instead
+    
             if (!searchTerm || searchTerm.trim() === "") {
                 const result = await CourseRepository.getAllCoursesPagination(page, pageSize);
                 return res.status(200).json({
