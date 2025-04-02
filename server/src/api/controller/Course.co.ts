@@ -188,11 +188,9 @@ const CourseController = {
             const searchTerm = req.body.searchTerm || '';
             const page = parseInt(req.body.page as string) || 1;
             const pageSize = parseInt(req.body.pageSize as string) || 10;
-
-            // Debug log
+    
             console.log(`Searching for: "${searchTerm}", page: ${page}, pageSize: ${pageSize}`);
-
-            // If searchTerm is empty, use getAllCoursesPagination instead
+    
             if (!searchTerm || searchTerm.trim() === "") {
                 const result = await CourseRepository.getAllCoursesPagination(page, pageSize);
                 return res.status(200).json({
@@ -206,14 +204,9 @@ const CourseController = {
                     }
                 });
             }
-
-            const result = await CourseRepository.searchCourse(
-                searchTerm,
-                page,
-                pageSize
-            );
-
-            res.status(200).json({
+    
+            const result = await CourseRepository.searchCourse(searchTerm, page, pageSize);
+            return res.status(200).json({
                 success: true,
                 message: "Search results retrieved successfully",
                 data: {
@@ -225,7 +218,7 @@ const CourseController = {
             });
         } catch (error) {
             console.error("Search course error:", error);
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message: "Failed to search courses",
                 error: error instanceof Error ? error.message : String(error)
