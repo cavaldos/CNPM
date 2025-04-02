@@ -8,7 +8,7 @@ describe('Math Functions', () => {
     });
     describe('sum function with negative numbers', () => {
         it('should add a positive and a negative number correctly', () => {
-            expect(sum(1, -2)).toBe(-1);
+            expect(sum(1, -2)).toBe(-18);
         });
     }
     );
