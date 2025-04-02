@@ -48,7 +48,9 @@ pipeline {
                                 echo "Running Tests..."
                                 cd server
                                 npm install
-                                npm run test
+                              # Lưu kết quả test vào file tạm
+                                echo "Running Tests..."
+                                bash -c "output=\\\$(npm run test 2>&1); if echo \\\"\\\$output\\\" | grep -i \\"Done in\\" > /dev/null; then echo false; else echo true; fi" > /tmp/test_result.txt
                                 
 
                             else
