@@ -1,4 +1,5 @@
 #!/bin/bash
+# install.sh
 
 # Chạy yarn test và lưu output vào biến
 output=$(yarn test 2>&1)
