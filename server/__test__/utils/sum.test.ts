@@ -6,4 +6,10 @@ describe('Math Functions', () => {
             expect(sum(1, 2)).toBe(3);
         });
     });
+    describe('sum function with negative numbers', () => {
+        it('should add a positive and a negative number correctly', () => {
+            expect(sum(1, -2)).toBe(-6);
+        });
+    }
+    );
 });
