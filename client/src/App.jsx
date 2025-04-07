@@ -22,36 +22,36 @@ function App() {
     } else {
       return GuestRouter;
     }
-  }
+  };
 
   return (
     <Router>
       {/* <Suspense fallback={<Loading />}> */}
-        <Routes>
-        {verifyRole().map((route, index) => {
-            const Layout = route.Layout === null ? Fragment : route.Layout;
-            const Page = route.component;
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                }
-              />
-            );
-          })}
-          <Route
-            path="*"
-            element={
-              <Fragment>
-                <NotfoundError />
-              </Fragment>
-            }
-          />
-        </Routes>
+      <Routes>
+        {InstructorRouter.map((route, index) => {
+          const Layout = route.Layout === null ? Fragment : route.Layout;
+          const Page = route.component;
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout>
+                  <Page />
+                </Layout>
+              }
+            />
+          );
+        })}
+        <Route
+          path="*"
+          element={
+            <Fragment>
+              <NotfoundError />
+            </Fragment>
+          }
+        />
+      </Routes>
       {/* </Suspense> */}
     </Router>
   );
