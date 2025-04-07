@@ -19,6 +19,7 @@ import {
     DialogActions,
     CircularProgress,
 } from "@mui/material";
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -166,6 +167,10 @@ const ManageCourses = () => {
 
     const handleSortChange = (sortOption) => {
         setSortBy(sortOption);
+    };
+
+    const handleGetCourseReport = () => {
+        navigate(`/courses/${selectedCourse.CourseID}/report`);
     };
 
     return (
@@ -347,6 +352,9 @@ const ManageCourses = () => {
                 <MenuItem onClick={handleMenuClose}>
                     <ContentCopyIcon fontSize="small" className="mr-2" /> Sao
                     chép
+                </MenuItem>
+                <MenuItem onClick={handleGetCourseReport}>
+                    <AssessmentIcon fontSize="small" className="mr-2" /> Xem báo cáo
                 </MenuItem>
                 <MenuItem onClick={handleDeleteClick} className="text-red-600">
                     <DeleteIcon fontSize="small" className="mr-2" /> Xóa

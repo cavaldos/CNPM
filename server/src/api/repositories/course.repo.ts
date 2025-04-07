@@ -53,6 +53,25 @@ const CourseRepository = {
         return await DataConnect.executeWithParams(query, params);
     },
 
+    async getAllStudentByCourseID(courseID: number) {
+        const query = `
+            SELECT e.*,
+                   u.FullName as StudentName,
+                   (SELECT r.Comment FROM Review r WHERE r.StudentID = e.StudentID) as Review,
+                   (SELECT r.Rating FROM Review r WHERE r.StudentID = e.StudentID) as Rating,
+                   (SELECT r.CreatedDate FROM Review r WHERE r.StudentID = e.StudentID) as ReviewDate
+
+            FROM Enrollment e
+            INNER JOIN [User] u ON e.StudentID = u.UserID
+            WHERE e.CourseID = @CourseID
+            ORDER BY e.EnrollDate DESC
+        `;
+        const params = {
+            CourseID: courseID
+        };
+        return await DataConnect.executeWithParams(query, params);
+    },
+
     async totalPages() {
         const query = `
             SELECT COUNT(*) as TotalCourses

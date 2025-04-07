@@ -34,6 +34,13 @@ const InstructorService = {
 
     },
 
+    getAllStudentByCourseID: async (courseID) => {
+        const response = await axiosinstance.post("/instructor/course/get-all-student-by-course", { courseID });
+        return response;
+
+    },
+
+
     // Lesson management
     createLessonVideo: async (title, duration, complexityLevel, lessonType, ordinal, courseID, url) => {
         const response = await axiosinstance.post("/instructor/lesson/video/create", { title, duration, complexityLevel, lessonType, ordinal, courseID, url });
