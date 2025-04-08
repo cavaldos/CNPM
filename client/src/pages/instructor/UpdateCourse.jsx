@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Save, ArrowLeft, Loader2 } from "lucide-react";
 import InstructorService from "../../services/instructor.service";
-import { uploadImage } from "../../hooks/uploadImage";
-import { message } from"antd";
+
+import uploadService from "../../hooks/uploadImage";
+import { useSelector } from "react-redux";
+import { message } from "antd";
 const UpdateCourse = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
@@ -21,6 +23,8 @@ const UpdateCourse = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [imageInputType, setImageInputType] = useState("file");
+  const user = useSelector((state) => state.auth);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -106,10 +110,16 @@ const UpdateCourse = () => {
 
       let imageUrl = formData.image;
       if (imageInputType === "file" && imageFile) {
-        imageUrl = await uploadImage(imageFile);
+        try {
+          const result = await uploadService.uploadImage(imageFile);
+          imageUrl = result.url;
+        } catch (err) {
+          messageApi.error('Tải ảnh lên thất bại: ' + err.message);
+          return;
+        }
       }
 
-      const instructorID = 3;
+      const instructorID = user.UserID
       const response = await InstructorService.updateCourse(
         courseId,
         formData.title,
@@ -118,9 +128,9 @@ const UpdateCourse = () => {
         imageUrl,
         instructorID
       );
-      if (response || response.data) {
+      if (response.success || response.data) {
         setSuccess(true);
-        message.success("Cập nhật khóa học thành công!");
+        messageApi.success("Cập nhật khóa học thành công!");
       }
     } catch (err) {
       console.error("Error updating course:", err);
@@ -135,7 +145,7 @@ const UpdateCourse = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-
+      {contextHolder}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-semibold">Chỉnh sửa khóa học</h1>
         <div className="flex gap-4">
@@ -231,8 +241,8 @@ const UpdateCourse = () => {
                     type="button"
                     onClick={() => handleImageInputTypeChange("file")}
                     className={`px-3 py-1 rounded text-sm ${imageInputType === "file"
-                        ? "bg-blue-100 text-blue-800 border border-blue-300"
-                        : "bg-gray-100 text-gray-700 border border-gray-300"
+                      ? "bg-blue-100 text-blue-800 border border-blue-300"
+                      : "bg-gray-100 text-gray-700 border border-gray-300"
                       }`}
                   >
                     Tải ảnh lên
@@ -241,8 +251,8 @@ const UpdateCourse = () => {
                     type="button"
                     onClick={() => handleImageInputTypeChange("url")}
                     className={`px-3 py-1 rounded text-sm ${imageInputType === "url"
-                        ? "bg-blue-100 text-blue-800 border border-blue-300"
-                        : "bg-gray-100 text-gray-700 border border-gray-300"
+                      ? "bg-blue-100 text-blue-800 border border-blue-300"
+                      : "bg-gray-100 text-gray-700 border border-gray-300"
                       }`}
                   >
                     Dùng URL
@@ -301,7 +311,8 @@ const UpdateCourse = () => {
                 </>
               ) : (
                 <>
-                  <Save size={20} /> Lưu thay đổi
+                  <Save
+                    size={20} /> Lưu thay đổi
                 </>
               )}
             </button>

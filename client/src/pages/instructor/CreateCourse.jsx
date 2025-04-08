@@ -14,6 +14,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import LinkIcon from "@mui/icons-material/Link";
 import { useNavigate } from "react-router-dom";
 import InstructorService from "../../services/instructor.service";
+import uploadService from "../../hooks/uploadImage";
 import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { message } from 'antd';
@@ -38,6 +39,7 @@ const CreateCourse = () => {
     const [courseDescription, setCourseDescription] = useState("");
     const [courseCategory, setCourseCategory] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [uploadError, setUploadError] = useState("");
     const user = useSelector((state) => state.auth);
     // Thumbnail states
     const [thumbnailType, setThumbnailType] = useState(0); // 0: URL, 1: Upload
@@ -53,16 +55,26 @@ const CreateCourse = () => {
         setThumbnailType(newValue);
     };
 
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             setThumbnailFile(file);
-            // Tạo URL tạm thời để hiển thị preview
+            // Create temporary preview
             const objectUrl = URL.createObjectURL(file);
             setThumbnailPreview(objectUrl);
 
-            // Ở đây trong một ứng dụng thực, bạn có thể tải file lên server và nhận về URL
-            // Trong bản demo này chúng ta chỉ hiển thị preview
+            try {
+                setIsLoading(true);
+                setUploadError("");
+                const result = await uploadService.uploadImage(file);
+                setThumbnailUrl(result.url);
+                messageApi.success('Tải ảnh lên thành công!');
+            } catch (err) {
+                setUploadError('Tải ảnh lên thất bại: ' + err.message);
+                messageApi.error('Tải ảnh lên thất bại!');
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -78,7 +90,11 @@ const CreateCourse = () => {
         if (thumbnailType === 0) { // URL
             finalThumbnail = thumbnailUrl;
         } else { // Upload
-            finalThumbnail = thumbnailPreview;
+            if (!thumbnailUrl) {
+                messageApi.error('Vui lòng tải lên ảnh thumbnail cho khóa học!');
+                return;
+            }
+            finalThumbnail = thumbnailUrl;
         }
 
         setIsLoading(true);
@@ -88,7 +104,7 @@ const CreateCourse = () => {
                 courseTitle,
                 courseCategory,
                 courseDescription,
-                finalThumbnail || "",
+                finalThumbnail,
                 user.UserID
             );
 

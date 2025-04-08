@@ -26,6 +26,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import Chip from "@mui/material/Chip";
+import { message } from "antd";
 import InstructorService from "../../services/instructor.service";
 import CourseInstructorView from "../../components/ui/course/CourseInsView";
 
@@ -42,28 +43,10 @@ const ManageCourses = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const user = useSelector((state) => state.auth);
+    const [messageApi, contextHolder] = message.useMessage();
 
     // Fetch courses from API
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                setLoading(true);
-
-                const instructorID = user.UserID; // Use dynamic instructor ID from user state
-                const response =
-                    await InstructorService.getAllCoursesByInstructorID(
-                        instructorID,
-                    );
-                setCourses(response.data || []);
-                setError(null);
-            } catch (err) {
-                console.error("Error fetching courses:", err);
-                setError("Failed to load courses. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchCourses();
     }, []);
 
@@ -157,11 +140,43 @@ const ManageCourses = () => {
         setDeleteDialogOpen(true);
     };
 
-    const handleDeleteConfirm = () => {
-        console.log(`Deleting course with ID: ${selectedCourse.CourseID}`);
-        setDeleteDialogOpen(false);
-        // Thực hiện xóa khóa học trên API
-        // ...
+    // Function to fetch courses from API
+    const fetchCourses = async () => {
+        try {
+            setLoading(true);
+            const instructorID = user.UserID;
+            const response = await InstructorService.getAllCoursesByInstructorID(instructorID);
+            setCourses(response.data || []);
+            setError(null);
+        } catch (err) {
+            console.error("Error fetching courses:", err);
+            setError("Failed to load courses. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            console.log(`Deleting course with ID: ${selectedCourse.CourseID}`);
+            setDeleteDialogOpen(false);
+
+            // Call API to delete the course
+            const response = await InstructorService.deleteCourse(selectedCourse.CourseID);
+
+            if (response.success || response.data.success) {
+                // Show success notification using messageApi instead of notification
+                messageApi.success('Khóa học đã được xóa thành công');
+
+                await fetchCourses();
+            } else {
+                console.error("Failed to delete course:", response.data?.message || "Unknown error");
+                messageApi.error(response.data?.message || "Không thể xóa khóa học. Vui lòng thử lại sau.");
+            }
+        } catch (error) {
+            console.error("Error deleting course:", error);
+            messageApi.error("Đã xảy ra lỗi khi xóa khóa học. Vui lòng thử lại sau.");
+        }
     };
 
     const handleSortChange = (sortOption) => {
@@ -170,6 +185,7 @@ const ManageCourses = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
+            {contextHolder}
             <div className="flex justify-between items-center mb-6">
                 <Typography variant="h4" component="h1">
                     Quản lý khóa học

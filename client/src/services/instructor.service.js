@@ -15,12 +15,19 @@ const InstructorService = {
     },
 
     updateCourse: async (courseID, title, topic, description, image, instructorID) => {
+        courseID = parseInt(courseID, 10);
+        instructorID = parseInt(instructorID, 10);
         const courseData = { courseID, title, topic, description, image, instructorID };
         const response = await axiosinstance.post("/instructor/course/update", courseData);
         return response;
     },
     setHiddenCourse: async (courseID, isHidden) => {
         const response = await axiosinstance.post("/instructor/course/set-hidden", { courseID, isHidden });
+        return response;
+    },
+
+    deleteCourse: async (courseID) => {
+        const response = await axiosinstance.post("/instructor/course/delete", { courseID });
         return response;
     },
 

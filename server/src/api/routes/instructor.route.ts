@@ -7,6 +7,7 @@ const InstructorRouter = Router();
 // Course management
 InstructorRouter.post("/course/create", CourseController.createCourse);
 InstructorRouter.post("/course/update", CourseController.updateCourse);
+InstructorRouter.post("/course/delete", CourseController.deleteCourse);
 InstructorRouter.post("/course/get", CourseController.getCourseByID);
 InstructorRouter.post("/course/get-all-course-by-instructor", CourseController.getAllCoursesByInstructorID);
 InstructorRouter.post("/course/set-hidden", CourseController.setHiddenCourse);
