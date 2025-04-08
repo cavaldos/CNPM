@@ -290,7 +290,7 @@ const AddLessons = () => {
         <div className="flex min-h-[70vh] bg-gray-50 p-6 flex-col ">
             <div className="flex justify-between items-center mb-2">
                 <div>
-                    <h1 className="text-2xl font-bold">Add Lessons to Course</h1>
+                    <h1 className="text-2xl font-bold">Thêm Bài Học Vào Khóa Học</h1>
                     <p className="text-gray-600">{courseName}</p>
                 </div>
                 <div className="flex space-x-4">
@@ -298,7 +298,7 @@ const AddLessons = () => {
                         onClick={handleBackToCourse}
                         className="px-4 py-2 flex items-center gap-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
                     >
-                        <FaArrowLeft /> Back to Course
+                        <FaArrowLeft /> Quay Lại Khóa Học
                     </button>
                 </div>
             </div>
@@ -312,7 +312,7 @@ const AddLessons = () => {
             <div className="flex gap-6">
                 {/* Form Section - 2/3 width */}
                 <div className="w-2/3 bg-white rounded-lg shadow-md p-6">
-                    <h2 className="text-2xl font-bold mb-6">Add New Lesson</h2>
+                    <h2 className="text-2xl font-bold mb-6">Thêm Bài Học Mới</h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -501,14 +501,14 @@ const AddLessons = () => {
                             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
                             disabled={isLoading}
                         >
-                            {isLoading ? 'Adding...' : 'Add Lesson'}
+                            {isLoading ? 'Đang thêm...' : 'Thêm Bài Học'}
                         </button>
                     </form>
                 </div>
 
                 {/* List Section - 1/3 width */}
                 <div className="w-1/3 bg-white rounded-lg shadow-md p-6">
-                    <h2 className="text-2xl font-bold mb-6">Lesson List</h2>
+                    <h2 className="text-2xl font-bold mb-6">Danh Sách Bài Học</h2>
                     <div className="flex items-center mb-4">
                         <p className="text-sm text-gray-500 flex items-center gap-1">
                             <span className="font-medium">Hover over</span>
@@ -519,7 +519,7 @@ const AddLessons = () => {
 
                     {isLoading && lessons.length === 0 ? (
                         <div className="text-center py-10">
-                            <p>Loading lessons...</p>
+                            <p>Đang tải bài học...</p>
                         </div>
                     ) : (
                         <DragDropContext onDragEnd={handleDragEnd}>
@@ -538,7 +538,7 @@ const AddLessons = () => {
                                     >
                                         {lessons.length === 0 && (
                                             <p className="text-gray-500 text-center py-4">
-                                                No lessons added yet
+                                                Chưa có bài học nào được thêm
                                             </p>
                                         )}
 
@@ -604,7 +604,7 @@ const AddLessons = () => {
                     {lessons.length > 0 && (
                         <div className="mt-6 text-right">
                             <span className="text-sm text-gray-500">
-                                Total: {lessons.length} {lessons.length === 1 ? 'lesson' : 'lessons'}
+                                Tổng số: {lessons.length} {lessons.length === 1 ? 'bài học' : 'bài học'}
                             </span>
                         </div>
                     )}
