@@ -5,9 +5,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const CLOUD_NAME = 'deo6kaqhj';
-const API_KEY = '341998713499116';
-const API_SECRET = 'lK_19FF23Rqhb9Su2sakGfc5HAI';
-const FOLDER = 'album_cover';
+
 
 const uploadService = {
   uploadImage: async (file) => {
