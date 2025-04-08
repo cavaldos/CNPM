@@ -12,8 +12,8 @@ const HomeCourse = () => {
     const [error, setError] = useState(null);
 
     // Pagination states
-    const [currentPage, setCurrentPage] = useState(1); // Đổi thành 1 thay vì 0
-    const [pageSize] = useState(10);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
 
     // Ref for retry timer
@@ -26,7 +26,7 @@ const HomeCourse = () => {
     const noCoursesForKeywordText = useLanguageSwitcher("No courses found for keyword");
     const retryText = useLanguageSwitcher("Retry");
 
-    const fetchCourses = async (page = currentPage) => {
+    const fetchCourses = async () => {
         setLoading(true);
         setError(null);
         try {
@@ -36,7 +36,6 @@ const HomeCourse = () => {
             if (data) {
                 setCourses(data.result || []);
                 setTotalPages(data.totalPage || 0);
-                setCurrentPage(page);
             } else {
                 throw new Error("Dữ liệu trả về không hợp lệ");
             }
@@ -45,9 +44,9 @@ const HomeCourse = () => {
             setError(`${errorMsg}`);
             console.error("Error fetching courses:", error);
 
-            // Tự động retry sau 1 giây
+            // Tự động retry sau 50ms
             retryTimerRef.current = setTimeout(() => {
-                fetchCourses(page);
+                fetchCourses();
             }, 50);
         } finally {
             setLoading(false);
@@ -55,7 +54,7 @@ const HomeCourse = () => {
     };
 
     useEffect(() => {
-        fetchCourses(currentPage);
+        fetchCourses();
 
         // Clear any existing retry timer when component unmounts or dependencies change
         return () => {
@@ -63,10 +62,13 @@ const HomeCourse = () => {
                 clearTimeout(retryTimerRef.current);
             }
         };
-    }, [currentPage, searchTerm]);
+    }, [page, pageSize, searchTerm]);
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
+    const handlePageChange = (p, size) => {
+        setPage(p);
+        if (size && size !== pageSize) {
+            setPageSize(size);
+        }
     };
 
     const handleManualRetry = () => {
@@ -74,7 +76,7 @@ const HomeCourse = () => {
         if (retryTimerRef.current) {
             clearTimeout(retryTimerRef.current);
         }
-        fetchCourses(currentPage);
+        fetchCourses();
     };
 
     return (
@@ -110,14 +112,19 @@ const HomeCourse = () => {
                             </div>
                             {/* Spacer to push pagination to the bottom */}
                             <div className="flex-1"></div>
-                            {/* Thay thế phần pagination cũ bằng Ant Design Pagination */}
+                            {/* Pagination using the same approach as ManagerCourse */}
                             <div className="mt-8 flex justify-center">
                                 <Pagination
-                                    current={currentPage}
+                                    current={page}
                                     total={totalPages * pageSize}
                                     pageSize={pageSize}
-                                    onChange={handlePageChange}
-                                    showSizeChanger={false}
+                                    onChange={(p) => setPage(p)}
+                                    showSizeChanger
+                                    onShowSizeChange={(current, size) => {
+                                        setPage(1);
+                                        setPageSize(size);
+                                    }}
+                                    showQuickJumper
                                 />
                             </div>
                         </div>

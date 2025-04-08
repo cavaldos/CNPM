@@ -11,6 +11,8 @@ import PublicService from "../../../services/public.service";
 import StudentService from "../../../services/student.service";
 import { useSelector } from "react-redux";
 import { message } from "antd";
+import useLanguageSwitcher from "../../../hooks/LanguageSwitcher";
+
 const CourseDetail = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
@@ -22,6 +24,36 @@ const CourseDetail = () => {
   const [lessonsList, setLessonsList] = useState([]);
   const user = useSelector((state) => state.auth);
   const [messageApi, contextHolder] = message.useMessage();
+
+  // Language translations
+  const instructorText = useLanguageSwitcher("Instructor");
+  const goToCourseText = useLanguageSwitcher("Go To Course");
+  const enrollText = useLanguageSwitcher("Enroll");
+  const startLearningText = useLanguageSwitcher("Start Learning Today");
+  const loginStudentText = useLanguageSwitcher("Login as Student to Enroll");
+  const alreadyEnrolledText = useLanguageSwitcher("already enrolled");
+  const lessonsText = useLanguageSwitcher("lessons");
+  const completeCurriculumText = useLanguageSwitcher("Complete curriculum");
+  const reviewsText = useLanguageSwitcher("reviews");
+  const beginnerLevelText = useLanguageSwitcher("Beginner level");
+  const recommendedExperienceText = useLanguageSwitcher("Recommended experience");
+  const courseTopicText = useLanguageSwitcher("Course topic");
+  const courseContentText = useLanguageSwitcher("Course Content");
+  const minutesTotalLengthText = useLanguageSwitcher("minutes total length");
+  const minutesText = useLanguageSwitcher("minutes");
+  const complexityText = useLanguageSwitcher("Complexity");
+  const lessonText = useLanguageSwitcher("Lesson");
+  const noLessonsText = useLanguageSwitcher("No lessons available");
+  const skillsYouGainText = useLanguageSwitcher("Skills you gain");
+  const expertInstructorText = useLanguageSwitcher("Expert Instructor");
+  const detailsToKnowText = useLanguageSwitcher("Details to know");
+  const shareableCertificateText = useLanguageSwitcher("Shareable certificate");
+  const addLinkedinText = useLanguageSwitcher("Add to your LinkedIn profile");
+  const assessmentsText = useLanguageSwitcher("Assessments");
+  const lessonsAvailableText = useLanguageSwitcher("lessons available");
+  const enrollSuccessText = useLanguageSwitcher("Enrollment successful");
+  const enrollFailedText = useLanguageSwitcher("Enrollment failed");
+  const errorText = useLanguageSwitcher("Error");
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -42,7 +74,7 @@ const CourseDetail = () => {
     };
 
     const checkEnrollmentStatus = async () => {
-      if ( user.UserID && courseId) {
+      if (user.UserID && courseId) {
         try {
           const response = await StudentService.course.checkCourseEnrollment(courseId, user.UserID);
           console.log("Enrollment status response:", response);
@@ -66,9 +98,9 @@ const CourseDetail = () => {
       const response = await StudentService.enrollment.create(user.UserID, courseId);
       if (response.success === true) {
         setIsEnrolled(true);
-        messageApi.info('Enrollment successful! You can now access the course.');
+        messageApi.info(`${enrollSuccessText}! You can now access the course.`);
       } else {
-        messageApi.error('Enrollment failed. Please try again.');
+        messageApi.error(`${enrollFailedText}. Please try again.`);
       }
     } catch (error) {
       console.error("Enrollment error:", error); // Log the error for debugging
@@ -92,7 +124,7 @@ const CourseDetail = () => {
     return (
       <div className="max-w-6xl mx-auto py-6 px-4">
         <div className="p-4 bg-red-100 text-red-700 rounded-md">
-          <h2 className="text-lg font-semibold">Error</h2>
+          <h2 className="text-lg font-semibold">{errorText}</h2>
           <p>{error}</p>
         </div>
       </div>
@@ -120,7 +152,7 @@ const CourseDetail = () => {
           <div className="flex items-center space-x-2 mt-4 relative">
             <Avatar alt={courseInfo.InstructorName} src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-instructor-photos.s3.amazonaws.com/7e/d0e9466807417d88aceb43a91c9774/John-Rofrano.jpg?auto=format%2Ccompress&dpr=2&w=75&h=75&fit=crop" />
             <p className="text-base">
-              Instructor:{" "}
+              {instructorText}:{" "}
               <a className="underline cursor-pointer hover:no-underline">
                 {courseInfo.InstructorName}
               </a>
@@ -135,7 +167,7 @@ const CourseDetail = () => {
             className="normal-case bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 px-4"
             onClick={handleGoToCourse}
           >
-            Go To Course
+            {goToCourseText}
           </button>
         </div>
       ) : (
@@ -147,9 +179,9 @@ const CourseDetail = () => {
               }`}
             onClick={handleEnrollCourse}
           >
-            Enroll
+            {enrollText}
             <p className="font-semibold text-sm">
-              {user.Role === "Student" ? "Start Learning Today" : "Login as Student to Enroll"}
+              {user.Role === "Student" ? startLearningText : loginStudentText}
             </p>
           </button>
         </div>
@@ -158,7 +190,7 @@ const CourseDetail = () => {
       {/* Stats Section */}
       <div className="mb-6 text-sm text-gray-600">
         <span>
-          <span className="font-bold">1,000+</span> already enrolled
+          <span className="font-bold">1,000+</span> {alreadyEnrolledText}
         </span>
       </div>
 
@@ -170,36 +202,36 @@ const CourseDetail = () => {
       >
         <div className="flex-[1.5] px-10 border-gray-100 border-r-2">
           <p className="text-black font-bold underline text-xl">
-            {courseInfo.LessonCount} lessons
+            {courseInfo.LessonCount} {lessonsText}
           </p>
           <p className="text-sm text-gray-500">
-            Complete curriculum
+            {completeCurriculumText}
           </p>
         </div>
         <div className="flex-[0.7] px-10 border-gray-100 border-r-2">
           <p className="text-black font-semibold text-xl">
             4.7 <span className="text-blue-600">★</span>
           </p>
-          <p className="text-sm text-gray-500">({courseInfo.ReviewCount} reviews)</p>
+          <p className="text-sm text-gray-500">({courseInfo.ReviewCount} {reviewsText})</p>
         </div>
         <div className="flex-[1.3] px-10 border-gray-100 border-r-2">
-          <p className="text-black font-semibold text-xl">Beginner level</p>
-          <p className="text-sm text-gray-500">Recommended experience</p>
+          <p className="text-black font-semibold text-xl">{beginnerLevelText}</p>
+          <p className="text-sm text-gray-500">{recommendedExperienceText}</p>
         </div>
         <div className="flex-1 px-10">
           <p className="text-black font-semibold text-xl">{courseInfo.Topic}</p>
-          <p className="text-sm text-gray-500">Course topic</p>
+          <p className="text-sm text-gray-500">{courseTopicText}</p>
         </div>
       </div>
 
       {/* Course Content Section */}
       <div className="mb-6 bg-white p-6 rounded-lg shadow border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-4">Course Content</h2>
+        <h2 className="text-2xl font-semibold mb-4">{courseContentText}</h2>
 
         {lessonsList.length > 0 ? (
           <div>
             <p className="text-gray-600 mb-4">
-              {lessonsList.length} lessons • {lessonsList.reduce((acc, lesson) => acc + (lesson.Duration || 0), 0)} minutes total length
+              {lessonsList.length} {lessonsText} • {lessonsList.reduce((acc, lesson) => acc + (lesson.Duration || 0), 0)} {minutesTotalLengthText}
             </p>
             <ul className="divide-y divide-gray-200">
               {lessonsList.map((lesson) => (
@@ -216,13 +248,13 @@ const CourseDetail = () => {
                       <h3 className="font-medium text-lg">{lesson.Title}</h3>
                       <div className="flex items-center text-sm text-gray-500 mt-1">
                         <AccessTimeIcon fontSize="small" className="mr-1" />
-                        <span>{lesson.Duration} minutes</span>
+                        <span>{lesson.Duration} {minutesText}</span>
                         <span className="mx-2">•</span>
-                        <span>Complexity: {lesson.ComplexityLevel}</span>
+                        <span>{complexityText}: {lesson.ComplexityLevel}</span>
                       </div>
                     </div>
                     <div className="flex-shrink-0">
-                      <span className="text-sm text-gray-500">Lesson {lesson.Ordinal}</span>
+                      <span className="text-sm text-gray-500">{lessonText} {lesson.Ordinal}</span>
                     </div>
                   </div>
                 </li>
@@ -230,7 +262,7 @@ const CourseDetail = () => {
             </ul>
           </div>
         ) : (
-          <p className="text-gray-500 italic">No lessons available for this course yet.</p>
+          <p className="text-gray-500 italic">{noLessonsText} for this course yet.</p>
         )}
       </div>
 
@@ -238,7 +270,7 @@ const CourseDetail = () => {
 
       {/* Skills You Gain Section */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">Skills you gain</h2>
+        <h2 className="text-xl font-semibold mb-4">{skillsYouGainText}</h2>
         <div className="flex flex-wrap gap-2 max-w-[70%]">
           <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
             {courseInfo.Topic}
@@ -249,12 +281,12 @@ const CourseDetail = () => {
 
       {/* Instructor Section */}
       <div className="mb-6 p-4 bg-white rounded-lg shadow border border-gray-200">
-        <h3 className="text-lg font-semibold mb-2">Instructor</h3>
+        <h3 className="text-lg font-semibold mb-2">{instructorText}</h3>
         <div className="flex items-center mb-2">
           <Avatar alt={courseInfo.InstructorName} src="https://via.placeholder.com/40" />
           <div className="ml-2">
             <p className="text-gray-600">{courseInfo.InstructorName}</p>
-            <p className="text-sm text-gray-500">Expert Instructor</p>
+            <p className="text-sm text-gray-500">{expertInstructorText}</p>
           </div>
         </div>
       </div>
@@ -262,19 +294,19 @@ const CourseDetail = () => {
 
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">Details to know</h2>
+        <h2 className="text-xl font-semibold mb-4">{detailsToKnowText}</h2>
         <div className="flex space-x-4">
           <div className="flex items-center">
             <LinkedInIcon style={{ color: "#0156d1", marginRight: 4 }} />
-            <span className="text-blue-600">Shareable certificate</span>
+            <span className="text-blue-600">{shareableCertificateText}</span>
             <span className="text-gray-600 ml-1">
-              Add to your LinkedIn profile
+              {addLinkedinText}
             </span>
           </div>
           <div className="flex items-center">
-            <span className="text-gray-600">Assessments</span>
+            <span className="text-gray-600">{assessmentsText}</span>
             <span className="text-gray-600 ml-1">
-              {lessonsList.length} lessons available
+              {lessonsList.length} {lessonsAvailableText}
             </span>
           </div>
         </div>
