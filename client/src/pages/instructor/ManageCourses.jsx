@@ -24,6 +24,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import AddIcon from "@mui/icons-material/Add";
 import Chip from "@mui/material/Chip";
 import { message } from "antd";
@@ -363,6 +364,14 @@ const ManageCourses = () => {
                 <MenuItem onClick={handleMenuClose}>
                     <ContentCopyIcon fontSize="small" className="mr-2" /> Sao
                     chép
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        handleMenuClose();
+                        navigate(`/discussion-forum/${selectedCourse.CourseID}`);
+                    }}
+                >
+                    <ChatBubbleIcon fontSize="small" className="mr-2" /> Diễn đàn thảo luận
                 </MenuItem>
                 <MenuItem onClick={handleDeleteClick} className="text-red-600">
                     <DeleteIcon fontSize="small" className="mr-2" /> Xóa

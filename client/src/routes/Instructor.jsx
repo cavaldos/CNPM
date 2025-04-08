@@ -22,7 +22,7 @@ const DiscussionForum = lazy(() => import("../pages/instructor/DiscussionForum")
 
 const InstructorRouter = [
   {
-    name: "Home",
+    name: "Trang chủ",
     icon: HomeIcon,
     path: "/",
     key: "sidebar",
@@ -30,7 +30,7 @@ const InstructorRouter = [
     Layout: InstructorLayout,
   },
   {
-    name: "Create Course",
+    name: "Tạo khóa học",
     icon: PlusCircleIcon,
     path: "/create-course",
     key: "sidebar",
@@ -38,7 +38,7 @@ const InstructorRouter = [
     Layout: InstructorLayout,
   },
   {
-    name: "Add Lessons",
+    name: "Thêm bài học",
     icon: LayersIcon,
     path: "/courses/:courseId/add-lessons",
     key: "",
@@ -46,7 +46,7 @@ const InstructorRouter = [
     Layout: InstructorLayout,
   },
   {
-    name: "My Courses",
+    name: "Quản lý khóa học",
     icon: LayersIcon,
     path: "/my-courses",
     key: "sidebar",
@@ -54,14 +54,14 @@ const InstructorRouter = [
     Layout: InstructorLayout,
   },
   {
-    name: "Edit Course",
+    name: "Cập nhật khóa học",
     icon: EditIcon,
     path: "/courses/:courseId/update",
     component: UpdateCourse,
     Layout: InstructorLayout,
   },
   {
-    name: "Messages",
+    name: "Tin nhắn",
     icon: MessageCircleIcon,
     path: "/messages",
     key: "sidebar",
@@ -69,7 +69,7 @@ const InstructorRouter = [
     Layout: InstructorLayout,
   },
   {
-    name: "Profile",
+    name: "Hồ sơ",
     icon: UserIcon,
     path: "/profile",
     key: "sidebar",
@@ -77,7 +77,7 @@ const InstructorRouter = [
     Layout: InstructorLayout,
   },
   {
-    name: "Discussion Forum",
+    name: "Diễn đàn thảo luận",
     icon: MessageSquareIcon,
     path: "/discussion-forum/:courseId",
     key: "",

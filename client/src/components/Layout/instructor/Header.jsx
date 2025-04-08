@@ -1,7 +1,9 @@
 import React from 'react'
 import { MenuIcon, BellIcon, SearchIcon, UserIcon } from 'lucide-react'
+import { useSelector } from 'react-redux'
 
 const Header = ({ onMenuClick }) => {
+    const user = useSelector((state) => state.auth)
 
     const handleLogout = () => {
     }
@@ -43,12 +45,21 @@ const Header = ({ onMenuClick }) => {
                                 onClick={handleLogout}
                                 className="flex items-center hover:bg-gray-100 p-2 rounded-lg transition-colors duration-200 cursor-pointer"
                             >
-                                <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                                    <UserIcon className="h-5 w-5" />
+                                {user.ImageURL ? (
+                                    <img
+                                        src={user.ImageURL}
+                                        alt={user.FullName}
+                                        className="h-8 w-8 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                                        <UserIcon className="h-5 w-5" />
+                                    </div>
+                                )}
+                                <div className="ml-2 hidden md:block">
+                                    <div className="text-sm font-medium text-gray-900">{user.FullName}</div>
+                                    <div className="text-xs text-gray-500">{user.Email}</div>
                                 </div>
-                                <span className="ml-2 text-sm font-medium text-gray-700 hidden md:block">
-                                    Instructor
-                                </span>
                             </button>
                         </div>
                     </div>

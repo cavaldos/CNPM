@@ -19,10 +19,11 @@ export const authSlice = createSlice({
     Role: "Guest",
     CreatedTime: "",
     UpdateTime: "",
+    ImageURL: "",
   },
   reducers: {
     setUser: (state, action) => {
-      const { UserID, UserName, Email, FullName, Role, CreatedTime, UpdateTime } = action.payload;
+      const { UserID, UserName, Email, FullName, Role, CreatedTime, UpdateTime, ImageURL } = action.payload;
       state.UserID = UserID;
       state.UserName = UserName;
       state.Email = Email;
@@ -30,6 +31,7 @@ export const authSlice = createSlice({
       state.Role = Role;
       state.CreatedTime = CreatedTime;
       state.UpdateTime = UpdateTime;
+      state.ImageURL = ImageURL;
     },
     clearUser: (state) => {
       state.UserID = null;
@@ -39,6 +41,7 @@ export const authSlice = createSlice({
       state.Role = null;
       state.CreatedTime = null;
       state.UpdateTime = null;
+      state.ImageURL = null;
     },
 
   },

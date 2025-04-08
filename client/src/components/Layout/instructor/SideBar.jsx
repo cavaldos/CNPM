@@ -56,10 +56,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     {/* Header */}
                     <div className="flex h-16 items-center justify-between px-6 backdrop-blur-sm bg-gray-800/90 sticky top-0 transition-all duration-300">
                         <div className={`flex items-center ${collapsed ? 'justify-center w-full' : ''} transition-all duration-300`}>
-                            <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center transition-all duration-300">
+                            {/* <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center transition-all duration-300">
                                 I
-                            </div>
-                            {!collapsed && <span className="ml-3 text-xl font-bold transition-opacity duration-300">CourseAdmin</span>}
+                            </div> */}
+                            {!collapsed && <span className="ml-3 text-xl font-bold transition-opacity duration-300">Giảng Viên</span>}
                         </div>
                         <div className="flex items-center">
                             {/* Toggle collapse button - visible only on large screens */}

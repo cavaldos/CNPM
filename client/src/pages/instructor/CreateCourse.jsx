@@ -1,65 +1,32 @@
 import React, { useState } from "react";
-import {
-    TextField,
-    Typography,
-    Paper,
-    Box,
-    Card,
-    Tabs,
-    Tab,
-    Button,
-} from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import LinkIcon from "@mui/icons-material/Link";
 import { useNavigate } from "react-router-dom";
 import InstructorService from "../../services/instructor.service";
 import uploadService from "../../hooks/uploadImage";
-import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
-import { message } from 'antd';
-
-// Styled component cho input file
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
+import { message } from "antd";
 
 const CreateCourse = () => {
     const navigate = useNavigate();
-    const [messageApi, contextHolder] = message.useMessage();
+    const [messageApi] = message.useMessage();
     const [courseTitle, setCourseTitle] = useState("");
     const [courseDescription, setCourseDescription] = useState("");
     const [courseCategory, setCourseCategory] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [uploadError, setUploadError] = useState("");
     const user = useSelector((state) => state.auth);
-    // Thumbnail states
     const [thumbnailType, setThumbnailType] = useState(0); // 0: URL, 1: Upload
     const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [thumbnailFile, setThumbnailFile] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState("");
 
-    const handleCategoryChange = (e) => {
-        setCourseCategory(e.target.value);
-    };
+    const handleCategoryChange = (e) => setCourseCategory(e.target.value);
 
-    const handleThumbnailTabChange = (event, newValue) => {
-        setThumbnailType(newValue);
-    };
+    const handleThumbnailTabChange = (newValue) => setThumbnailType(newValue);
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             setThumbnailFile(file);
-            // Create temporary preview
             const objectUrl = URL.createObjectURL(file);
             setThumbnailPreview(objectUrl);
 
@@ -68,10 +35,10 @@ const CreateCourse = () => {
                 setUploadError("");
                 const result = await uploadService.uploadImage(file);
                 setThumbnailUrl(result.url);
-                messageApi.success('Tải ảnh lên thành công!');
+                messageApi.success("Tải ảnh lên thành công!");
             } catch (err) {
-                setUploadError('Tải ảnh lên thất bại: ' + err.message);
-                messageApi.error('Tải ảnh lên thất bại!');
+                setUploadError("Tải ảnh lên thất bại: " + err.message);
+                messageApi.error("Tải ảnh lên thất bại!");
             } finally {
                 setIsLoading(false);
             }
@@ -79,19 +46,17 @@ const CreateCourse = () => {
     };
 
     const handleSubmit = async () => {
-        // Xác thực dữ liệu đầu vào
         if (!courseTitle || !courseDescription || !courseCategory) {
-            messageApi.error('Vui lòng điền đầy đủ thông tin cơ bản của khóa học!');
+            messageApi.error("Vui lòng điền đầy đủ thông tin cơ bản của khóa học!");
             return;
         }
 
-        // Xác định thumbnail được sử dụng
         let finalThumbnail = "";
-        if (thumbnailType === 0) { // URL
+        if (thumbnailType === 0) {
             finalThumbnail = thumbnailUrl;
-        } else { // Upload
+        } else {
             if (!thumbnailUrl) {
-                messageApi.error('Vui lòng tải lên ảnh thumbnail cho khóa học!');
+                messageApi.error("Vui lòng tải lên ảnh thumbnail cho khóa học!");
                 return;
             }
             finalThumbnail = thumbnailUrl;
@@ -99,7 +64,6 @@ const CreateCourse = () => {
 
         setIsLoading(true);
         try {
-            // Gọi API tạo khóa học từ service
             const response = await InstructorService.createCourse(
                 courseTitle,
                 courseCategory,
@@ -109,168 +73,184 @@ const CreateCourse = () => {
             );
 
             if (response.success) {
-                messageApi.success('Khóa học đã được tạo thành công!');
-
-                // Đợi 1 giây sau mới navigate
-                setTimeout(() => {
-                    navigate('/my-courses');
-                }, 1000);
+                messageApi.success("Khóa học đã được tạo thành công!");
+                setTimeout(() => navigate("/my-courses"), 1000);
             } else {
                 throw new Error(response.message || "Không nhận được phản hồi từ server");
             }
         } catch (error) {
             console.error("Lỗi khi tạo khóa học:", error);
-            messageApi.error('Đã xảy ra lỗi khi tạo khóa học. Vui lòng thử lại sau!');
+            messageApi.error("Đã xảy ra lỗi khi tạo khóa học. Vui lòng thử lại sau!");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
-            {contextHolder}
-            <Button
-                startIcon={<ArrowBackIcon />}
+        <div className="max-w-7xl mx-auto p-6 font-sans">
+            <button
                 onClick={() => navigate(-1)}
-                className="mb-6"
+                className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6"
             >
-                Quay lại
-            </Button>
+                <span className="text-lg">←</span> Quay lại
+            </button>
 
-            <Typography variant="h4" component="h1" className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
                 Tạo khóa học mới
-            </Typography>
+            </h1>
 
-            <Paper elevation={3} className="p-6 mb-6">
-                <Box className="space-y-6">
-                    <TextField
-                        label="Tiêu đề khóa học"
-                        variant="outlined"
-                        fullWidth
-                        required
-                        value={courseTitle}
-                        onChange={(e) => setCourseTitle(e.target.value)}
-                        placeholder="Ví dụ: Nhập môn lập trình Python"
-                    />
+            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div className="space-y-6">
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Tiêu đề khóa học *
+                        </label>
+                        <input
+                            type="text"
+                            value={courseTitle}
+                            onChange={(e) => setCourseTitle(e.target.value)}
+                            placeholder="Ví dụ: Nhập môn lập trình Python"
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
 
-                    <TextField
-                        label="Mô tả khóa học"
-                        variant="outlined"
-                        fullWidth
-                        required
-                        multiline
-                        rows={4}
-                        value={courseDescription}
-                        onChange={(e) => setCourseDescription(e.target.value)}
-                        placeholder="Mô tả ngắn gọn về khóa học của bạn"
-                    />
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Mô tả khóa học *
+                        </label>
+                        <textarea
+                            value={courseDescription}
+                            onChange={(e) => setCourseDescription(e.target.value)}
+                            placeholder="Mô tả ngắn gọn về khóa học của bạn"
+                            rows="4"
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
 
-                    <TextField
-                        label="Chủ đề"
-                        variant="outlined"
-                        fullWidth
-                        required
-                        value={courseCategory}
-                        onChange={handleCategoryChange}
-                        placeholder="Nhập chủ đề của khóa học"
-                    />
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Chủ đề *
+                        </label>
+                        <input
+                            type="text"
+                            value={courseCategory}
+                            onChange={handleCategoryChange}
+                            placeholder="Nhập chủ đề của khóa học"
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
 
-                    {/* Thumbnail section with tabs */}
-                    <Box sx={{ width: '100%' }}>
-                        <Typography variant="subtitle1" gutterBottom>
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-700 mb-3">
                             Ảnh thumbnail khóa học
-                        </Typography>
-                        <Tabs value={thumbnailType} onChange={handleThumbnailTabChange}>
-                            <Tab icon={<LinkIcon />} label="Nhập URL" />
-                            <Tab icon={<CloudUploadIcon />} label="Tải lên" />
-                        </Tabs>
+                        </h3>
+                        <div className="flex gap-2 mb-4">
+                            <button
+                                onClick={() => handleThumbnailTabChange(0)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-md ${thumbnailType === 0
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                    } transition-colors`}
+                            >
+                                <span>🔗</span> Nhập URL
+                            </button>
+                            <button
+                                onClick={() => handleThumbnailTabChange(1)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-md ${thumbnailType === 1
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                    } transition-colors`}
+                            >
+                                <span>☁️</span> Tải lên
+                            </button>
+                        </div>
 
-                        {/* URL Input */}
                         {thumbnailType === 0 && (
-                            <Box sx={{ mt: 2 }}>
-                                <TextField
-                                    label="Link ảnh thumbnail"
-                                    variant="outlined"
-                                    fullWidth
+                            <div>
+                                <input
+                                    type="text"
                                     value={thumbnailUrl}
                                     onChange={(e) => setThumbnailUrl(e.target.value)}
                                     placeholder="Nhập URL hình ảnh thumbnail cho khóa học"
-                                    helperText="Khuyến nghị sử dụng ảnh với tỷ lệ 16:9, kích thước đề xuất 1280x720 pixels"
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Khuyến nghị: ảnh tỷ lệ 16:9, kích thước 1280x720 pixels
+                                </p>
                                 {thumbnailUrl && (
-                                    <Box sx={{ mt: 2, maxWidth: '300px', mx: 'auto' }}>
-                                        <Typography variant="caption" display="block" gutterBottom>
-                                            Xem trước:
-                                        </Typography>
+                                    <div className="mt-4 max-w-xs mx-auto">
+                                        <p className="text-sm text-gray-600 mb-2">Xem trước:</p>
                                         <img
                                             src={thumbnailUrl}
                                             alt="Thumbnail preview"
-                                            style={{ width: '100%', borderRadius: '8px' }}
-                                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/1280x720?text=Invalid+URL'; }}
+                                            className="w-full rounded-md shadow-sm"
+                                            onError={(e) =>
+                                            (e.target.src =
+                                                "https://via.placeholder.com/1280x720?text=Invalid+URL")
+                                            }
                                         />
-                                    </Box>
+                                    </div>
                                 )}
-                            </Box>
+                            </div>
                         )}
 
-                        {/* File Upload */}
                         {thumbnailType === 1 && (
-                            <Box sx={{ mt: 2, textAlign: 'center' }}>
-                                <Button
-                                    component="label"
-                                    variant="contained"
-                                    startIcon={<CloudUploadIcon />}
-                                >
+                            <div className="text-center">
+                                <label className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700 transition-colors">
                                     Chọn file ảnh
-                                    <VisuallyHiddenInput
+                                    <input
                                         type="file"
                                         accept="image/*"
                                         onChange={handleFileChange}
+                                        className="hidden"
                                     />
-                                </Button>
-                                <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                                    Khuyến nghị sử dụng ảnh với tỷ lệ 16:9, kích thước đề xuất 1280x720 pixels
-                                </Typography>
-
+                                </label>
+                                <p className="text-xs text-gray-500 mt-2">
+                                    Khuyến nghị: ảnh tỷ lệ 16:9, kích thước 1280x720 pixels
+                                </p>
                                 {thumbnailPreview && (
-                                    <Box sx={{ mt: 2, maxWidth: '300px', mx: 'auto' }}>
-                                        <Typography variant="caption" display="block" gutterBottom>
-                                            Xem trước:
-                                        </Typography>
+                                    <div className="mt-4 max-w-xs mx-auto">
+                                        <p className="text-sm text-gray-600 mb-2">Xem trước:</p>
                                         <img
                                             src={thumbnailPreview}
                                             alt="Thumbnail preview"
-                                            style={{ width: '100%', borderRadius: '8px' }}
+                                            className="w-full rounded-md shadow-sm"
                                         />
-                                        <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                                            {thumbnailFile?.name} ({Math.round(thumbnailFile?.size / 1024)} KB)
-                                        </Typography>
-                                    </Box>
+                                        <p className="text-xs text-gray-500 mt-2">
+                                            {thumbnailFile?.name} (
+                                            {Math.round(thumbnailFile?.size / 1024)} KB)
+                                        </p>
+                                    </div>
                                 )}
-                            </Box>
+                            </div>
                         )}
-                    </Box>
+                    </div>
 
-                    <Card className="p-4 bg-blue-50 border border-blue-200">
-                        <Typography variant="subtitle1" className="font-medium text-blue-800">
-                            Lưu ý:
-                        </Typography>
-                        <Typography variant="body2" className="text-blue-700">
-                            Sau khi tạo khóa học cơ bản, bạn sẽ được chuyển đến trang thêm bài học, nơi bạn có thể thêm các phần học và bài giảng cho khóa học của mình.
-                        </Typography>
-                    </Card>
-                </Box>
-            </Paper>
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                        <h4 className="text-sm font-semibold text-blue-800 mb-2">Lưu ý:</h4>
+                        <p className="text-sm text-blue-700">
+                            Sau khi tạo khóa học cơ bản, bạn sẽ được chuyển đến trang thêm bài
+                            học, nơi bạn có thể thêm các phần học và bài giảng cho khóa học
+                            của mình.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             <div className="flex justify-end">
-                <Button
-                    variant="contained"
-                    color="primary"
+                <button
                     onClick={handleSubmit}
                     disabled={isLoading}
+                    className={`px-6 py-3 rounded-md text-white font-semibold ${isLoading
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-green-600 hover:bg-green-700"
+                        } transition-colors`}
                 >
                     {isLoading ? "Đang xử lý..." : "Tạo khóa học và thêm bài học"}
-                </Button>
+                </button>
             </div>
         </div>
     );
