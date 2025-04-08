@@ -5,6 +5,7 @@ import AccountControll from "./AccountControll";
 import StudentRouter from "../../../routes/Student";
 import { Button } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import LanguageSwitcher from "../../../hooks/LanguageSwitcher";
 
 // Navigation button component
 const NavButton = ({ name, path }) => {
@@ -21,11 +22,11 @@ const NavButton = ({ name, path }) => {
     <button
       onClick={handleClick}
       className={`py-1 px-1 ease-in-out ${isActive
-          ? "text-[#0156d1] border-b-4 border-[#0156d1] font-semibold "
-          : "text-gray-600 font-medium hover:text-[#3e78c9]"
+        ? "text-[#0156d1] border-b-4 border-[#0156d1] font-semibold "
+        : "text-gray-600 font-medium hover:text-[#3e78c9]"
         }`}
     >
-      {name}
+      {LanguageSwitcher(name)}
     </button>
   );
 };
@@ -39,7 +40,7 @@ const HeaderStudent = () => {
           <div className="flex items-center gap-5">
             <h1 className="text-3xl font-semibold text-[#0156d1] hover:cursor-pointer" onClick={() => navigate('/')}>coursera</h1>
             <Button className="" variant="outlined">
-              Explore
+              {LanguageSwitcher("Explore")}
               <KeyboardArrowDownIcon className="ml-2" />
             </Button>
           </div>

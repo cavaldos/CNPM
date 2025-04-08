@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CourseCard from "./CourseCard";
 import PublicService from "../../../services/public.service";
 import { useParams } from "react-router-dom";
+import { Pagination } from 'antd';
+import useLanguageSwitcher from "../../../hooks/LanguageSwitcher";
 
 const HomeCourse = () => {
     const { searchTerm } = useParams();
@@ -10,23 +12,31 @@ const HomeCourse = () => {
     const [error, setError] = useState(null);
 
     // Pagination states
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(8);
+    const [currentPage, setCurrentPage] = useState(1); // Đổi thành 1 thay vì 0
+    const [pageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
+
+    // Ref for retry timer
+    const retryTimerRef = useRef(null);
+
+    // Language translations
+    const suggestedCoursesText = useLanguageSwitcher("Suggested courses for you");
+    const searchResultsForText = useLanguageSwitcher("Search results for");
+    const noCoursesFoundText = useLanguageSwitcher("No courses found");
+    const noCoursesForKeywordText = useLanguageSwitcher("No courses found for keyword");
+    const retryText = useLanguageSwitcher("Retry");
 
     const fetchCourses = async (page = currentPage) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await PublicService.course.searchCourse(searchTerm || '', page, pageSize);
+            const response = await PublicService.course.searchCourse(searchTerm || '', page - 1, pageSize); // Trừ 1 khi gọi API
             const data = response.data;
 
-            // Check if data exists and has expected structure
             if (data) {
-                // Set courses to empty array if no results
                 setCourses(data.result || []);
                 setTotalPages(data.totalPage || 0);
-                setCurrentPage(data.page || page);
+                setCurrentPage(page);
             } else {
                 throw new Error("Dữ liệu trả về không hợp lệ");
             }
@@ -34,6 +44,11 @@ const HomeCourse = () => {
             const errorMsg = error.response?.data?.message || error.message || "Lỗi không xác định";
             setError(`${errorMsg}`);
             console.error("Error fetching courses:", error);
+
+            // Tự động retry sau 1 giây
+            retryTimerRef.current = setTimeout(() => {
+                fetchCourses(page);
+            }, 50);
         } finally {
             setLoading(false);
         }
@@ -41,21 +56,25 @@ const HomeCourse = () => {
 
     useEffect(() => {
         fetchCourses(currentPage);
+
+        // Clear any existing retry timer when component unmounts or dependencies change
+        return () => {
+            if (retryTimerRef.current) {
+                clearTimeout(retryTimerRef.current);
+            }
+        };
     }, [currentPage, searchTerm]);
 
-    const handlePageChange = (newPage) => {
-        if (newPage >= 0 && newPage < totalPages) {
-            setCurrentPage(newPage);
-        }
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
-    const categories = ["Tất cả", "Lập trình", "Data Science", "Quản lý", "Thiết kế", "Ngoại ngữ"];
-    const handleCategoryClick = (category) => {
-        if (category === "Tất cả") {
-            setCurrentPage(0);
-        } else {
-            console.log("Filter by category:", category);
+    const handleManualRetry = () => {
+        // Clear any existing timer before manual retry
+        if (retryTimerRef.current) {
+            clearTimeout(retryTimerRef.current);
         }
+        fetchCourses(currentPage);
     };
 
     return (
@@ -65,7 +84,7 @@ const HomeCourse = () => {
                 {/* Course List */}
                 <div className="flex flex-col min-h-[calc(100vh-200px)]">
                     <h2 className="text-2xl font-bold mb-6">
-                        {searchTerm ? `Kết quả tìm kiếm cho "${searchTerm}"` : "Khóa học đề xuất cho bạn"}
+                        {searchTerm ? `${searchResultsForText} "${searchTerm}"` : suggestedCoursesText}
                     </h2>
                     {loading ? (
                         <div className="flex-1 flex justify-center items-center py-10">
@@ -77,9 +96,9 @@ const HomeCourse = () => {
 
                             <button
                                 className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md border border-blue-700 hover:bg-blue-700 transition-colors duration-200"
-                                onClick={() => fetchCourses(currentPage)}
+                                onClick={handleManualRetry}
                             >
-                                Thử lại
+                                {retryText}
                             </button>
                         </div>
                     ) : courses.length > 0 ? (
@@ -91,57 +110,23 @@ const HomeCourse = () => {
                             </div>
                             {/* Spacer to push pagination to the bottom */}
                             <div className="flex-1"></div>
-                            {/* Pagination */}
-                            <div className="mt-8">
-                                <div className="flex justify-center space-x-1">
-                                    <button
-                                        onClick={() => handlePageChange(currentPage - 1)}
-                                        disabled={currentPage === 0}
-                                        className={`px-4 py-2 rounded border border-gray-300 ${currentPage === 0
-                                            ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                            : "bg-white text-gray-700 hover:bg-gray-100"
-                                            } transition-colors duration-200`}
-                                    >
-                                        Previous
-                                    </button>
-
-                                    {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                                        const pageNum = i + Math.max(0, currentPage - 2);
-                                        if (pageNum >= totalPages) return null;
-
-                                        return (
-                                            <button
-                                                key={pageNum}
-                                                onClick={() => handlePageChange(pageNum)}
-                                                className={`px-4 py-2 rounded border border-gray-300 ${currentPage === pageNum
-                                                    ? "bg-blue-600 text-white border-blue-600"
-                                                    : "bg-white text-gray-700 hover:bg-gray-100"
-                                                    } transition-colors duration-200`}
-                                            >
-                                                {pageNum + 1}
-                                            </button>
-                                        );
-                                    })}
-
-                                    <button
-                                        onClick={() => handlePageChange(currentPage + 1)}
-                                        disabled={currentPage >= totalPages - 1}
-                                        className={`px-4 py-2 rounded border border-gray-300 ${currentPage >= totalPages - 1
-                                            ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                            : "bg-white text-gray-700 hover:bg-gray-100"
-                                            } transition-colors duration-200`}
-                                    >
-                                        Next
-                                    </button>
-                                </div>
+                            {/* Thay thế phần pagination cũ bằng Ant Design Pagination */}
+                            <div className="mt-8 flex justify-center">
+                                <Pagination
+                                    current={currentPage}
+                                    total={totalPages * pageSize}
+                                    pageSize={pageSize}
+                                    onChange={handlePageChange}
+                                    showSizeChanger={false}
+                                />
                             </div>
                         </div>
                     ) : (
                         <div className="flex-1 flex justify-center items-center py-10 flex-col">
-                            <p className="text-gray-500 mb-4">Không tìm thấy khóa học nào</p>
+                            <p className="text-gray-500 mb-4">{noCoursesFoundText}</p>
                             {searchTerm && (
                                 <p className="text-gray-400">
-                                    Không tìm thấy khóa học nào cho từ khóa "{searchTerm}"
+                                    {noCoursesForKeywordText} "{searchTerm}"
                                 </p>
                             )}
                         </div>

@@ -93,6 +93,14 @@ const StudentService = {
             return response
 
         },
+        updateEnrollmentStatus: async (enrollmentID, status) => {
+            const validStatuses = ['Enrolled', 'Completed', 'Dropped'];
+            if (!validStatuses.includes(status)) {
+                throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+            }
+            const response = await axiosinstance.post(`/student/enrollment/update-status`, { enrollmentID, status });
+            return response;
+        }
     },
     progress: {
         getAllCourseProgress: async (studentID) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicService from "../../../services/public.service";
-
+import useLanguageSwitcher from "../../../hooks/LanguageSwitcher";
 // Mock data for recently viewed and popular items (replace with API data if needed)
 
 const SearchBar = () => {
@@ -60,13 +60,15 @@ const SearchBar = () => {
         setSearchTerm(text);
         setIsDropdownOpen(false);
     };
-
+    const placeholder = useLanguageSwitcher("what do you want to learn?");
+    const popularRightNow = useLanguageSwitcher("Popular right now");
+    const recentlyViewed = useLanguageSwitcher("Recently viewed");
     return (
         <div className="flex items-center space-x-2 mr-auto ml-4 relative">
             <div className="relative">
                 <input
                     type="text"
-                    placeholder="What do you want to learn?"
+                    placeholder={placeholder}
                     className="border-gray-300 border-b border-[1px] rounded-full px-4 py-2 w-[500px] focus:outline-none focus:ring-2 focus:ring-blue-600"
                     value={searchTerm}
                     onChange={handleInputChange}
@@ -101,7 +103,7 @@ const SearchBar = () => {
                     {/* Popular Right Now Section */}
                     <div>
                         <h3 className="text-sm font-semibold text-gray-600 mb-2">
-                            Popular right now
+                            {popularRightNow}
                         </h3>
                         {results.map((item, index) => (
                             <div
@@ -118,7 +120,7 @@ const SearchBar = () => {
                     {/* Recently Viewed Section */}
                     <div className="mb-4">
                         <h3 className="text-sm font-semibold text-gray-600 mb-2">
-                            Recently viewed
+                            {recentlyViewed}
                         </h3>
                         {recent.map((item, index) => (
                             <div

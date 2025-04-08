@@ -32,7 +32,7 @@ StudentRouter.post("/lesson/get-all-lessons", LessonController.getAllLessonsByCo
 
 StudentRouter.post("/enrollment/create", EnrollmentController.createEnrollment);
 StudentRouter.post("/enrollment/delete", EnrollmentController.deleteEnrollment);
-StudentRouter.post("/enrollment/update", EnrollmentController.updateEnrollmentStatus);
+StudentRouter.post("/enrollment/update-status", EnrollmentController.updateEnrollmentStatus);
 StudentRouter.post("/enrollment/get-by-student-id", EnrollmentController.getAllEnrollmentsByStudent);
 StudentRouter.post("/enrollment/get-contacts", EnrollmentController.getContacts);
 

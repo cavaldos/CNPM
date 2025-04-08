@@ -3,7 +3,8 @@ import { BookOpen, CheckCircle, Clock, MoreVertical, Loader2 } from "lucide-reac
 import StudentService from "../../services/student.service";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { notification } from "antd"; // Thay đổi từ toast sang notification của antd
+import { notification } from "antd";
+import LanguageSwitcher from "../../hooks/LanguageSwitcher";
 /**
  * @typedef {Object} Course
  * @property {number} id
@@ -24,6 +25,21 @@ const MyLearning = () => {
     const [completingCourse, setCompletingCourse] = useState(null); // Track which course is being completed
     const user = useSelector((state) => state.auth);
     const navigate = useNavigate();
+
+    // Text translations
+    const myLearningText = LanguageSwitcher("My Learning");
+    const enrolledText = LanguageSwitcher("Enrolled");
+    const completedText = LanguageSwitcher("Completed");
+    const loadingText = LanguageSwitcher("Loading your courses...");
+    const tryAgainText = LanguageSwitcher("Try again");
+    const noEnrolledText = LanguageSwitcher("You don't have any enrolled courses yet.");
+    const noCompletedText = LanguageSwitcher("You haven't completed any courses yet.");
+    const courseText = LanguageSwitcher("Course");
+    const enrolledOnText = LanguageSwitcher("Enrolled on");
+    const completeCourseText = LanguageSwitcher("Complete Course");
+    const processingText = LanguageSwitcher("Processing...");
+    const completeText = LanguageSwitcher("complete");
+
     useEffect(() => {
         const fetchCourseProgress = async () => {
             try {
@@ -60,7 +76,9 @@ const MyLearning = () => {
         e.stopPropagation(); // Prevent navigating to course details
         try {
             setCompletingCourse(enrollmentID);
-            const response = await StudentService.progress.completeCourseProgress(enrollmentID);
+
+            // Sử dụng API updateEnrollmentStatus thay vì completeCourseProgress
+            const response = await StudentService.enrollment.updateEnrollmentStatus(enrollmentID, "Completed");
 
             if (response.success) {
                 // Update the status of the completed course in state
@@ -103,7 +121,7 @@ const MyLearning = () => {
     return (
         <div className="min-h-screen w-full px-[120px] bg-gray-50 p-6">
             <div className="max-w-7xl mx-auto">
-                <h1 className="text-3xl font-bold mb-6">My Learning</h1>
+                <h1 className="text-3xl font-bold mb-6">{myLearningText}</h1>
                 {/* Tabs */}
                 <div className="flex gap-4 mb-8">
                     <button
@@ -111,14 +129,14 @@ const MyLearning = () => {
                         onClick={() => setActiveTab("enrolled")}
                     >
                         <Clock className="w-4 h-4 inline-block mr-2" />
-                        Enrolled
+                        {enrolledText}
                     </button>
                     <button
                         className={`px-4 py-2 rounded-full ${activeTab === "completed" ? "bg-blue-600 text-white" : "bg-white text-gray-600"}`}
                         onClick={() => setActiveTab("completed")}
                     >
                         <CheckCircle className="w-4 h-4 inline-block mr-2" />
-                        Completed
+                        {completedText}
                     </button>
                 </div>
 
@@ -126,7 +144,7 @@ const MyLearning = () => {
                 {loading && (
                     <div className="flex justify-center items-center py-12">
                         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-                        <p className="ml-2 text-gray-600">Loading your courses...</p>
+                        <p className="ml-2 text-gray-600">{loadingText}</p>
                     </div>
                 )}
 
@@ -138,7 +156,7 @@ const MyLearning = () => {
                             onClick={() => window.location.reload()}
                             className="text-sm underline mt-2"
                         >
-                            Try again
+                            {tryAgainText}
                         </button>
                     </div>
                 )}
@@ -148,8 +166,8 @@ const MyLearning = () => {
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
                         <p className="text-gray-600">
                             {activeTab === "enrolled"
-                                ? "You don't have any enrolled courses yet."
-                                : "You haven't completed any courses yet."}
+                                ? noEnrolledText
+                                : noCompletedText}
                         </p>
                     </div>
                 )}
@@ -180,7 +198,7 @@ const MyLearning = () => {
                                             <div className="flex items-center gap-2">
                                                 <BookOpen className="w-4 h-4 text-gray-500" />
                                                 <span className="text-sm text-gray-600">
-                                                    Course · {course.status} · Enrolled on {course.enrollDate}
+                                                    {courseText} · {course.status} · {enrolledOnText} {course.enrollDate}
                                                 </span>
                                             </div>
                                         </div>
@@ -195,12 +213,12 @@ const MyLearning = () => {
                                                 {completingCourse === course.EnrollmentID ? (
                                                     <span className="flex items-center">
                                                         <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                                                        Processing...
+                                                        {processingText}
                                                     </span>
                                                 ) : (
                                                     <span className="flex items-center">
                                                         <CheckCircle className="w-3 h-3 mr-1" />
-                                                        Complete Course
+                                                        {completeCourseText}
                                                     </span>
                                                 )}
                                             </button>
@@ -221,7 +239,7 @@ const MyLearning = () => {
                                             />
                                         </div>
                                         <p className="text-sm text-gray-600 mt-1">
-                                            {course.progress}% complete
+                                            {course.progress}% {completeText}
                                         </p>
                                     </div>
                                 )}

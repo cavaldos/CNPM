@@ -46,21 +46,21 @@ const EnrollmentController = {
 
     async updateEnrollmentStatus(req: Request, res: Response) {
         try {
-            const { enrollmentID, Status } = req.body;
+            const { enrollmentID, status } = req.body;
 
             if (!enrollmentID) {
                 return res.status(400).json({ message: "EnrollmentID is required" });
             }
 
-            // Validate that Status is one of the allowed values
+            // Validate that status is one of the allowed values
             const allowedStatuses = ['Enrolled', 'Completed', 'Dropped'];
-            if (Status && !allowedStatuses.includes(Status)) {
+            if (status && !allowedStatuses.includes(status)) {
                 return res.status(400).json({
                     message: "Status must be one of: Enrolled, Completed, or Dropped"
                 });
             }
 
-            const result = await EnrollmentRepository.updateEnrollment(enrollmentID, Status);
+            const result = await EnrollmentRepository.updateEnrollment(enrollmentID, status);
 
             return res.status(200).json({
                 success: true,

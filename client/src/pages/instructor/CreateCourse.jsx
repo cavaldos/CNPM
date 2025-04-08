@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-    Button,
     TextField,
     Typography,
     Paper,
@@ -8,6 +7,7 @@ import {
     Card,
     Tabs,
     Tab,
+    Button,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -15,6 +15,8 @@ import LinkIcon from "@mui/icons-material/Link";
 import { useNavigate } from "react-router-dom";
 import InstructorService from "../../services/instructor.service";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
+import { message } from 'antd';
 
 // Styled component cho input file
 const VisuallyHiddenInput = styled('input')({
@@ -31,11 +33,12 @@ const VisuallyHiddenInput = styled('input')({
 
 const CreateCourse = () => {
     const navigate = useNavigate();
+    const [messageApi, contextHolder] = message.useMessage();
     const [courseTitle, setCourseTitle] = useState("");
     const [courseDescription, setCourseDescription] = useState("");
     const [courseCategory, setCourseCategory] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
+    const user = useSelector((state) => state.auth);
     // Thumbnail states
     const [thumbnailType, setThumbnailType] = useState(0); // 0: URL, 1: Upload
     const [thumbnailUrl, setThumbnailUrl] = useState("");
@@ -66,7 +69,7 @@ const CreateCourse = () => {
     const handleSubmit = async () => {
         // Xác thực dữ liệu đầu vào
         if (!courseTitle || !courseDescription || !courseCategory) {
-            alert("Vui lòng điền đầy đủ thông tin cơ bản của khóa học!");
+            messageApi.error('Vui lòng điền đầy đủ thông tin cơ bản của khóa học!');
             return;
         }
 
@@ -75,8 +78,6 @@ const CreateCourse = () => {
         if (thumbnailType === 0) { // URL
             finalThumbnail = thumbnailUrl;
         } else { // Upload
-            // Trong ứng dụng thực tế, tại đây bạn sẽ tải file lên server và nhận về URL
-            // Hiện tại chúng ta chỉ dùng URL preview tạm thời cho demo
             finalThumbnail = thumbnailPreview;
         }
 
@@ -88,19 +89,22 @@ const CreateCourse = () => {
                 courseCategory,
                 courseDescription,
                 finalThumbnail || "",
-                "instructor-id-placeholder" // Trong thực tế, lấy ID từ user đăng nhập
+                user.UserID
             );
 
-            if (response && response.data) {
-                alert("Khóa học đã được tạo thành công!");
-                // Chuyển hướng đến trang thêm bài học với ID khóa học vừa tạo
-                navigate(`/instructor/courses/${response.data.courseId}/lessons`);
+            if (response.success) {
+                messageApi.success('Khóa học đã được tạo thành công!');
+
+                // Đợi 1 giây sau mới navigate
+                setTimeout(() => {
+                    navigate('/my-courses');
+                }, 1000);
             } else {
-                throw new Error("Không nhận được phản hồi từ server");
+                throw new Error(response.message || "Không nhận được phản hồi từ server");
             }
         } catch (error) {
             console.error("Lỗi khi tạo khóa học:", error);
-            alert("Đã xảy ra lỗi khi tạo khóa học. Vui lòng thử lại sau!");
+            messageApi.error('Đã xảy ra lỗi khi tạo khóa học. Vui lòng thử lại sau!');
         } finally {
             setIsLoading(false);
         }
@@ -108,6 +112,7 @@ const CreateCourse = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
+            {contextHolder}
             <Button
                 startIcon={<ArrowBackIcon />}
                 onClick={() => navigate(-1)}

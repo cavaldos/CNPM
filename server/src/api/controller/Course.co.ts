@@ -91,6 +91,7 @@ const CourseController = {
     createCourse: async (req: Request, res: Response) => {
         try {
             const { title, topic, description, image, instructorID } = req.body;
+            console.log(req.body);
             const result = await CourseRepository.createCourse(
                 title,
                 topic,
@@ -218,7 +219,7 @@ const CourseController = {
                     page: page,
                     pageSize: pageSize,
                     totalPage: result.total || 0,
-                    result: result || [],
+                    result: result.result || [],
                 }
             });
         } catch (error) {

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronUp, Globe, Bell } from "lucide-react";
+import { ChevronDown, ChevronUp, Bell } from "lucide-react";
 import { useSelector } from "react-redux";
 import LoginService from "../../auth/LoginService";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../../redux/features/authSlice";
+import PickLanguage from "../PickLanguage";
+
 const AccountControll = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
@@ -50,15 +52,9 @@ const AccountControll = () => {
         }
     }
 
-
-
     return (
         <div className="flex items-center space-x-4 relative account-dropdown">
-            <button className="flex items-center text-sm font-medium text-gray-700 hover:text-[#0156d1]">
-                <Globe className="w-5 h-5 mr-1" />
-                English
-                <ChevronDown className="w-4 h-4 ml-1" />
-            </button>
+            <PickLanguage />
             <button className="relative p-1 text-gray-700 hover:text-[#0156d1]">
                 <Bell className="w-6 h-6" />
             </button>

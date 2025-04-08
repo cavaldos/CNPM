@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import LanguageSwitcher from "../../../hooks/LanguageSwitcher";
 
 const CourseCard = ({ course }) => {
   const {
@@ -22,7 +23,7 @@ const CourseCard = ({ course }) => {
 
   // Format ngày tạo
   const formattedDate = new Date(CreateTime).toLocaleDateString("vi-VN", {
-    month: "long",
+    month: "numeric",
     year: "numeric",
   });
 
@@ -57,7 +58,7 @@ const CourseCard = ({ course }) => {
               d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
             />
           </svg>
-          {EnrollmentCount} học viên
+          {EnrollmentCount} {LanguageSwitcher("students")}
         </div>
       </div>
 
@@ -100,8 +101,8 @@ const CourseCard = ({ course }) => {
                     <svg
                       key={i}
                       className={`w-4 h-4 ${i < Math.floor(AvgRating)
-                          ? "text-yellow-400"
-                          : "text-gray-300"
+                        ? "text-yellow-400"
+                        : "text-gray-300"
                         }`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
@@ -116,7 +117,7 @@ const CourseCard = ({ course }) => {
               </>
             )}
           </div>
-          <span className="text-xs text-gray-500">{formattedDate}</span>
+          <span className="text-xs text-gray-500">{LanguageSwitcher("created_at")} {formattedDate}</span>
         </div>
       </div>
     </div>

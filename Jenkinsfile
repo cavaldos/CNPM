@@ -46,7 +46,7 @@ pipeline {
                                 
 
                                 echo "Running Tests..."
-                                cd server
+                      4          cd server
                                 npm install
                                 npm run test -- __test__/utils/sum.test.ts
                             else
