@@ -1,12 +1,109 @@
-name: Notify on Production Push
+name: Deploy and Notify on Production Push
 
 on:
   push:
     branches:
-      - production  # Chạy khi push lên nhánh production
+      - production  # Run when pushing to production branch
 
 jobs:
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.MANJARO }}
+          
+      - name: Deploy to Staging
+        run: |
+          ssh -o StrictHostKeyChecking=no -p 22 ubuntu@3.106.223.225 '
+            if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
+                echo "Node.js or npm is not installed or not in PATH. Installing Node.js 18.x..."
+                sudo apt-get update
+                sudo apt-get install -y curl
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                sudo apt-get install -y nodejs
+                
+                source ~/.bashrc || true
+                
+                if ! command -v npm &> /dev/null; then
+                    echo "npm still not found. Installing npm separately..."
+                    sudo apt-get install -y npm
+                fi
+            fi
+            
+            node -v || echo "Node.js not found in PATH"
+            npm -v || echo "npm not found in PATH"
+            
+            if command -v npm &> /dev/null; then
+                echo "Node.js and npm are installed. Proceeding with the deployment..."
+                
+                mkdir -p ~/Code/CICD
+                cd ~/Code/CICD
+                if [ -d "CNPM" ]; then
+                    echo "Project already exists. Updating from GitHub..."
+                    cd CNPM
+                    git fetch
+                    git reset --hard origin/production
+                    git pull origin production
+                else
+                    echo "Project does not exist. Cloning from GitHub..."
+                    git clone https://github.com/cavaldos/CNPM.git
+                    cd CNPM
+                    git checkout production
+                fi
+                
+                echo "Running Tests..."
+                cd server
+                npm install
+                npm run test -- __test__/utils/sum.test.ts
+            else
+                echo "ERROR: npm installation failed. Cannot proceed with deployment."
+                exit 1
+            fi
+            echo "Deployment to staging completed."
+          '
+
+  deploy-to-production:
+    needs: deploy-to-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.MANJARO }}
+          
+      - name: Deploy to Production
+        run: |
+          ssh -o StrictHostKeyChecking=no -p 2323 bourbon@bourbon.zapto.org '
+            mkdir -p ~/Code/CICD
+            cd ~/Code/CICD
+            if [ -d "CNPM" ]; then
+                echo "Project already exists. Updating from GitHub..."
+                cd CNPM
+                git fetch
+                git reset --hard origin/production
+                git pull origin production
+            else
+                echo "Project does not exist. Cloning from GitHub..."
+                git clone https://github.com/cavaldos/CNPM.git
+                cd CNPM
+                git checkout production
+            fi
+            
+            echo "Deploying to Production..."
+            sh ./deploy.sh
+            echo "Deployment to production completed."
+          '
+
   notify:
+    needs: deploy-to-production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,9 +115,9 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 465
           secure: true
-          username: ${{ secrets.EMAIL_USERNAME }}  # Gmail gửi thông báo
-          password: ${{ secrets.EMAIL_PASSWORD }}  # App Password của Gmail gửi thông báo
-          subject: "🚀 Code Pushed to Production"
-          body: "Mã nguồn đã được cập nhật trên production.\nChi tiết commit: ${{ github.event.head_commit.message }}"
+          username: ${{ secrets.EMAIL_USERNAME }}  # Gmail account for notifications
+          password: ${{ secrets.EMAIL_PASSWORD }}  # App Password for Gmail
+          subject: "🚀 Code Deployed to Production"
+          body: "Code has been successfully deployed to production.\nCommit details: ${{ github.event.head_commit.message }}"
           to: "nguyen.vu.hung309@gmail.com,tbnguyen21@vp.fitus.edu.vn,nguyenducnha1304@gmail.com,lehoangdaian@gmail.com,khanhtiensinh297@gmail.com"
           from: "GitHub Actions <nnkhanh21@vp.fitus.edu.vn>"
