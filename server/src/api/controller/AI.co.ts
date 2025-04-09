@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { chatWithGroq } from '../../grpc/client';
+import { chatWithGroq } from '../../modules/ai/infrastructure/grpc';
 
 const AIController = {
   chatWithGroq: async (req: Request, res: Response) => {

@@ -4,8 +4,8 @@
  * This file defines the service layer for the Lesson domain, containing business logic.
  */
 
-import { Lesson, VideoLesson, DocumentLesson, LessonType, ComplexityLevel } from './lesson';
-import LessonRepository from './lesson.repo';
+import { Lesson, VideoLesson, DocumentLesson, LessonType, ComplexityLevel } from '../domain/lesson';
+import LessonRepository from '../repositories/lesson.repo';
 
 // Service interface
 export interface ILessonService {

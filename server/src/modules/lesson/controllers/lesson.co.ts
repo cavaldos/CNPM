@@ -5,9 +5,9 @@
  */
 
 import { Request, Response } from 'express';
-import LessonService from './lesson.service';
+import LessonService from '../services/lesson.service';
 
-const LessonController = {
+class LessonController {
   async createLessonVideo(req: Request, res: Response): Promise<void> {
     try {
       const { title, duration, complexityLevel, ordinal, courseID, url } = req.body;
@@ -33,7 +33,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async updateLessonVideo(req: Request, res: Response): Promise<void> {
     try {
@@ -53,7 +53,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async createLessonDocument(req: Request, res: Response): Promise<void> {
     try {
@@ -80,7 +80,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async updateLessonDocument(req: Request, res: Response): Promise<void> {
     try {
@@ -100,7 +100,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async updateLesson(req: Request, res: Response): Promise<void> {
     try {
@@ -127,7 +127,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async deleteLesson(req: Request, res: Response): Promise<void> {
     try {
@@ -147,7 +147,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async getAllLessonsByCourseID(req: Request, res: Response): Promise<void> {
     try {
@@ -167,7 +167,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async getLessonByID(req: Request, res: Response): Promise<void> {
     try {
@@ -195,7 +195,7 @@ const LessonController = {
         error: error
       });
     }
-  },
+  }
 
   async sortLessons(req: Request, res: Response): Promise<void> {
     try {
@@ -216,6 +216,7 @@ const LessonController = {
       });
     }
   }
-};
+}
 
-export default LessonController;
+// Export a singleton instance
+export default new LessonController();

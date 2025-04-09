@@ -1,14 +1,20 @@
+/**
+ * AI Module gRPC Client
+ * 
+ * This file defines the gRPC client for the AI module to communicate with the chatserver.
+ */
+
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import dotenv from 'dotenv';
-import { ProtoGrpcType } from '../types/ai';
-import { AIServiceClient } from '../types/ai/ai/AIService';
+import { ProtoGrpcType } from './types/ai';
+import { AIServiceClient } from './types/ai/AIService';
 
 dotenv.config();
 
 // Load proto file
-const PROTO_PATH = path.resolve(__dirname, '../../../proto/ai.proto');
+const PROTO_PATH = path.resolve(__dirname, '../../../../../../proto/ai.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -42,12 +48,12 @@ export const chatWithGroq = (message: string): Promise<string> => {
         reject(error);
         return;
       }
-      
+
       if (!response.success) {
         reject(new Error(response.message));
         return;
       }
-      
+
       resolve(response.response);
     });
   });

@@ -12,7 +12,7 @@ import {
     reviewRoutes,
     lessonRoutes,
     enrollmentRoutes
-} from '../../modules';
+} from '.';
 
 const DddRouter = Router();
 

@@ -1,11 +1,11 @@
 /**
  * AI Service
- * 
+ *
  * This file defines the service layer for the AI domain, containing business logic.
  */
 
 import { AIMessage } from '../domain/ai';
-import { chatWithGroq } from '../../../grpc/client';
+import { chatWithGroq } from '../infrastructure/grpc';
 
 // Service interface
 export interface IAIService {

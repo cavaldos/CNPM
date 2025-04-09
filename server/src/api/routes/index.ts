@@ -5,7 +5,7 @@ import StudentRouter from "./student.route";
 import PublicRouter from "./public.route";
 import AuthRouter from "./auth.route";
 import AIRouter from "./ai.route";
-import DomainRouter from "./domain.route";
+import DomainRouter from "../../modules/domain.route";
 
 const router = Router();
 

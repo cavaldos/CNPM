@@ -5,7 +5,7 @@
  */
 
 import { Request, Response } from 'express';
-import ReviewService from '../services/reviewService';
+import ReviewService from '../services/review.service';
 
 class ReviewController {
   async createReview(req: Request, res: Response): Promise<void> {

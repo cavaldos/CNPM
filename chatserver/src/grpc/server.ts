@@ -2,7 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import { ProtoGrpcType } from '../types/ai';
-import { AIServiceHandlers } from '../types/ai/ai/AIService';
+import { AIServiceHandlers } from '../types/ai/AIService';
 import GroqAI from '../utils/groq';
 
 // Load proto file

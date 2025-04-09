@@ -25,25 +25,25 @@ import AIService from './ai/services/ai.service';
 import { AIMessage } from './ai/domain/ai';
 
 // Review module
-import reviewRouter from './review/review.route';
-import ReviewController from './review/review.co';
-import ReviewService from './review/review.service';
-import ReviewRepository from './review/review.repo';
-import { Review } from './review/review';
+import reviewRouter from './review/routes/review.route';
+import ReviewController from './review/controllers/review.co';
+import ReviewService from './review/services/review.service';
+import ReviewRepository from './review/repositories/review.repo';
+import { Review } from './review/domain/review';
 
 // Lesson module
-import lessonRouter from './lesson/lesson.route';
-import LessonController from './lesson/lesson.co';
-import LessonService from './lesson/lesson.service';
-import LessonRepository from './lesson/lesson.repo';
-import { Lesson, VideoLesson, DocumentLesson, LessonType, ComplexityLevel, createLesson } from './lesson/lesson';
+import lessonRouter from './lesson/routes/lesson.route';
+import LessonController from './lesson/controllers/lesson.co';
+import LessonService from './lesson/services/lesson.service';
+import LessonRepository from './lesson/repositories/lesson.repo';
+import { Lesson, VideoLesson, DocumentLesson, LessonType, ComplexityLevel, createLesson } from './lesson/domain/lesson';
 
 // Enrollment module
-import enrollmentRouter from './enrollment/enrollment.route';
-import EnrollmentController from './enrollment/enrollment.co';
-import EnrollmentService from './enrollment/enrollment.service';
-import EnrollmentRepository from './enrollment/enrollment.repo';
-import { Enrollment, EnrollmentStatus } from './enrollment/enrollment';
+import enrollmentRouter from './enrollment/routes/enrollment.route';
+import EnrollmentController from './enrollment/controllers/enrollment.co';
+import EnrollmentService from './enrollment/services/enrollment.service';
+import EnrollmentRepository from './enrollment/repositories/enrollment.repo';
+import { Enrollment, EnrollmentStatus } from './enrollment/domain/enrollment';
 
 // Export all modules
 export {

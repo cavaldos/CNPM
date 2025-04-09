@@ -1,7 +1,7 @@
 import type * as grpc from '@grpc/grpc-js';
 import type { MethodDefinition } from '@grpc/proto-loader';
-import type { ChatRequest as _ai_ChatRequest, ChatRequest__Output as _ai_ChatRequest__Output } from '../ai/ChatRequest';
-import type { ChatResponse as _ai_ChatResponse, ChatResponse__Output as _ai_ChatResponse__Output } from '../ai/ChatResponse';
+import type { ChatRequest as _ai_ChatRequest, ChatRequest__Output as _ai_ChatRequest__Output } from './ChatRequest';
+import type { ChatResponse as _ai_ChatResponse, ChatResponse__Output as _ai_ChatResponse__Output } from './ChatResponse';
 
 export interface AIServiceClient extends grpc.Client {
   ChatWithGroq(argument: _ai_ChatRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_ai_ChatResponse__Output>): grpc.ClientUnaryCall;

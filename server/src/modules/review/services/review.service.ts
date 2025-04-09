@@ -4,8 +4,8 @@
  * This file defines the service layer for the Review domain, containing business logic.
  */
 
-import { Review } from './review';
-import ReviewRepository from './review.repo';
+import { Review } from '../domain/review';
+import ReviewRepository from '../repositories/review.repo';
 
 // Service interface
 export interface IReviewService {
