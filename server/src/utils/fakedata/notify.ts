@@ -1,4 +1,4 @@
-import { NotifyResponseDTO } from '../dto/notify.dto';
+import { NotifyResponseDTO } from '../../dto/notify.dto';
 
 export const notifications: NotifyResponseDTO[] = [
     {

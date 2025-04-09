@@ -1,4 +1,4 @@
-import { LearnProgressResponseDTO } from '../dto/learnProgress.dto';
+import { LearnProgressResponseDTO } from '../../dto/learnProgress.dto';
 
 export const learnProgress: LearnProgressResponseDTO[] = [
     // Emily Davis - JavaScript Course

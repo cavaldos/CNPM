@@ -1,4 +1,4 @@
-import { ForumMessageResponseDTO } from '../dto/forum.dto';
+import { ForumMessageResponseDTO } from '../../dto/forum.dto';
 
 export const forumMessages: ForumMessageResponseDTO[] = [
     {

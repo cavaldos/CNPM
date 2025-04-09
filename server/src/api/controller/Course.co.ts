@@ -3,7 +3,7 @@ import CourseRepository from "../repositories/course.repo";
 import ReviewRepository from "../repositories/review.repo";
 import LessonRepository from "../repositories/lesson.repo";
 import EnrollmentRepository from "../repositories/enrollment.repo";
-import { datasearch } from "../../fakedata/course";
+import { datasearch } from "../../utils/fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
         try {
@@ -189,9 +189,9 @@ const CourseController = {
             const searchTerm = req.body.searchTerm || '';
             const page = parseInt(req.body.page as string) || 1;
             const pageSize = parseInt(req.body.pageSize as string) || 10;
-    
+
             console.log(`Searching for: "${searchTerm}", page: ${page}, pageSize: ${pageSize}`);
-    
+
             if (!searchTerm || searchTerm.trim() === "") {
                 const result = await CourseRepository.getAllCoursesPagination(page, pageSize);
                 return res.status(200).json({
@@ -211,7 +211,7 @@ const CourseController = {
                 page,
                 pageSize
             );
-    
+
             return res.status(200).json({
                 success: true,
                 message: "Search results retrieved successfully",

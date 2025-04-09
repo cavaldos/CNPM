@@ -1,4 +1,4 @@
-import { ReviewResponseDTO } from '../dto/review.dto';
+import { ReviewResponseDTO } from '../../dto/review.dto';
 
 export const reviews: ReviewResponseDTO[] = [
     {

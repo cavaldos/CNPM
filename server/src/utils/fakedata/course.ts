@@ -1,4 +1,4 @@
-import { CourseResponseDTO } from '../dto/course.dto';
+import { CourseResponseDTO } from '../../dto/course.dto';
 
 export const datasearch = {
     results: [

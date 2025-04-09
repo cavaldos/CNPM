@@ -1,4 +1,4 @@
-import { LessonResponseDTO } from '../dto/lesson.dto';
+import { LessonResponseDTO } from '../../dto/lesson.dto';
 
 export const lessons: LessonResponseDTO[] = [
     // JavaScript Course Lessons
