@@ -14,6 +14,7 @@ services:
       - VITE_ALLOWED_HOST=coursera.zapto.org
     depends_on:
       - server-coursera
+      - chatserver-coursera
     restart: always
 
   server-coursera:
@@ -24,6 +25,24 @@ services:
     ports:
       - "3000:3000"
       - "5001:5001"
+    networks:
+      - default
+    environment:
+      - NODE_ENV=production
+      - GRPC_SERVER_ADDRESS=chatserver-coursera:50051
+    depends_on:
+      - chatserver-coursera
+    restart: always
+
+  chatserver-coursera:
+    build:
+      context: ./chatserver
+      dockerfile: Dockerfile
+    container_name: chatserver-coursera
+    ports:
+      - "5003:5003"
+      - "5004:5004"
+      - "50051:50051"
     networks:
       - default
     environment:

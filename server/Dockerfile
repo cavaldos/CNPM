@@ -1,10 +1,13 @@
-FROM node:20-alpine 
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 COPY package.json ./
 
 RUN yarn global add typescript
 RUN yarn install --frozen-lockfile
+
+# Copy proto files
+COPY ../proto ./proto
 
 COPY . .
 COPY .env ./

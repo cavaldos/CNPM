@@ -7,6 +7,7 @@ import portfinder from "portfinder";
 import dotenv from "dotenv";
 import connectDB from "./config/connectMongodb";
 import startSocketServer from "./config/socket";
+import { startGrpcServer } from "./grpc/server";
 dotenv.config();
 const IP = getIPAddresses.IP();
 
@@ -17,6 +18,10 @@ const PORSERVER: number = process.env.PORT_SERVER
 const PORT_SOCKET: number = process.env.PORT_SOCKET
   ? parseInt(process.env.PORT_SOCKET)
   : 5004;
+
+const PORT_GRPC: number = process.env.PORT_GRPC
+  ? parseInt(process.env.PORT_GRPC)
+  : 50051;
 
 const host: string = "0.0.0.0";
 async function startServer() {
@@ -35,6 +40,7 @@ async function startServer() {
       console.log(`  🚀  ➜   Local:  `, color.green(`http://${IP}:${PORT}`));
     });
     startSocketServer(PORT_SOCKET);
+    startGrpcServer(PORT_GRPC);
   } catch (err) {
     console.error(`Server startup error: ${err}`);
     process.exit(1);
