@@ -4,8 +4,8 @@
  * This file defines the repository interface and implementation for the Course domain.
  */
 
-import DataConnect from '../../../config/DataConnect';
-import { Course } from '../domain/course';
+import DataConnect from '../../../../config/DataConnect';
+import { Course } from '../../domain/course';
 
 // Repository interface
 export interface ICourseRepository {
@@ -113,9 +113,9 @@ class CourseRepository implements ICourseRepository {
     };
     const coursesData = await DataConnect.executeProcedure(proc, params);
     const total = await this.totalPages(false);
-    
+
     const courses = coursesData ? coursesData.map((courseData: any) => Course.create(courseData)) : [];
-    
+
     return {
       courses,
       total,
@@ -125,24 +125,24 @@ class CourseRepository implements ICourseRepository {
   async search(searchTerm: string, page: number, pageSize: number): Promise<{ courses: Course[], total: number }> {
     const proc = 'search_course';
     const offset = (page - 1) * pageSize;
-    
+
     const params = {
       SearchTerm: searchTerm,
       Offset: offset,
       PageSize: pageSize
     };
-    
+
     const total = await this.totalPages(false);
-    
+
     try {
       const result = await DataConnect.executeProcedure(proc, params);
-      
+
       if (!result) {
         return { courses: [], total: 0 };
       }
-      
+
       const courses = result.map((courseData: any) => Course.create(courseData));
-      
+
       return { courses, total };
     } catch (error) {
       console.error('Error in searchCourse repository:', error);

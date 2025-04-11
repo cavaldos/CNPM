@@ -26,4 +26,3 @@ PublicRouter.post("/forum/course", ForumController.getMessagesByCourse);
 
 
 export default PublicRouter;
-    

@@ -15,7 +15,7 @@ import { User, UserRole } from './user/domain/user';
 import courseRoutes from './course/routes/course.route';
 import CourseController from './course/controllers/course.co';
 import CourseService from './course/services/course.service';
-import CourseRepository from './course/repositories/course.repo';
+import CourseRepository from './course/repositories/Implement/Course.repo';
 import { Course } from './course/domain/course';
 
 // AI module
@@ -44,6 +44,13 @@ import EnrollmentController from './enrollment/controllers/enrollment.co';
 import EnrollmentService from './enrollment/services/enrollment.service';
 import EnrollmentRepository from './enrollment/repositories/enrollment.repo';
 import { Enrollment, EnrollmentStatus } from './enrollment/domain/enrollment';
+
+// Learning module
+import learningRouter from './learning/routes/learning.route';
+import LearningController from './learning/controllers/learning.co';
+import LearningService from './learning/services/learning.service';
+import LearningRepository from './learning/repositories/learning.repo';
+import { LearningProgress, LearningStatus, CourseProgress } from './learning/domain/learning';
 
 // Export all modules
 export {
@@ -93,5 +100,14 @@ export {
   EnrollmentService,
   EnrollmentRepository,
   Enrollment,
-  EnrollmentStatus
+  EnrollmentStatus,
+
+  // Learning module
+  learningRouter as learningRoutes,
+  LearningController,
+  LearningService,
+  LearningRepository,
+  LearningProgress,
+  LearningStatus,
+  CourseProgress
 };

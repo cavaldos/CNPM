@@ -5,7 +5,7 @@
  */
 
 import { Course } from '../domain/course';
-import CourseRepository from '../repositories/course.repo';
+import CourseRepository from '../repositories/Implement/Course.repo';
 
 // Service interface
 export interface ICourseService {

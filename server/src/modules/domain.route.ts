@@ -11,7 +11,8 @@ import {
     aiRoutes,
     reviewRoutes,
     lessonRoutes,
-    enrollmentRoutes
+    enrollmentRoutes,
+    learningRoutes
 } from '.';
 
 const DddRouter = Router();
@@ -23,5 +24,6 @@ DddRouter.use('/ai', aiRoutes);
 DddRouter.use('/review', reviewRoutes);
 DddRouter.use('/lesson', lessonRoutes);
 DddRouter.use('/enrollment', enrollmentRoutes);
+DddRouter.use('/learning', learningRoutes);
 
 export default DddRouter;
