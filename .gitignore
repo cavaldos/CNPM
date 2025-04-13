@@ -3,3 +3,6 @@
 /.DS_Store
 gateway
 docker-compose.test.yml
+
+.vscode
+/.vscode

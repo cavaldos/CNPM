@@ -4,52 +4,133 @@
  * This file defines the Lesson entity and related value objects in the domain model.
  */
 
-// Lesson complexity level as a value object
-export enum ComplexityLevel {
-  BEGINNER = 'Beginner',
-  INTERMEDIATE = 'Intermediate',
-  ADVANCED = 'Advanced'
+// Value Objects
+export class LessonTitle {
+  private readonly value: string;
+  
+  constructor(value: string) {
+    if (!value || value.trim().length === 0) {
+      throw new Error('Lesson title cannot be empty');
+    }
+    
+    if (value.length > 100) {
+      throw new Error('Lesson title cannot exceed 100 characters');
+    }
+    
+    this.value = value.trim();
+  }
+  
+  getValue(): string {
+    return this.value;
+  }
 }
 
-// Lesson type as a value object
-export enum LessonType {
-  VIDEO = 'Video',
-  DOCUMENT = 'Document',
-  QUIZ = 'Quiz'
+export class LessonComplexity {
+  private readonly value: string;
+  private static readonly ALLOWED_VALUES = ['Easy', 'Medium', 'Hard', 'Beginner', 'Intermediate', 'Advanced'];
+  
+  constructor(value: string) {
+    if (!value || value.trim().length === 0) {
+      throw new Error('Complexity level cannot be empty');
+    }
+    
+    const normalizedValue = value.trim();
+    if (!LessonComplexity.ALLOWED_VALUES.includes(normalizedValue)) {
+      throw new Error(`Complexity level must be one of: ${LessonComplexity.ALLOWED_VALUES.join(', ')}`);
+    }
+    
+    this.value = normalizedValue;
+  }
+  
+  getValue(): string {
+    return this.value;
+  }
 }
 
-// Base Lesson entity (abstract)
-export abstract class Lesson {
-  protected _id: number;
-  protected _title: string;
-  protected _lessonType: LessonType;
-  protected _duration: number;
-  protected _complexityLevel: ComplexityLevel;
-  protected _ordinal: number;
-  protected _courseID: number;
-  protected _createdTime: Date;
-  protected _updatedTime?: Date;
+export class LessonType {
+  private readonly value: string;
+  private static readonly ALLOWED_VALUES = ['Video', 'Document'];
+  
+  constructor(value: string) {
+    if (!value || value.trim().length === 0) {
+      throw new Error('Lesson type cannot be empty');
+    }
+    
+    const normalizedValue = value.trim();
+    if (!LessonType.ALLOWED_VALUES.includes(normalizedValue)) {
+      throw new Error(`Lesson type must be one of: ${LessonType.ALLOWED_VALUES.join(', ')}`);
+    }
+    
+    this.value = normalizedValue;
+  }
+  
+  getValue(): string {
+    return this.value;
+  }
+  
+  isVideo(): boolean {
+    return this.value === 'Video';
+  }
+  
+  isDocument(): boolean {
+    return this.value === 'Document';
+  }
+}
+
+// Domain Events
+export class LessonCreatedEvent {
+  constructor(public readonly lessonId: number) {}
+}
+
+export class LessonUpdatedEvent {
+  constructor(public readonly lessonId: number) {}
+}
+
+export class LessonDeletedEvent {
+  constructor(public readonly lessonId: number) {}
+}
+
+// Lesson entity
+export class Lesson {
+  private _id: number;
+  private _title: string;
+  private _duration: number;
+  private _complexityLevel: string;
+  private _lessonType: string;
+  private _ordinal: number;
+  private _courseID: number;
+  private _createdTime: Date;
+  private _updatedTime?: Date;
+  private _content?: string; // For document lessons
+  private _url?: string; // For video lessons
+  private _resourceID?: number; // ID of the related resource (video or document)
 
   constructor(
     id: number,
     title: string,
-    lessonType: LessonType,
     duration: number,
-    complexityLevel: ComplexityLevel,
+    complexityLevel: string,
+    lessonType: string,
     ordinal: number,
     courseID: number,
     createdTime: Date,
-    updatedTime?: Date
+    updatedTime?: Date,
+    content?: string,
+    url?: string,
+    resourceID?: number
   ) {
     this._id = id;
     this._title = title;
-    this._lessonType = lessonType;
     this._duration = duration;
     this._complexityLevel = complexityLevel;
+    this._lessonType = lessonType;
     this._ordinal = ordinal;
     this._courseID = courseID;
     this._createdTime = createdTime;
     this._updatedTime = updatedTime;
+    this._content = content;
+    this._url = url;
+    this._resourceID = resourceID;
   }
 
   // Getters
@@ -61,16 +142,16 @@ export abstract class Lesson {
     return this._title;
   }
 
-  get lessonType(): LessonType {
-    return this._lessonType;
-  }
-
   get duration(): number {
     return this._duration;
   }
 
-  get complexityLevel(): ComplexityLevel {
+  get complexityLevel(): string {
     return this._complexityLevel;
+  }
+
+  get lessonType(): string {
+    return this._lessonType;
   }
 
   get ordinal(): number {
@@ -89,150 +170,109 @@ export abstract class Lesson {
     return this._updatedTime;
   }
 
-  // Abstract methods
-  abstract toDTO(): any;
-}
-
-// Video Lesson entity
-export class VideoLesson extends Lesson {
-  private _url: string;
-  private _lessonVideoID?: number;
-
-  constructor(
-    id: number,
-    title: string,
-    duration: number,
-    complexityLevel: ComplexityLevel,
-    ordinal: number,
-    courseID: number,
-    url: string,
-    createdTime: Date,
-    updatedTime?: Date,
-    lessonVideoID?: number
-  ) {
-    super(id, title, LessonType.VIDEO, duration, complexityLevel, ordinal, courseID, createdTime, updatedTime);
-    this._url = url;
-    this._lessonVideoID = lessonVideoID;
-  }
-
-  // Getters
-  get url(): string {
-    return this._url;
-  }
-
-  get lessonVideoID(): number | undefined {
-    return this._lessonVideoID;
-  }
-
-  // Factory method to create a VideoLesson from raw data
-  static create(data: any): VideoLesson {
-    return new VideoLesson(
-      data.LessonID || data.lessonID,
-      data.Title || data.title,
-      data.Duration || data.duration || 0,
-      data.ComplexityLevel || data.complexityLevel || ComplexityLevel.BEGINNER,
-      data.Ordinal || data.ordinal || 0,
-      data.CourseID || data.courseID,
-      data.URL || data.url || '',
-      data.CreatedTime || data.createdTime || new Date(),
-      data.UpdatedTime || data.updatedTime,
-      data.LessonVideoID || data.lessonVideoID
-    );
-  }
-
-  // Convert to DTO for API responses
-  toDTO(): any {
-    return {
-      lessonID: this._id,
-      title: this._title,
-      lessonType: this._lessonType,
-      duration: this._duration,
-      complexityLevel: this._complexityLevel,
-      ordinal: this._ordinal,
-      courseID: this._courseID,
-      createdTime: this._createdTime,
-      updatedTime: this._updatedTime,
-      url: this._url,
-      lessonVideoID: this._lessonVideoID,
-      content: this._url // For compatibility with existing code
-    };
-  }
-}
-
-// Document Lesson entity
-export class DocumentLesson extends Lesson {
-  private _content: string;
-  private _lessonDocumentID?: number;
-
-  constructor(
-    id: number,
-    title: string,
-    duration: number,
-    complexityLevel: ComplexityLevel,
-    ordinal: number,
-    courseID: number,
-    content: string,
-    createdTime: Date,
-    updatedTime?: Date,
-    lessonDocumentID?: number
-  ) {
-    super(id, title, LessonType.DOCUMENT, duration, complexityLevel, ordinal, courseID, createdTime, updatedTime);
-    this._content = content;
-    this._lessonDocumentID = lessonDocumentID;
-  }
-
-  // Getters
-  get content(): string {
+  get content(): string | undefined {
     return this._content;
   }
 
-  get lessonDocumentID(): number | undefined {
-    return this._lessonDocumentID;
+  get url(): string | undefined {
+    return this._url;
   }
 
-  // Factory method to create a DocumentLesson from raw data
-  static create(data: any): DocumentLesson {
-    return new DocumentLesson(
-      data.LessonID || data.lessonID,
-      data.Title || data.title,
-      data.Duration || data.duration || 0,
-      data.ComplexityLevel || data.complexityLevel || ComplexityLevel.BEGINNER,
-      data.Ordinal || data.ordinal || 0,
-      data.CourseID || data.courseID,
-      data.Content || data.content || '',
-      data.CreatedTime || data.createdTime || new Date(),
-      data.UpdatedTime || data.updatedTime,
-      data.LessonDocumentID || data.lessonDocumentID
-    );
+  get resourceID(): number | undefined {
+    return this._resourceID;
+  }
+
+  // Domain methods
+  isVideo(): boolean {
+    return this._lessonType === 'Video';
+  }
+
+  isDocument(): boolean {
+    return this._lessonType === 'Document';
+  }
+
+  updateTitle(title: string): void {
+    const lessonTitle = new LessonTitle(title);
+    this._title = lessonTitle.getValue();
+    this._updatedTime = new Date();
+  }
+
+  updateDuration(duration: number): void {
+    if (duration <= 0) {
+      throw new Error('Duration must be greater than 0');
+    }
+    this._duration = duration;
+    this._updatedTime = new Date();
+  }
+
+  updateComplexityLevel(complexityLevel: string): void {
+    const lessonComplexity = new LessonComplexity(complexityLevel);
+    this._complexityLevel = lessonComplexity.getValue();
+    this._updatedTime = new Date();
+  }
+
+  updateOrdinal(ordinal: number): void {
+    if (ordinal < 0) {
+      throw new Error('Ordinal must be a non-negative number');
+    }
+    this._ordinal = ordinal;
+    this._updatedTime = new Date();
+  }
+
+  updateContent(content: string): void {
+    if (!this.isDocument()) {
+      throw new Error('Cannot update content for non-document lessons');
+    }
+    if (!content || content.trim().length === 0) {
+      throw new Error('Content cannot be empty');
+    }
+    this._content = content.trim();
+    this._updatedTime = new Date();
+  }
+
+  updateUrl(url: string): void {
+    if (!this.isVideo()) {
+      throw new Error('Cannot update URL for non-video lessons');
+    }
+    if (!url || url.trim().length === 0) {
+      throw new Error('URL cannot be empty');
+    }
+    this._url = url.trim();
+    this._updatedTime = new Date();
+  }
+
+  belongsToCourse(courseId: number): boolean {
+    return this._courseID === courseId;
   }
 
   // Convert to DTO for API responses
   toDTO(): any {
-    return {
+    const dto: any = {
       lessonID: this._id,
       title: this._title,
-      lessonType: this._lessonType,
       duration: this._duration,
       complexityLevel: this._complexityLevel,
+      lessonType: this._lessonType,
       ordinal: this._ordinal,
       courseID: this._courseID,
       createdTime: this._createdTime,
-      updatedTime: this._updatedTime,
-      content: this._content,
-      lessonDocumentID: this._lessonDocumentID
+      updatedTime: this._updatedTime
     };
-  }
-}
 
-// Factory function to create the appropriate Lesson type based on data
-export function createLesson(data: any): Lesson {
-  const lessonType = data.LessonType || data.lessonType;
-  
-  if (lessonType === LessonType.VIDEO) {
-    return VideoLesson.create(data);
-  } else if (lessonType === LessonType.DOCUMENT) {
-    return DocumentLesson.create(data);
-  } else {
-    throw new Error(`Unsupported lesson type: ${lessonType}`);
+    if (this.isVideo() && this._url) {
+      dto.videoURL = this._url;
+      if (this._resourceID) {
+        dto.lessonVideoID = this._resourceID;
+      }
+    }
+
+    if (this.isDocument() && this._content) {
+      dto.documentContent = this._content;
+      if (this._resourceID) {
+        dto.lessonDocumentID = this._resourceID;
+      }
+    }
+
+    return dto;
   }
 }

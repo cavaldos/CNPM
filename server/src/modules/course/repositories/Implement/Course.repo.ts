@@ -1,25 +1,21 @@
 /**
- * Course Repository
- * 
- * This file defines the repository interface and implementation for the Course domain.
+ * Course Repository Implementation
+ *
+ * This file implements the repository interface for the Course domain.
+ * It handles the persistence of Course entities to the database.
  */
 
 import DataConnect from '../../../../config/DataConnect';
 import { Course } from '../../domain/course';
+import CourseFactory from '../../domain/factories/course.factory';
+import { ICourseRepository } from '../interface/ICourse.repo';
 
-// Repository interface
-export interface ICourseRepository {
-  create(title: string, topic: string, description: string, image: string, instructorID: number): Promise<any>;
-  update(courseID: number, title: string, topic: string, description: string, image: string, price: number): Promise<any>;
-  delete(courseID: number): Promise<any>;
-  getById(courseID: number): Promise<Course | null>;
-  getAll(): Promise<Course[]>;
-  getAllByInstructorID(instructorID: number): Promise<Course[]>;
-  getAllPagination(offSet: number, pageSize: number): Promise<{ courses: Course[], total: number }>;
-  search(searchTerm: string, page: number, pageSize: number): Promise<{ courses: Course[], total: number }>;
-  setHidden(courseID: number, isHidden: boolean): Promise<any>;
-  totalPages(isHidden: boolean): Promise<number>;
-}
+/**
+ * Course Repository Implementation
+ *
+ * This class is responsible for persisting and retrieving Course entities from the database.
+ * It implements the ICourseRepository interface defined in the domain layer.
+ */
 
 // Repository implementation
 class CourseRepository implements ICourseRepository {
@@ -58,10 +54,11 @@ class CourseRepository implements ICourseRepository {
 
   async getById(courseID: number): Promise<Course | null> {
     const query = `
-      SELECT c.*, 
+      SELECT c.*,
              u.FullName as InstructorName,
              (SELECT COUNT(*) FROM Review r WHERE r.CourseID = c.CourseID) as ReviewCount,
-             (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount
+             (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount,
+             (SELECT AVG(CAST(r.Rating AS FLOAT)) FROM Review r WHERE r.CourseID = c.CourseID) as AverageRating
       FROM Course c
       INNER JOIN [User] u ON c.InstructorID = u.UserID
       WHERE c.CourseID = @CourseID
@@ -70,29 +67,32 @@ class CourseRepository implements ICourseRepository {
       CourseID: courseID
     };
     const result = await DataConnect.executeWithParams(query, params);
-    return result && result.length > 0 ? Course.create(result[0]) : null;
+    return result && result.length > 0 ? CourseFactory.createCourseFromDB(result[0]) : null;
   }
 
   async getAll(): Promise<Course[]> {
     const query = `
-      SELECT c.*, 
+      SELECT c.*,
              u.FullName as InstructorName,
              (SELECT COUNT(*) FROM Review r WHERE r.CourseID = c.CourseID) as ReviewCount,
-             (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount
+             (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount,
+             (SELECT AVG(CAST(r.Rating AS FLOAT)) FROM Review r WHERE r.CourseID = c.CourseID) as AverageRating
       FROM Course c
       INNER JOIN [User] u ON c.InstructorID = u.UserID
+      WHERE c.IsHidden = 0
       ORDER BY c.CreateTime DESC
     `;
     const result = await DataConnect.execute(query);
-    return result ? result.map((courseData: any) => Course.create(courseData)) : [];
+    return result ? result.map((courseData: any) => CourseFactory.createCourseFromDB(courseData)) : [];
   }
 
   async getAllByInstructorID(instructorID: number): Promise<Course[]> {
     const query = `
-      SELECT c.*, 
+      SELECT c.*,
              u.FullName as InstructorName,
              (SELECT COUNT(*) FROM Review r WHERE r.CourseID = c.CourseID) as ReviewCount,
-             (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount
+             (SELECT COUNT(*) FROM Lessons l WHERE l.CourseID = c.CourseID) as LessonCount,
+             (SELECT AVG(CAST(r.Rating AS FLOAT)) FROM Review r WHERE r.CourseID = c.CourseID) as AverageRating
       FROM Course c
       INNER JOIN [User] u ON c.InstructorID = u.UserID
       WHERE c.InstructorID = @InstructorID
@@ -102,7 +102,7 @@ class CourseRepository implements ICourseRepository {
       InstructorID: instructorID
     };
     const result = await DataConnect.executeWithParams(query, params);
-    return result ? result.map((courseData: any) => Course.create(courseData)) : [];
+    return result ? result.map((courseData: any) => CourseFactory.createCourseFromDB(courseData)) : [];
   }
 
   async getAllPagination(offSet: number, pageSize: number): Promise<{ courses: Course[], total: number }> {
@@ -114,7 +114,7 @@ class CourseRepository implements ICourseRepository {
     const coursesData = await DataConnect.executeProcedure(proc, params);
     const total = await this.totalPages(false);
 
-    const courses = coursesData ? coursesData.map((courseData: any) => Course.create(courseData)) : [];
+    const courses = coursesData ? coursesData.map((courseData: any) => CourseFactory.createCourseFromDB(courseData)) : [];
 
     return {
       courses,
@@ -141,7 +141,7 @@ class CourseRepository implements ICourseRepository {
         return { courses: [], total: 0 };
       }
 
-      const courses = result.map((courseData: any) => Course.create(courseData));
+      const courses = result.map((courseData: any) => CourseFactory.createCourseFromDB(courseData));
 
       return { courses, total };
     } catch (error) {

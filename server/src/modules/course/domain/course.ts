@@ -1,8 +1,78 @@
 /**
  * Course Domain Entity
- * 
+ *
  * This file defines the Course entity and related value objects in the domain model.
  */
+
+// Value Objects
+export class CourseTitle {
+  private readonly value: string;
+
+  constructor(value: string) {
+    if (!value || value.trim().length === 0) {
+      throw new Error('Course title cannot be empty');
+    }
+
+    if (value.length > 100) {
+      throw new Error('Course title cannot exceed 100 characters');
+    }
+
+    this.value = value.trim();
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+}
+
+export class CourseDescription {
+  private readonly value: string;
+
+  constructor(value: string) {
+    if (!value || value.trim().length === 0) {
+      throw new Error('Course description cannot be empty');
+    }
+
+    this.value = value.trim();
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+}
+
+export class CoursePrice {
+  private readonly value: number;
+
+  constructor(value: number) {
+    if (value < 0) {
+      throw new Error('Course price cannot be negative');
+    }
+
+    this.value = value;
+  }
+
+  getValue(): number {
+    return this.value;
+  }
+
+  isFree(): boolean {
+    return this.value === 0;
+  }
+}
+
+// Domain Events
+export class CourseCreatedEvent {
+  constructor(public readonly courseId: number) { }
+}
+
+export class CourseUpdatedEvent {
+  constructor(public readonly courseId: number) { }
+}
+
+export class CourseDeletedEvent {
+  constructor(public readonly courseId: number) { }
+}
 
 // Course entity
 export class Course {
@@ -115,6 +185,14 @@ export class Course {
     return !this._isHidden;
   }
 
+  publish(): void {
+    this._isHidden = false;
+  }
+
+  unpublish(): void {
+    this._isHidden = true;
+  }
+
   hasLessons(): boolean {
     return this._lessonCount !== undefined && this._lessonCount > 0;
   }
@@ -123,25 +201,45 @@ export class Course {
     return this._reviewCount !== undefined && this._reviewCount > 0;
   }
 
-  // Factory method to create a Course from raw data
-  static create(data: any): Course {
-    return new Course(
-      data.CourseID || data.courseID,
-      data.Title || data.title,
-      data.Topic || data.topic,
-      data.Description || data.description,
-      data.Image || data.image,
-      data.Price || data.price || 0,
-      data.InstructorID || data.instructorID,
-      data.CreateTime || data.createTime || new Date(),
-      data.IsHidden || data.isHidden || false,
-      data.UpdateTime || data.updateTime,
-      data.InstructorName || data.instructorName,
-      data.ReviewCount || data.reviewCount,
-      data.LessonCount || data.lessonCount,
-      data.AverageRating || data.averageRating
-    );
+  updateTitle(title: string): void {
+    const courseTitle = new CourseTitle(title);
+    this._title = courseTitle.getValue();
+    this._updateTime = new Date();
   }
+
+  updateDescription(description: string): void {
+    const courseDescription = new CourseDescription(description);
+    this._description = courseDescription.getValue();
+    this._updateTime = new Date();
+  }
+
+  updatePrice(price: number): void {
+    const coursePrice = new CoursePrice(price);
+    this._price = coursePrice.getValue();
+    this._updateTime = new Date();
+  }
+
+  updateImage(image: string): void {
+    if (!image) {
+      throw new Error('Image URL cannot be empty');
+    }
+    this._image = image;
+    this._updateTime = new Date();
+  }
+
+  updateTopic(topic: string): void {
+    if (!topic || topic.trim().length === 0) {
+      throw new Error('Topic cannot be empty');
+    }
+    this._topic = topic.trim();
+    this._updateTime = new Date();
+  }
+
+  isOwnedBy(instructorId: number): boolean {
+    return this._instructorID === instructorId;
+  }
+
+  // Note: Factory methods have been moved to CourseFactory class
 
   // Convert to DTO for API responses
   toDTO(): any {

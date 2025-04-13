@@ -1,22 +1,34 @@
 /**
  * Course Controller
- * 
+ *
  * This file defines the controller layer for the Course domain, handling HTTP requests.
  */
 
 import { Request, Response } from 'express';
-import CourseService from '../services/course.service';
+import CourseService from '../domain/course.service';
+import CourseDTO_Factory from '../domain/factories/courseDTO.factory';
+import CourseCommandFactory from '../domain/factories/courseCommand.factory';
 
 class CourseController {
   async createCourse(req: Request, res: Response): Promise<void> {
     try {
       const { title, topic, description, image, instructorID } = req.body;
-      const result = await CourseService.createCourse(title, topic, description, image, instructorID);
+
+      // Create command using factory
+      const command = CourseCommandFactory.createCreateCourseCommand(
+        title,
+        topic,
+        description,
+        image,
+        instructorID
+      );
+
+      const course = await CourseService.createCourse(command);
 
       res.status(201).json({
         success: true,
         message: 'Course created successfully',
-        data: result
+        data: CourseDTO_Factory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -29,13 +41,24 @@ class CourseController {
 
   async updateCourse(req: Request, res: Response): Promise<void> {
     try {
-      const { courseID, title, topic, description, image, price } = req.body;
-      const result = await CourseService.updateCourse(courseID, title, topic, description, image, price);
+      const { courseID, title, topic, description, image, price = 0 } = req.body;
+
+      // Create command using factory
+      const command = CourseCommandFactory.createUpdateCourseCommand(
+        courseID,
+        title,
+        topic,
+        description,
+        image,
+        price
+      );
+
+      const course = await CourseService.updateCourse(command);
 
       res.status(200).json({
         success: true,
         message: 'Course updated successfully',
-        data: result
+        data: CourseDTO_Factory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -49,12 +72,11 @@ class CourseController {
   async deleteCourse(req: Request, res: Response): Promise<void> {
     try {
       const { courseID } = req.body;
-      const result = await CourseService.deleteCourse(courseID);
+      await CourseService.deleteCourse(courseID);
 
       res.status(200).json({
         success: true,
-        message: 'Course deleted successfully',
-        data: result
+        message: 'Course deleted successfully'
       });
     } catch (error: any) {
       res.status(500).json({
@@ -81,7 +103,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Course retrieved successfully',
-        data: course.toDTO()
+        data: CourseDTO_Factory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -92,14 +114,14 @@ class CourseController {
     }
   }
 
-  async getAllCourses(req: Request, res: Response): Promise<void> {
+  async getAllCourses(_req: Request, res: Response): Promise<void> {
     try {
       const courses = await CourseService.getAllCourses();
 
       res.status(200).json({
         success: true,
         message: 'Courses retrieved successfully',
-        data: courses.map(course => course.toDTO())
+        data: CourseDTO_Factory.createCourseDTOList(courses)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -118,7 +140,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Courses retrieved successfully',
-        data: courses.map(course => course.toDTO())
+        data: CourseDTO_Factory.createCourseDTOList(courses)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -138,7 +160,7 @@ class CourseController {
         success: true,
         message: 'Courses retrieved successfully',
         data: {
-          courses: result.courses.map(course => course.toDTO()),
+          courses: CourseDTO_Factory.createCourseDTOList(result.courses),
           total: result.total
         }
       });
@@ -160,7 +182,7 @@ class CourseController {
         success: true,
         message: 'Courses retrieved successfully',
         data: {
-          courses: result.courses.map(course => course.toDTO()),
+          courses: CourseDTO_Factory.createCourseDTOList(result.courses),
           total: result.total
         }
       });
@@ -173,15 +195,60 @@ class CourseController {
     }
   }
 
+  async publishCourse(req: Request, res: Response): Promise<void> {
+    try {
+      const { courseID } = req.body;
+      const course = await CourseService.publishCourse(courseID);
+
+      res.status(200).json({
+        success: true,
+        message: 'Course published successfully',
+        data: CourseDTO_Factory.createCourseDTO(course)
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to publish course',
+        error: error
+      });
+    }
+  }
+
+  async unpublishCourse(req: Request, res: Response): Promise<void> {
+    try {
+      const { courseID } = req.body;
+      const course = await CourseService.unpublishCourse(courseID);
+
+      res.status(200).json({
+        success: true,
+        message: 'Course unpublished successfully',
+        data: CourseDTO_Factory.createCourseDTO(course)
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to unpublish course',
+        error: error
+      });
+    }
+  }
+
+  // For backward compatibility
   async setHiddenCourse(req: Request, res: Response): Promise<void> {
     try {
       const { courseID, isHidden } = req.body;
-      const result = await CourseService.setHiddenCourse(courseID, isHidden);
+      let course;
+
+      if (isHidden) {
+        course = await CourseService.unpublishCourse(courseID);
+      } else {
+        course = await CourseService.publishCourse(courseID);
+      }
 
       res.status(200).json({
         success: true,
         message: `Course ${isHidden ? 'hidden' : 'published'} successfully`,
-        data: result
+        data: CourseDTO_Factory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -192,26 +259,25 @@ class CourseController {
     }
   }
 
-  // Additional method for course detail with reviews and lessons
+  // Method for course detail with lessons using DDD approach
   async getCourseDetail(req: Request, res: Response): Promise<void> {
     try {
       const { courseID } = req.body;
-      const course = await CourseService.getCourseById(courseID);
 
-      if (!course) {
-        res.status(404).json({
-          success: false,
-          message: 'Course not found'
-        });
-        return;
-      }
+      // Use the new method that leverages LessonRepository
+      const { course, lessons } = await CourseService.getCourseWithLessons(courseID);
 
-      // In a real DDD implementation, we would use aggregates to fetch related data
-      // For now, we'll just return the course
+      // Create a detailed DTO with lessons
+      const courseDTO = CourseDTO_Factory.createCourseDetailDTO(course);
+
+      // Add lessons to the DTO
       res.status(200).json({
         success: true,
         message: 'Course detail retrieved successfully',
-        data: course.toDTO()
+        data: {
+          ...courseDTO,
+          lessons: lessons.map(lesson => lesson.toDTO())
+        }
       });
     } catch (error: any) {
       res.status(500).json({

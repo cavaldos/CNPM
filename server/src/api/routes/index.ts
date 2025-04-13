@@ -5,7 +5,6 @@ import StudentRouter from "./student.route";
 import PublicRouter from "./public.route";
 import AuthRouter from "./auth.route";
 import AIRouter from "./ai.route";
-import DomainRouter from "../../modules/domain.route";
 
 const router = Router();
 
@@ -17,7 +16,6 @@ router.use("/instructor", InstructorRouter);
 router.use("/student", StudentRouter);
 router.use("/ai", AIRouter);
 
-// Mount Domain routes
-router.use("/apiv2", DomainRouter);
+
 
 export default router;

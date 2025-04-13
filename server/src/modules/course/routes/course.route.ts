@@ -1,6 +1,6 @@
 /**
  * Course Routes
- * 
+ *
  * This file defines the routes for the Course domain.
  */
 
@@ -20,6 +20,10 @@ router.post('/get-all-course-by-instructor', CourseController.getAllCoursesByIns
 router.post('/get-all-course-pagination', CourseController.getAllCoursesPagination);
 router.post('/search', CourseController.searchCourse);
 router.post('/get-course-detail', CourseController.getCourseDetail);
-router.post('/set-hidden', CourseController.setHiddenCourse);
+
+// Course visibility management
+router.post('/publish', CourseController.publishCourse);
+router.post('/unpublish', CourseController.unpublishCourse);
+router.post('/set-hidden', CourseController.setHiddenCourse); // For backward compatibility
 
 export default router;
