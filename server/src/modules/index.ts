@@ -12,8 +12,6 @@ import {
   CoursePrice,
   CourseService,
   CourseFactory,
-  CourseDTO_Factory,
-  CourseCommandFactory,
   CourseRepository,
   CourseController,
   courseRoutes
@@ -36,6 +34,40 @@ import AIController from './ai/controllers/ai.co';
 import AIService from './ai/services/ai.service';
 import { AIMessage } from './ai/domain/ai';
 
+// Learning module
+import {
+  LearningProgress,
+  Enrollment as LearningEnrollment,
+  ProcessStatus as LearningProcessStatus,
+  LearningService,
+  LearningFactory,
+  LearningRepository,
+  LearningController,
+  learningRoutes
+} from './learning';
+
+// Enrollment module
+import {
+  Enrollment,
+  EnrollmentStatus,
+  EnrollmentService,
+  EnrollmentFactory,
+  EnrollmentRepository,
+  EnrollmentController,
+  enrollmentRoutes
+} from './enrollment';
+
+// LearnProgress module
+import {
+  LearnProgress,
+  ProcessStatus,
+  LearnProgressService,
+  LearnProgressFactory,
+  LearnProgressRepository,
+  LearnProgressController,
+  learnProgressRoutes
+} from './learnProgress';
+
 // Export all modules
 export {
   // Course module
@@ -45,8 +77,6 @@ export {
   CoursePrice,
   CourseService,
   CourseFactory,
-  CourseDTO_Factory,
-  CourseCommandFactory,
   CourseRepository,
   CourseController,
   courseRoutes,
@@ -64,5 +94,33 @@ export {
   aiRoutes,
   AIController,
   AIService,
-  AIMessage
+  AIMessage,
+
+  // Learning module
+  LearningProgress,
+  LearningEnrollment,
+  LearningProcessStatus,
+  LearningService,
+  LearningFactory,
+  LearningRepository,
+  LearningController,
+  learningRoutes,
+
+  // Enrollment module
+  Enrollment,
+  EnrollmentStatus,
+  EnrollmentService,
+  EnrollmentFactory,
+  EnrollmentRepository,
+  EnrollmentController,
+  enrollmentRoutes,
+
+  // LearnProgress module
+  LearnProgress,
+  ProcessStatus,
+  LearnProgressService,
+  LearnProgressFactory,
+  LearnProgressRepository,
+  LearnProgressController,
+  learnProgressRoutes
 };

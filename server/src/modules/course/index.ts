@@ -9,7 +9,7 @@ import { Course, CourseTitle, CourseDescription, CoursePrice } from './domain/co
 import CourseService from './domain/course.service';
 
 // Factories
-import { CourseFactory, CourseDTO_Factory, CourseCommandFactory } from './domain/factories';
+import { CourseFactory } from './domain/factories';
 
 // Infrastructure
 import CourseRepository from './repositories/Implement/Course.repo';
@@ -29,8 +29,6 @@ export {
 
   // Factories
   CourseFactory,
-  CourseDTO_Factory,
-  CourseCommandFactory,
 
   // Infrastructure
   CourseRepository,

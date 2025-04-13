@@ -6,8 +6,7 @@
 
 import { Request, Response } from 'express';
 import CourseService from '../domain/course.service';
-import CourseDTO_Factory from '../domain/factories/courseDTO.factory';
-import CourseCommandFactory from '../domain/factories/courseCommand.factory';
+import CourseFactory from '../domain/factories/course.factory';
 
 class CourseController {
   async createCourse(req: Request, res: Response): Promise<void> {
@@ -15,7 +14,7 @@ class CourseController {
       const { title, topic, description, image, instructorID } = req.body;
 
       // Create command using factory
-      const command = CourseCommandFactory.createCreateCourseCommand(
+      const command = CourseFactory.createCreateCourseCommand(
         title,
         topic,
         description,
@@ -28,7 +27,7 @@ class CourseController {
       res.status(201).json({
         success: true,
         message: 'Course created successfully',
-        data: CourseDTO_Factory.createCourseDTO(course)
+        data: CourseFactory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -44,7 +43,7 @@ class CourseController {
       const { courseID, title, topic, description, image, price = 0 } = req.body;
 
       // Create command using factory
-      const command = CourseCommandFactory.createUpdateCourseCommand(
+      const command = CourseFactory.createUpdateCourseCommand(
         courseID,
         title,
         topic,
@@ -58,7 +57,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Course updated successfully',
-        data: CourseDTO_Factory.createCourseDTO(course)
+        data: CourseFactory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -103,7 +102,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Course retrieved successfully',
-        data: CourseDTO_Factory.createCourseDTO(course)
+        data: CourseFactory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -121,7 +120,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Courses retrieved successfully',
-        data: CourseDTO_Factory.createCourseDTOList(courses)
+        data: CourseFactory.createCourseDTOList(courses)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -140,7 +139,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Courses retrieved successfully',
-        data: CourseDTO_Factory.createCourseDTOList(courses)
+        data: CourseFactory.createCourseDTOList(courses)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -160,7 +159,7 @@ class CourseController {
         success: true,
         message: 'Courses retrieved successfully',
         data: {
-          courses: CourseDTO_Factory.createCourseDTOList(result.courses),
+          courses: CourseFactory.createCourseDTOList(result.courses),
           total: result.total
         }
       });
@@ -182,7 +181,7 @@ class CourseController {
         success: true,
         message: 'Courses retrieved successfully',
         data: {
-          courses: CourseDTO_Factory.createCourseDTOList(result.courses),
+          courses: CourseFactory.createCourseDTOList(result.courses),
           total: result.total
         }
       });
@@ -203,7 +202,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Course published successfully',
-        data: CourseDTO_Factory.createCourseDTO(course)
+        data: CourseFactory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -222,7 +221,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: 'Course unpublished successfully',
-        data: CourseDTO_Factory.createCourseDTO(course)
+        data: CourseFactory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -248,7 +247,7 @@ class CourseController {
       res.status(200).json({
         success: true,
         message: `Course ${isHidden ? 'hidden' : 'published'} successfully`,
-        data: CourseDTO_Factory.createCourseDTO(course)
+        data: CourseFactory.createCourseDTO(course)
       });
     } catch (error: any) {
       res.status(500).json({
@@ -268,7 +267,7 @@ class CourseController {
       const { course, lessons } = await CourseService.getCourseWithLessons(courseID);
 
       // Create a detailed DTO with lessons
-      const courseDTO = CourseDTO_Factory.createCourseDetailDTO(course);
+      const courseDTO = CourseFactory.createCourseDetailDTO(course);
 
       // Add lessons to the DTO
       res.status(200).json({
