@@ -12,6 +12,7 @@ import StudentService from "../../../services/student.service";
 import { useSelector } from "react-redux";
 import { message } from "antd";
 import useLanguageSwitcher from "../../../hooks/LanguageSwitcher";
+import RelatedCourses from "./RelatedCourses";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
@@ -311,6 +312,13 @@ const CourseDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Related Courses Section */}
+      {courseInfo && (
+        <RelatedCourses
+          currentCourseId={courseInfo.CourseID}
+        />
+      )}
     </div>
   </>
   );
