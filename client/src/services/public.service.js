@@ -72,6 +72,19 @@ const PublicService = {
             const response = await axiosinstance.post("/public/forum/course", { courseID });
             return response;
         }
+    },
+    ai: {
+        chatWithGroq: async (message) => {
+            const response = await axiosinstance.post("/apiv2/ai/groq", { message });
+            return response;
+            // {
+            //     "success": true,
+            //         "message": "Chat successful",
+            //             "data": {
+            //         "result": "Hello again. How's your day goinyou'dsome conversation starters?"
+            //     }
+            // }
+        }
     }
 }
 

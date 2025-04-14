@@ -53,21 +53,20 @@ const CourseRepository = {
         return await DataConnect.executeWithParams(query, params);
     },
 
-    async totalPages(isHidden?: boolean) {
+    async totalPages() {
         let query = `
             SELECT COUNT(*) as TotalCourses
             FROM Course
         `;
-        
-        if (isHidden !== undefined) {
-            query += ` WHERE IsHidden = @IsHidden`;
-            const params = {
-                IsHidden: isHidden
-            };
-            const result = await DataConnect.executeWithParams(query, params);
-            return Math.ceil(result[0].TotalCourses / 10); // Assuming page size is 10
-        }
-        
+        const result = await DataConnect.execute(query);
+        return Math.ceil(result[0].TotalCourses / 10); // Assuming page size is 10
+    },
+    async totalPagesPublish() {
+        let query = `
+            SELECT COUNT(*) as TotalCourses
+            FROM Course
+            WHERE IsHidden = 0
+        `;
         const result = await DataConnect.execute(query);
         return Math.ceil(result[0].TotalCourses / 10); // Assuming page size is 10
     },
@@ -80,7 +79,7 @@ const CourseRepository = {
             PageSize: pageSize
         }
         const courses = await DataConnect.executeProcedure(proc, params);
-        const total = await this.totalPages(false);
+        const total = await this.totalPagesPublish();
         return {
             courses,
             total,
@@ -173,7 +172,7 @@ const CourseRepository = {
             PageSize: pageSize
         };
 
-        const total = await this.totalPages(false);
+        const total = await this.totalPagesPublish();
 
         try {
             const result = await DataConnect.executeProcedure(proc, params);

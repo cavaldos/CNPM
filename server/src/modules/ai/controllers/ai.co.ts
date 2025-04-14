@@ -27,7 +27,7 @@ class AIController {
         success: true,
         message: 'Chat successful',
         data: {
-          response: aiMessage.response
+          result: aiMessage.response
         }
       });
     } catch (error: any) {
