@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-coursera
+  namespace: coursera-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: server-coursera
+  template:
+    metadata:
+      labels:
+        app: server-coursera
+    spec:
+      containers:
+      - name: server-coursera
+        image: server-coursera:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5001
+          name: api
+        - containerPort: 3000
+          name: admin
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: GRPC_SERVER_ADDRESS
+          value: "chatserver-coursera-service:50051"
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-coursera-service
+  namespace: coursera-app
+spec:
+  selector:
+    app: server-coursera
+  ports:
+  - name: api
+    port: 5001
+    targetPort: 5001
+  - name: admin
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP

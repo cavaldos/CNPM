@@ -1,11 +1,25 @@
 services:
+  nginx-load-balancer:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx-load-balancer
+    ports:
+      - "80:80"
+    networks:
+      - default
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+
   client-coursera:
     build:
       context: ./client
       dockerfile: Dockerfile
     container_name: client-coursera
     ports:
-      - "80:5173"
+      - "5173:5173"
     networks:
       - default
     env_file: "./client/.env"
