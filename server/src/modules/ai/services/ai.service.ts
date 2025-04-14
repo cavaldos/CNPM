@@ -6,10 +6,12 @@
 
 import { AIMessage } from '../domain/ai';
 import { chatWithGroq } from '../infrastructure/grpc';
+import { getHelloWorld } from '../infrastructure/graphql';
 
 // Service interface
 export interface IAIService {
   chatWithGroq(message: string): Promise<AIMessage>;
+  getHelloWorld(): Promise<string>;
 }
 
 // Service implementation
@@ -25,6 +27,15 @@ class AIService implements IAIService {
     } catch (error) {
       console.error('Error in AI service:', error);
       throw new Error('Failed to communicate with AI service');
+    }
+  }
+
+  async getHelloWorld(): Promise<string> {
+    try {
+      return await getHelloWorld();
+    } catch (error) {
+      console.error('Error in AI service getHelloWorld:', error);
+      throw new Error('Failed to communicate with GraphQL service');
     }
   }
 }

@@ -1,6 +1,6 @@
 /**
  * AI Controller
- * 
+ *
  * This file defines the controller layer for the AI domain, handling HTTP requests.
  */
 
@@ -32,6 +32,28 @@ class AIController {
       });
     } catch (error: any) {
       console.error('Error in chatWithGroq controller:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Internal server error'
+      });
+    }
+  }
+
+  async helloWorld(req: Request, res: Response): Promise<void> {
+    try {
+      console.log('Received hello world request');
+
+      const message = await AIService.getHelloWorld();
+
+      res.status(200).json({
+        success: true,
+        message: 'Hello world request successful',
+        data: {
+          result: message
+        }
+      });
+    } catch (error: any) {
+      console.error('Error in helloWorld controller:', error);
       res.status(500).json({
         success: false,
         message: error.message || 'Internal server error'
