@@ -13,6 +13,7 @@
     "debug": "tsnd --respawn --transpile-only --exit-child --debug src/server.ts",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
+    "seed:users": "node src/scripts/seed-users.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

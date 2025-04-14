@@ -6,12 +6,14 @@
 
 import { AIMessage } from '../domain/ai';
 import { chatWithGroq } from '../infrastructure/grpc';
-import { getHelloWorld } from '../infrastructure/graphql';
+import { getHelloWorld, getUserById, getAllUsers, User } from '../infrastructure/graphql';
 
 // Service interface
 export interface IAIService {
   chatWithGroq(message: string): Promise<AIMessage>;
   getHelloWorld(): Promise<string>;
+  getUserById(id: string): Promise<User>;
+  getAllUsers(): Promise<User[]>;
 }
 
 // Service implementation
@@ -36,6 +38,24 @@ class AIService implements IAIService {
     } catch (error) {
       console.error('Error in AI service getHelloWorld:', error);
       throw new Error('Failed to communicate with GraphQL service');
+    }
+  }
+
+  async getUserById(id: string): Promise<User> {
+    try {
+      return await getUserById(id);
+    } catch (error) {
+      console.error('Error in AI service getUserById:', error);
+      throw new Error('Failed to fetch user from GraphQL service');
+    }
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    try {
+      return await getAllUsers();
+    } catch (error) {
+      console.error('Error in AI service getAllUsers:', error);
+      throw new Error('Failed to fetch users from GraphQL service');
     }
   }
 }

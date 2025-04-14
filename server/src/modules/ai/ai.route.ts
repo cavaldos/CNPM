@@ -13,4 +13,8 @@ const router = Router();
 router.post('/groq', AIController.chatWithGroq);
 router.get('/hello-world', AIController.helloWorld);
 
+// User routes via GraphQL
+router.get('/users', AIController.getUsers);
+router.post('/users', AIController.getUser);
+
 export default router;

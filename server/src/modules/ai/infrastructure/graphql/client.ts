@@ -32,6 +32,36 @@ export const HELLO_WORLD_QUERY = gql`
   }
 `;
 
+export const GET_USER_QUERY = gql`
+  query GetUser($id: ID!) {
+    user(id: $id) {
+      _id
+      username
+      email
+      fullName
+      age
+      role
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_USERS_QUERY = gql`
+  query GetUsers {
+    users {
+      _id
+      username
+      email
+      fullName
+      age
+      role
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // Helper function to get hello world message
 export const getHelloWorld = async (): Promise<string> => {
   try {
@@ -43,6 +73,47 @@ export const getHelloWorld = async (): Promise<string> => {
   } catch (error) {
     console.error('Error calling GraphQL service:', error);
     throw new Error('Failed to communicate with GraphQL service');
+  }
+};
+
+// Define User type
+export interface User {
+  _id: string;
+  username: string;
+  email: string;
+  fullName: string;
+  age?: number;
+  role?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Helper function to get a user by ID
+export const getUserById = async (id: string): Promise<User> => {
+  try {
+    const { data } = await client.query({
+      query: GET_USER_QUERY,
+      variables: { id },
+    });
+
+    return data.user;
+  } catch (error) {
+    console.error('Error calling GraphQL service:', error);
+    throw new Error('Failed to fetch user from GraphQL service');
+  }
+};
+
+// Helper function to get all users
+export const getAllUsers = async (): Promise<User[]> => {
+  try {
+    const { data } = await client.query({
+      query: GET_USERS_QUERY,
+    });
+
+    return data.users;
+  } catch (error) {
+    console.error('Error calling GraphQL service:', error);
+    throw new Error('Failed to fetch users from GraphQL service');
   }
 };
 
