@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { FaGoogle, FaFacebook } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const SearchCoursePage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     // Xử lý đăng nhập tại đây
-    console.log("Login with:", { email, password });
+    console.log('Login with:', { email, password });
   };
 
   const handleGoogleLogin = () => {
     // Xử lý đăng nhập bằng Google
-    console.log("Login with Google");
+    console.log('Login with Google');
   };
 
   const handleFacebookLogin = () => {
     // Xử lý đăng nhập bằng Facebook
-    console.log("Login with Facebook");
+    console.log('Login with Facebook');
   };
 
   return (

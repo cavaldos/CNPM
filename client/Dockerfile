@@ -1,30 +1,36 @@
+# Stage 1: Build the app
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+RUN apk add --no-cache python3 g++ make
 
-COPY . .
+COPY package.json ./
+RUN yarn install && yarn add --force esbuild
+
+
 COPY .env ./
+COPY . .
 
-ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
+RUN yarn build
 
-RUN npm run build
-
-# Production stage
+# Stage 2: Serve the app
 FROM node:20-alpine
 
 WORKDIR /app
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/vite.config.js ./
+COPY --from=builder /app/yarn.lock ./
 
-RUN npm install -g serve
+RUN yarn install --production && yarn add --force esbuild
 
 EXPOSE 5173
+EXPOSE 8081
+EXPOSE 80
+EXPOSE 81
 
-CMD ["serve", "-s", "dist", "-l", "5173"]
-# docker build -t client .
+# CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173", "--strictPort", "true"]
+
+CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
+# CMD ["yarn", "preview"]

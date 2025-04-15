@@ -1,57 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Save, ArrowLeft, Loader2 } from "lucide-react";
-import InstructorService from "../../services/instructor.service";
-import { uploadImage } from "../../hooks/uploadImage";
-import { message } from"antd";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Save, ArrowLeft, Loader2 } from 'lucide-react';
+import InstructorService from '../../services/instructor.service';
+
+import uploadService from '../../hooks/uploadImage';
+import { useSelector } from 'react-redux';
+import { message } from 'antd';
 const UpdateCourse = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
 
   const [formData, setFormData] = useState({
-    title: "",
-    topic: "",
-    description: "",
-    image: "",
+    title: '',
+    topic: '',
+    description: '',
+    image: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
-  const [imageInputType, setImageInputType] = useState("file");
+  const [imagePreview, setImagePreview] = useState('');
+  const [imageInputType, setImageInputType] = useState('file');
+  const user = useSelector(state => state.auth);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
         const response = await InstructorService.getCourseByID(courseId);
-        console.log("Course data:", response.data);
+        console.log('Course data:', response.data);
         if (response.data) {
           const courseData = response.data[0];
           setFormData({
-            title: courseData.Title || "",
-            topic: courseData.Topic || "",
-            description: courseData.Description || "",
-            image: courseData.Image || "",
+            title: courseData.Title || '',
+            topic: courseData.Topic || '',
+            description: courseData.Description || '',
+            image: courseData.Image || '',
           });
 
           if (courseData.Image) {
             setImagePreview(
-              courseData.Image.startsWith("http")
+              courseData.Image.startsWith('http')
                 ? courseData.Image
                 : `/images/courses/${courseData.Image}`
             );
-            setImageInputType(courseData.Image.startsWith("http") ? "url" : "file");
+            setImageInputType(courseData.Image.startsWith('http') ? 'url' : 'file');
           }
           setError(null);
         } else {
-          setError("Không tìm thấy thông tin khóa học.");
+          setError('Không tìm thấy thông tin khóa học.');
         }
       } catch (err) {
-        console.error("Error fetching course:", err);
-        setError("Không thể tải thông tin khóa học. Vui lòng thử lại sau.");
+        console.error('Error fetching course:', err);
+        setError('Không thể tải thông tin khóa học. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
       }
@@ -62,19 +66,19 @@ const UpdateCourse = () => {
     }
   }, [courseId]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
 
-    if (name === "image" && imageInputType === "url" && value) {
+    if (name === 'image' && imageInputType === 'url' && value) {
       setImagePreview(value);
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = e => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
@@ -86,18 +90,18 @@ const UpdateCourse = () => {
     }
   };
 
-  const handleImageInputTypeChange = (type) => {
+  const handleImageInputTypeChange = type => {
     setImageInputType(type);
-    if (type === "url") {
+    if (type === 'url') {
       setImageFile(null);
     } else {
       if (!imageFile) {
-        setFormData({ ...formData, image: "" });
+        setFormData({ ...formData, image: '' });
       }
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       setSaving(true);
@@ -105,11 +109,17 @@ const UpdateCourse = () => {
       setSuccess(false);
 
       let imageUrl = formData.image;
-      if (imageInputType === "file" && imageFile) {
-        imageUrl = await uploadImage(imageFile);
+      if (imageInputType === 'file' && imageFile) {
+        try {
+          const result = await uploadService.uploadImage(imageFile);
+          imageUrl = result.url;
+        } catch (err) {
+          messageApi.error('Tải ảnh lên thất bại: ' + err.message);
+          return;
+        }
       }
 
-      const instructorID = 3;
+      const instructorID = user.UserID;
       const response = await InstructorService.updateCourse(
         courseId,
         formData.title,
@@ -118,24 +128,24 @@ const UpdateCourse = () => {
         imageUrl,
         instructorID
       );
-      if (response || response.data) {
+      if (response.success || response.data) {
         setSuccess(true);
-        message.success("Cập nhật khóa học thành công!");
+        messageApi.success('Cập nhật khóa học thành công!');
       }
     } catch (err) {
-      console.error("Error updating course:", err);
-      setError("Không thể cập nhật khóa học. Vui lòng thử lại sau.");
+      console.error('Error updating course:', err);
+      setError('Không thể cập nhật khóa học. Vui lòng thử lại sau.');
     } finally {
       setSaving(false);
     }
   };
 
-  const handleBack = () => navigate("/my-courses");
+  const handleBack = () => navigate('/my-courses');
   const handleAddLessons = () => navigate(`/courses/${courseId}/add-lessons`);
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-
+      {contextHolder}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-semibold">Chỉnh sửa khóa học</h1>
         <div className="flex gap-4">
@@ -181,9 +191,7 @@ const UpdateCourse = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Chủ đề *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Chủ đề *</label>
                 <input
                   type="text"
                   name="topic"
@@ -195,9 +203,7 @@ const UpdateCourse = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mô tả *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả *</label>
                 <textarea
                   name="description"
                   value={formData.description}
@@ -229,27 +235,29 @@ const UpdateCourse = () => {
                 <div className="flex gap-2 mb-4">
                   <button
                     type="button"
-                    onClick={() => handleImageInputTypeChange("file")}
-                    className={`px-3 py-1 rounded text-sm ${imageInputType === "file"
-                        ? "bg-blue-100 text-blue-800 border border-blue-300"
-                        : "bg-gray-100 text-gray-700 border border-gray-300"
-                      }`}
+                    onClick={() => handleImageInputTypeChange('file')}
+                    className={`px-3 py-1 rounded text-sm ${
+                      imageInputType === 'file'
+                        ? 'bg-blue-100 text-blue-800 border border-blue-300'
+                        : 'bg-gray-100 text-gray-700 border border-gray-300'
+                    }`}
                   >
                     Tải ảnh lên
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleImageInputTypeChange("url")}
-                    className={`px-3 py-1 rounded text-sm ${imageInputType === "url"
-                        ? "bg-blue-100 text-blue-800 border border-blue-300"
-                        : "bg-gray-100 text-gray-700 border border-gray-300"
-                      }`}
+                    onClick={() => handleImageInputTypeChange('url')}
+                    className={`px-3 py-1 rounded text-sm ${
+                      imageInputType === 'url'
+                        ? 'bg-blue-100 text-blue-800 border border-blue-300'
+                        : 'bg-gray-100 text-gray-700 border border-gray-300'
+                    }`}
                   >
                     Dùng URL
                   </button>
                 </div>
 
-                {imageInputType === "file" ? (
+                {imageInputType === 'file' ? (
                   <label className="block w-full">
                     <span className="sr-only">Chọn hình ảnh</span>
                     <input

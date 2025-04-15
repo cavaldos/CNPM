@@ -8,7 +8,7 @@ const PublicRouter = Router();
 PublicRouter.post("/user/create", UserController.createUser);
 PublicRouter.post("/user/update", UserController.updateUser);
 PublicRouter.post("/user/delete", UserController.deleteUser);
-PublicRouter.post("/user/getAll", UserController.getAllUsers);
+PublicRouter.post("/user/get-all", UserController.getAllUsers);
 PublicRouter.post("/user/get", UserController.getUserByID);
 
 // Course routes
@@ -17,6 +17,8 @@ PublicRouter.post("/course/get-courses-offset", CourseController.getCoursesOffse
 PublicRouter.post("/course/autocomplete", CourseController.autoComplete);
 PublicRouter.post("/course/search", CourseController.searchCourse);
 PublicRouter.post("/course/get-course-detail", CourseController.getCourseDetail);
+PublicRouter.post("/course/get-all", CourseController.getAllCourses);
+PublicRouter.get("/course/get-all", CourseController.getAllCourses);
 
 // Forum interaction
 PublicRouter.post("/forum/create", ForumController.createMessage);
@@ -25,4 +27,3 @@ PublicRouter.post("/forum/course", ForumController.getMessagesByCourse);
 
 
 export default PublicRouter;
-    

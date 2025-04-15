@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-coursera
+  namespace: coursera-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: client-coursera
+  template:
+    metadata:
+      labels:
+        app: client-coursera
+    spec:
+      containers:
+      - name: client-coursera
+        image: client-coursera:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5173
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_ALLOWED_HOST
+          value: "coursera.zapto.org"
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-coursera-service
+  namespace: coursera-app
+spec:
+  selector:
+    app: client-coursera
+  ports:
+  - port: 80
+    targetPort: 5173
+  type: ClusterIP

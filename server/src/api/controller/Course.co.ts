@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import CourseRepository from "../repositories/course";
-import ReviewRepository from "../repositories/review";
-import LessonRepository from "../repositories/lesson";
-import { datasearch } from "../../fakedata/course";
+import CourseRepository from "../repositories/course.repo";
+import ReviewRepository from "../repositories/review.repo";
+import LessonRepository from "../repositories/lesson.repo";
+import EnrollmentRepository from "../repositories/enrollment.repo";
+import { datasearch } from "../../utils/fakedata/course";
 const CourseController = {
     getCourseByID: async (req: Request, res: Response) => {
         try {
@@ -118,6 +119,7 @@ const CourseController = {
     createCourse: async (req: Request, res: Response) => {
         try {
             const { title, topic, description, image, instructorID } = req.body;
+            console.log(req.body);
             const result = await CourseRepository.createCourse(
                 title,
                 topic,
@@ -184,45 +186,76 @@ const CourseController = {
     autoComplete: async (req: Request, res: Response) => {
         try {
             const { searchTerm } = req.body;
-            console.log("searchTerm", searchTerm);
+            let formattedResult: string[] = [];
+            const limitedRecent = datasearch.recent.slice(0, 5); // Limit recent searches
+
+            if (searchTerm && searchTerm.trim() !== "") {
+                const result = await CourseRepository.autoComplete(searchTerm);
+                // Limit results to 5 and format
+                const limitedResult = result.slice(0, 5);
+                formattedResult = limitedResult.map((item: any) => item.Word);
+            }
+
             res.status(200).json({
                 success: true,
                 message: "Auto-complete results retrieved successfully",
-                data: datasearch,
+                data: {
+                    results: formattedResult, // Use the potentially empty or limited array
+                    recent: limitedRecent,
+                },
             });
         } catch (error) {
             res.status(500).json({
                 success: false,
                 message: "Failed to get auto-complete results",
-                error: error
+                error: error,
             });
         }
     },
     searchCourse: async (req: Request, res: Response) => {
         try {
-            const { searchTerm } = req.body;
-            console.log("searchTerm", searchTerm);
-            const page = 1;
-            const pageSize = 10;
-            const result = await CourseRepository.getAllCoursesPagination(
+            const searchTerm = req.body.searchTerm || '';
+            const page = parseInt(req.body.page as string) || 1;
+            const pageSize = parseInt(req.body.pageSize as string) || 10;
+
+            console.log(`Searching for: "${searchTerm}", page: ${page}, pageSize: ${pageSize}`);
+
+            if (!searchTerm || searchTerm.trim() === "") {
+                const result = await CourseRepository.getAllCoursesPagination(page, pageSize);
+                return res.status(200).json({
+                    success: true,
+                    message: "All courses retrieved successfully",
+                    data: {
+                        page: page,
+                        pageSize: pageSize,
+                        totalPage: result.total || 0,
+                        result: result.courses || [],
+                    }
+                });
+            }
+
+            const result = await CourseRepository.searchCourse(
+                searchTerm,
                 page,
                 pageSize
             );
-            res.status(200).json({
+
+            return res.status(200).json({
                 success: true,
                 message: "Search results retrieved successfully",
                 data: {
                     page: page,
                     pageSize: pageSize,
-                    totalPage: result.total,
-                    result: result.courses,
+                    totalPage: result.total || 0,
+                    result: result.result || [],
                 }
             });
         } catch (error) {
-            res.status(500).json({
+            console.error("Search course error:", error);
+            return res.status(500).json({
                 success: false,
                 message: "Failed to search courses",
-                error: error
+                error: error instanceof Error ? error.message : String(error)
             });
         }
     },
@@ -273,7 +306,31 @@ const CourseController = {
             });
         }
     },
-
+    checkCourseEnrollment: async (req: Request, res: Response) => {
+        try {
+            const { studentID, courseID } = req.body;
+            // Validate input
+            if (!studentID || !courseID) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Missing studentID or courseID in request body"
+                });
+            }
+            const isEnrolled = await EnrollmentRepository.checkEnrollment(studentID, courseID);
+            return res.status(200).json({
+                success: true,
+                message: "Enrollment status retrieved successfully",
+                data: { isEnrolled: isEnrolled }
+            });
+        } catch (error) {
+            console.error("Error checking enrollment status:", error); // Log the error for debugging
+            return res.status(500).json({
+                success: false,
+                message: "Failed to check enrollment status",
+                error: error instanceof Error ? error.message : String(error) // Provide error details
+            });
+        }
+    },
 
     review: {
 
@@ -358,7 +415,9 @@ const CourseController = {
                     error: error
                 });
             }
-        }
+        },
+
+
     }
 };
 

@@ -13,6 +13,9 @@ RUN yarn global add typescript
 # Cài đặt các phụ thuộc
 RUN yarn install --frozen-lockfile
 
+# Copy proto files
+COPY ../proto ./proto
+
 # Copy toàn bộ mã nguồn của dự án vào thư mục làm việc trong container
 COPY . .
 COPY .env ./
@@ -22,6 +25,8 @@ RUN yarn build
 
 # Mở cổng mà ứng dụng sẽ chạy trên đó
 EXPOSE 3003
+EXPOSE 5004
+EXPOSE 50051
 
 # Chạy ứng dụng
 CMD ["node", "dist/server.js"]

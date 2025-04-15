@@ -1,14 +1,14 @@
-import axios from "axios";
+import axios from 'axios';
 // import GetCookie from "../hooks/GetCookie";
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_CHAT_URL || "http://localhost:5003",
+  baseURL: import.meta.env.VITE_API_CHAT_URL || 'http://localhost:5003',
   timeout: 5000,
-  headers: { "X-Custom-Header": "foobar" },
+  headers: { 'X-Custom-Header': 'foobar' },
 });
 
 instance.interceptors.request.use(
   function (config) {
-    const token = "";
+    const token = '';
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,4 +28,4 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-export default instance ;
+export default instance;

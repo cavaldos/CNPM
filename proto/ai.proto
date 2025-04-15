@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package ai;
+
+// Service definition for AI operations
+service AIService {
+  // RPC to chat with Groq AI
+  rpc ChatWithGroq (ChatRequest) returns (ChatResponse);
+}
+
+// Request message for ChatWithGroq
+message ChatRequest {
+  string message = 1;
+}
+
+// Response message for ChatWithGroq
+message ChatResponse {
+  bool success = 1;
+  string message = 2;
+  string response = 3;
+}

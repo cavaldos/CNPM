@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Footer = () => {
   return (
@@ -8,20 +8,76 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-2">Coursera</h3>
           <ul className="text-sm text-gray-600 space-y-2">
-            <li><a href="#" className="hover:text-[#0156d1]">About</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">What We Offer</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Leadership</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Careers</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Catalog</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Coursera Plus</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Professional Certificates</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">MasterTrack® Certificates</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Degrees</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">For Enterprise</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">For Government</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">For Campus</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Become a Partner</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Social Impact</a></li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                About
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                What We Offer
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Leadership
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Careers
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Catalog
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Coursera Plus
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Professional Certificates
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                MasterTrack® Certificates
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Degrees
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                For Enterprise
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                For Government
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                For Campus
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Become a Partner
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Social Impact
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -29,13 +85,41 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-2">Community</h3>
           <ul className="text-sm text-gray-600 space-y-2">
-            <li><a href="#" className="hover:text-[#0156d1]">Learners</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Partners</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Beta Testers</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Blog</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">The Coursera Podcast</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Tech Blog</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Teaching Center</a></li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Learners
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Partners
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Beta Testers
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Blog
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                The Coursera Podcast
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Tech Blog
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Teaching Center
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -43,18 +127,66 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-2">More</h3>
           <ul className="text-sm text-gray-600 space-y-2">
-            <li><a href="#" className="hover:text-[#0156d1]">Press</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Investors</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Terms</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Privacy</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Help</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Accessibility</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Contact</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Articles</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Directory</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Affiliates</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Modern Slavery Statement</a></li>
-            <li><a href="#" className="hover:text-[#0156d1]">Manage Cookie Preferences</a></li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Press
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Investors
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Terms
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Privacy
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Help
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Accessibility
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Contact
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Articles
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Directory
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Affiliates
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Modern Slavery Statement
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-[#0156d1]">
+                Manage Cookie Preferences
+              </a>
+            </li>
           </ul>
         </div>
 

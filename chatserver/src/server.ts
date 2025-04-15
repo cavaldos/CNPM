@@ -7,6 +7,8 @@ import portfinder from "portfinder";
 import dotenv from "dotenv";
 import connectDB from "./config/connectMongodb";
 import startSocketServer from "./config/socket";
+import { startGrpcServer } from "./grpc/server";
+import { setupApolloServer } from "./graphql";
 dotenv.config();
 const IP = getIPAddresses.IP();
 
@@ -18,6 +20,10 @@ const PORT_SOCKET: number = process.env.PORT_SOCKET
   ? parseInt(process.env.PORT_SOCKET)
   : 5004;
 
+const PORT_GRPC: number = process.env.PORT_GRPC
+  ? parseInt(process.env.PORT_GRPC)
+  : 50051;
+
 const host: string = "0.0.0.0";
 async function startServer() {
   try {
@@ -27,6 +33,9 @@ async function startServer() {
     const publicIP = await fetchPublicIP();
     const PORT = await portfinder.getPortPromise({ port: PORSERVER });
 
+    // Set up Apollo Server (GraphQL)
+    await setupApolloServer(app);
+
     app.listen(PORT, host, () => {
       console.log(
         `  🚀  ➜ Network:  `,
@@ -35,6 +44,7 @@ async function startServer() {
       console.log(`  🚀  ➜   Local:  `, color.green(`http://${IP}:${PORT}`));
     });
     startSocketServer(PORT_SOCKET);
+    startGrpcServer(PORT_GRPC);
   } catch (err) {
     console.error(`Server startup error: ${err}`);
     process.exit(1);

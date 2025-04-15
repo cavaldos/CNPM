@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import EnrollmentRepository from "../repositories/Enrollment";
+import EnrollmentRepository from "../repositories/enrollment.repo";
 import _ from "lodash";
 
 const EnrollmentController = {
@@ -10,10 +10,11 @@ const EnrollmentController = {
             if (!studentID || !courseID) {
                 return res.status(400).json({ message: "StudentID and CourseID are required" });
             }
-
+            console.log("Creating enrollment with StudentID:", studentID, "and CourseID:", courseID);
             const result = await EnrollmentRepository.createEnrollment(studentID, courseID);
 
             return res.status(201).json({
+                success: true,
                 message: "Enrollment created successfully",
                 data: result
             });
@@ -34,6 +35,7 @@ const EnrollmentController = {
             await EnrollmentRepository.deleteEnrollment(enrollmentID);
 
             return res.status(200).json({
+                success: true,
                 message: "Enrollment deleted successfully"
             });
         } catch (error) {
@@ -44,29 +46,33 @@ const EnrollmentController = {
 
     async updateEnrollmentStatus(req: Request, res: Response) {
         try {
-            const { enrollmentID, Status } = req.body;
+            const { enrollmentID, status } = req.body;
 
             if (!enrollmentID) {
                 return res.status(400).json({ message: "EnrollmentID is required" });
             }
 
-            // Validate that Status is one of the allowed values
+            // Validate that status is one of the allowed values
             const allowedStatuses = ['Enrolled', 'Completed', 'Dropped'];
-            if (Status && !allowedStatuses.includes(Status)) {
+            if (status && !allowedStatuses.includes(status)) {
                 return res.status(400).json({
                     message: "Status must be one of: Enrolled, Completed, or Dropped"
                 });
             }
 
-            const result = await EnrollmentRepository.updateEnrollment(enrollmentID, Status);
+            const result = await EnrollmentRepository.updateEnrollment(enrollmentID, status);
 
             return res.status(200).json({
+                success: true,
                 message: "Enrollment updated successfully",
                 data: result
             });
         } catch (error) {
             console.error("Error updating enrollment:", error);
-            return res.status(500).json({ message: "Internal server error" });
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
         }
     },
 
@@ -75,7 +81,10 @@ const EnrollmentController = {
             const { studentID } = req.body;
 
             if (!studentID) {
-                return res.status(400).json({ message: "StudentID is required" });
+                return res.status(400).json({
+                    success: false,
+                    message: "StudentID is required"
+                });
             }
 
             const enrollmentsResult = await EnrollmentRepository.getAllEnrollmentsByStudent(studentID);
@@ -112,33 +121,44 @@ const EnrollmentController = {
             };
 
             return res.status(200).json({
+                success: true,
                 message: "Enrollments retrieved successfully",
                 data: result
             });
         } catch (error) {
             console.error("Error retrieving enrollments:", error);
-            return res.status(500).json({ message: "Internal server error" });
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
         }
     },
     async getContacts(req: Request, res: Response) {
-        
+
         try {
             const { courseID } = req.body;
 
             if (!courseID) {
-                return res.status(400).json({ message: "CourseID is required" });
+                return res.status(400).json({
+                    success: false,
+                    message: "CourseID is required"
+                });
             }
 
             const friendsResult = await EnrollmentRepository.getContacts(courseID);
             console.log("Friends retrieved:", friendsResult);
 
             return res.status(200).json({
+                success: true,
                 message: "Friends retrieved successfully",
                 data: friendsResult
             });
         } catch (error) {
             console.error("Error retrieving friends:", error);
-            return res.status(500).json({ message: "Internal server error" });
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
         }
     }
 

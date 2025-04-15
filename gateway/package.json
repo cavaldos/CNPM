@@ -1,0 +1,28 @@
+{
+  "name": "gateway",
+  "module": "index.ts",
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "bun build src/index.ts --outdir=dist --minify",
+    "dev": "bun run src/index.ts",
+    "start": "bun run build && bun run dist/index.js",
+    "test": "bun test",
+    "lint": "bun run lint:ts && bun run lint:json",
+    "lint:ts": "bun run eslint . --ext .ts",
+    "lint:json": "bun run jsonlint ."
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "eslint": "^9.22.0",
+    "jsonlint": "^1.6.3",
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "typescript": "^5.0.0",
+    "eslint-plugin-jest": "^28.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

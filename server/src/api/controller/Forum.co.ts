@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ForumRepository from "../repositories/forum";
+import ForumRepository from "../repositories/forum.repo";
 
 const ForumController = {
     createMessage: async (req: Request, res: Response) => {

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // {
 //   "UserID": 1,
@@ -10,19 +10,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //               "UpdateTime": "2025-01-01T10:00:00.000Z"
 // }
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
     UserID: 0,
-    UserName: "",
-    Email: "",
-    FullName: "",
-    Role: "Guest",
-    CreatedTime: "",
-    UpdateTime: "",
+    UserName: '',
+    Email: '',
+    FullName: '',
+    Role: 'Guest',
+    CreatedTime: '',
+    UpdateTime: '',
+    ImageURL: '',
   },
   reducers: {
     setUser: (state, action) => {
-      const { UserID, UserName, Email, FullName, Role, CreatedTime, UpdateTime } = action.payload;
+      const { UserID, UserName, Email, FullName, Role, CreatedTime, UpdateTime, ImageURL } =
+        action.payload;
       state.UserID = UserID;
       state.UserName = UserName;
       state.Email = Email;
@@ -30,8 +32,9 @@ export const authSlice = createSlice({
       state.Role = Role;
       state.CreatedTime = CreatedTime;
       state.UpdateTime = UpdateTime;
+      state.ImageURL = ImageURL;
     },
-    clearUser: (state) => {
+    clearUser: state => {
       state.UserID = null;
       state.UserName = null;
       state.Email = null;
@@ -39,10 +42,9 @@ export const authSlice = createSlice({
       state.Role = null;
       state.CreatedTime = null;
       state.UpdateTime = null;
+      state.ImageURL = null;
     },
-
   },
-
 });
 
 export const { setUser, clearUser } = authSlice.actions;

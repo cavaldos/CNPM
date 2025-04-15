@@ -1,9 +1,23 @@
 services:
-  client-tp:
+  nginx-load-balancer:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx-load-balancer
+    ports:
+      - "80:80"
+    networks:
+      - default
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+
+  client-coursera:
     build:
       context: ./client
       dockerfile: Dockerfile
-    container_name: client-tp
+    container_name: client-coursera
     ports:
       - "5173:5173"
     networks:
@@ -11,27 +25,44 @@ services:
     env_file: "./client/.env"
     environment:
       - NODE_ENV=production
-      - VITE_API_URL= http://bourbon.zapto.org:3000
+      - VITE_ALLOWED_HOST=coursera.zapto.org
     depends_on:
-      - server-tp
+      - server-coursera
+      - chatserver-coursera
     restart: always
 
-  server-tp:
+  server-coursera:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: server-tp
+    container_name: server-coursera
     ports:
       - "3000:3000"
+      - "5001:5001"
+    networks:
+      - default
+    environment:
+      - NODE_ENV=production
+      - GRPC_SERVER_ADDRESS=chatserver-coursera:50051
+    depends_on:
+      - chatserver-coursera
+    restart: always
+
+  chatserver-coursera:
+    build:
+      context: ./chatserver
+      dockerfile: Dockerfile
+    container_name: chatserver-coursera
+    ports:
+      - "5003:5003"
+      - "5004:5004"
+      - "50051:50051"
     networks:
       - default
     environment:
       - NODE_ENV=production
     restart: always
 
-
 networks:
   default:
-    driver: bridge 
-    
-    
+    driver: bridge

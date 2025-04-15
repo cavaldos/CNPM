@@ -1,5 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import LanguageSwitcher from '../../../hooks/LanguageSwitcher';
 
 const CourseCard = ({ course }) => {
   const {
@@ -18,12 +19,12 @@ const CourseCard = ({ course }) => {
 
   // Fallback image nếu không có ảnh
   const fallbackImage =
-    "https://plus.unsplash.com/premium_photo-1738105946749-320f638ed0be?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8";
+    'https://plus.unsplash.com/premium_photo-1738105946749-320f638ed0be?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8';
 
   // Format ngày tạo
-  const formattedDate = new Date(CreateTime).toLocaleDateString("vi-VN", {
-    month: "long",
-    year: "numeric",
+  const formattedDate = new Date(CreateTime).toLocaleDateString('vi-VN', {
+    month: 'numeric',
+    year: 'numeric',
   });
 
   return (
@@ -37,19 +38,14 @@ const CourseCard = ({ course }) => {
           src={Image || fallbackImage}
           alt={Title}
           className="w-full h-52 object-cover transition-transform duration-300 hover:scale-105"
-          onError={(e) => {
+          onError={e => {
             e.target.onerror = null;
             e.target.src = fallbackImage;
           }}
         />
         {/* Enrollment Badge */}
         <div className="absolute top-3 right-3 bg-blue-600 text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
-          <svg
-            className="w-4 h-4 mr-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -57,7 +53,7 @@ const CourseCard = ({ course }) => {
               d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
             />
           </svg>
-          {EnrollmentCount} học viên
+          {EnrollmentCount} {LanguageSwitcher('students')}
         </div>
       </div>
 
@@ -69,25 +65,17 @@ const CourseCard = ({ course }) => {
         </span>
 
         {/* Course Title */}
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
-          {Title}
-        </h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">{Title}</h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {Description}
-        </p>
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{Description}</p>
 
         {/* Instructor Info */}
         <div className="flex items-center mb-4">
           <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-2">
-            <span className="text-sm font-semibold text-gray-700">
-              {InstructorName.charAt(0)}
-            </span>
+            <span className="text-sm font-semibold text-gray-700">{InstructorName.charAt(0)}</span>
           </div>
-          <span className="text-sm text-gray-700 font-medium">
-            {InstructorName}
-          </span>
+          <span className="text-sm text-gray-700 font-medium">{InstructorName}</span>
         </div>
 
         {/* Rating & Date */}
@@ -99,10 +87,9 @@ const CourseCard = ({ course }) => {
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className={`w-4 h-4 ${i < Math.floor(AvgRating)
-                          ? "text-yellow-400"
-                          : "text-gray-300"
-                        }`}
+                      className={`w-4 h-4 ${
+                        i < Math.floor(AvgRating) ? 'text-yellow-400' : 'text-gray-300'
+                      }`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -110,13 +97,13 @@ const CourseCard = ({ course }) => {
                     </svg>
                   ))}
                 </div>
-                <span className="text-sm text-gray-600 font-medium">
-                  {AvgRating.toFixed(1)}
-                </span>
+                <span className="text-sm text-gray-600 font-medium">{AvgRating.toFixed(1)}</span>
               </>
             )}
           </div>
-          <span className="text-xs text-gray-500">{formattedDate}</span>
+          <span className="text-xs text-gray-500">
+            {LanguageSwitcher('created_at')} {formattedDate}
+          </span>
         </div>
       </div>
     </div>

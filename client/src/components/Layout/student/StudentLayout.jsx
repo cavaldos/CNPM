@@ -1,15 +1,14 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import HeaderStudent from "./HeaderStudent";
-import FooterStudent from "../../ui/utilize/Footer";
-import ChatAI from "./ChatAI";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import HeaderStudent from './HeaderStudent';
+import FooterStudent from '../../ui/utilize/Footer';
+import ChatAI from './ChatAI';
 
 const StudentLayout = ({ children }) => {
   const location = useLocation();
   const isLearningPage =
-    location.pathname.includes("/learning") ||
-    location.pathname.includes("/careers");
- 
+    location.pathname.includes('/learning') || location.pathname.includes('/careers');
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="fixed w-full h-[120px] z-50">
@@ -21,9 +20,9 @@ const StudentLayout = ({ children }) => {
           <FooterStudent />
         </footer>
       )}
-      
+
       {/* ChatAI component that appears in the bottom right corner */}
-    
+
       <ChatAI />
     </div>
   );

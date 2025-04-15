@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy } from 'react';
 import {
   HomeIcon,
   PlusCircleIcon,
@@ -6,81 +6,81 @@ import {
   EditIcon,
   MessageCircleIcon,
   UserIcon,
-  MessageSquareIcon
-} from "lucide-react";
+  MessageSquareIcon,
+} from 'lucide-react';
 
 // Sử dụng đường dẫn tương đối thay vì alias (~)
-const InstructorLayout = lazy(() => import("../components/Layout/instructor/InstructorLayout"));
-const HomeInstructor = lazy(() => import("../pages/instructor/index"));
-const CreateCourse = lazy(() => import("../pages/instructor/CreateCourse"));
-const ManageCourses = lazy(() => import("../pages/instructor/ManageCourses"));
-const UpdateCourse = lazy(() => import("../pages/instructor/UpdateCourse"));
-const Messages = lazy(() => import("../pages/instructor/Messages"));
-const Profile = lazy(() => import("../pages/instructor/Profile"));
-const AddLessons = lazy(() => import("../pages/instructor/AddLessons"));
-const DiscussionForum = lazy(() => import("../pages/instructor/DiscussionForum"));
+const InstructorLayout = lazy(() => import('../components/Layout/instructor/InstructorLayout'));
+const HomeInstructor = lazy(() => import('../pages/instructor/index'));
+const CreateCourse = lazy(() => import('../pages/instructor/CreateCourse'));
+const ManageCourses = lazy(() => import('../pages/instructor/ManageCourses'));
+const UpdateCourse = lazy(() => import('../pages/instructor/UpdateCourse'));
+const Messages = lazy(() => import('../pages/instructor/Messages'));
+const Profile = lazy(() => import('../pages/instructor/Profile'));
+const AddLessons = lazy(() => import('../pages/instructor/AddLessons'));
+const DiscussionForum = lazy(() => import('../pages/instructor/DiscussionForum'));
 
 const InstructorRouter = [
   {
-    name: "Home",
+    name: 'Trang chủ',
     icon: HomeIcon,
-    path: "/",
-    key: "sidebar",
+    path: '/',
+    key: 'sidebar',
     component: HomeInstructor,
     Layout: InstructorLayout,
   },
   {
-    name: "Create Course",
+    name: 'Tạo khóa học',
     icon: PlusCircleIcon,
-    path: "/create-course",
-    key: "sidebar",
+    path: '/create-course',
+    key: 'sidebar',
     component: CreateCourse,
     Layout: InstructorLayout,
   },
   {
-    name: "Add Lessons",
+    name: 'Thêm bài học',
     icon: LayersIcon,
-    path: "/courses/:courseId/add-lessons",
-    key: "",
+    path: '/courses/:courseId/add-lessons',
+    key: '',
     component: AddLessons,
     Layout: InstructorLayout,
   },
   {
-    name: "My Courses",
+    name: 'Quản lý khóa học',
     icon: LayersIcon,
-    path: "/my-courses",
-    key: "sidebar",
+    path: '/my-courses',
+    key: 'sidebar',
     component: ManageCourses,
     Layout: InstructorLayout,
   },
   {
-    name: "Edit Course",
+    name: 'Cập nhật khóa học',
     icon: EditIcon,
-    path: "/courses/:courseId/update",
+    path: '/courses/:courseId/update',
     component: UpdateCourse,
     Layout: InstructorLayout,
   },
   {
-    name: "Messages",
+    name: 'Tin nhắn',
     icon: MessageCircleIcon,
-    path: "/messages",
-    key: "sidebar",
+    path: '/messages',
+    key: 'sidebar',
     component: Messages,
     Layout: InstructorLayout,
   },
   {
-    name: "Profile",
+    name: 'Hồ sơ',
     icon: UserIcon,
-    path: "/profile",
-    key: "sidebar",
+    path: '/profile',
+    key: 'sidebar',
     component: Profile,
     Layout: InstructorLayout,
   },
   {
-    name: "Discussion Forum",
+    name: 'Diễn đàn thảo luận',
     icon: MessageSquareIcon,
-    path: "/discussion-forum/:courseId",
-    key: "",
+    path: '/discussion-forum/:courseId',
+    key: '',
     component: DiscussionForum,
     Layout: InstructorLayout,
   },

@@ -6,18 +6,18 @@ import LessonController from "../controller/Lesson.co";
 const StudentRouter = Router();
 
 StudentRouter.post("/course/get-all-course", CourseController.getAllCourses);
-
+StudentRouter.post("/course/check-course-enrolled", CourseController.checkCourseEnrollment);
 // Course reviews
 StudentRouter.post("/course/review/create", CourseController.review.createReview);
 StudentRouter.post("/course/review/update", CourseController.review.updateReview);
 StudentRouter.post("/course/review/delete", CourseController.review.deleteReview);
 StudentRouter.post("/course/reviews", CourseController.review.getCourseReviews);
 
-
 // Learning progress
 
 StudentRouter.post("/progress/get-all", LearnProgressController.getAllCourseProgress);
 StudentRouter.post("/progress/check-status", LearnProgressController.checkProcessStatus);
+StudentRouter.post("/progress/complete", LearnProgressController.completeCourseProgress);
 
 StudentRouter.post("/progress/start", LearnProgressController.startLearnProgress);
 StudentRouter.post("/progress/update", LearnProgressController.updateLearnProgress);
@@ -32,7 +32,7 @@ StudentRouter.post("/lesson/get-all-lessons", LessonController.getAllLessonsByCo
 
 StudentRouter.post("/enrollment/create", EnrollmentController.createEnrollment);
 StudentRouter.post("/enrollment/delete", EnrollmentController.deleteEnrollment);
-StudentRouter.post("/enrollment/update", EnrollmentController.updateEnrollmentStatus);
+StudentRouter.post("/enrollment/update-status", EnrollmentController.updateEnrollmentStatus);
 StudentRouter.post("/enrollment/get-by-student-id", EnrollmentController.getAllEnrollmentsByStudent);
 StudentRouter.post("/enrollment/get-contacts", EnrollmentController.getContacts);
 
