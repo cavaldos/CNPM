@@ -29,7 +29,7 @@ k8s/
 ├── setup-cluster.sh            # Script tự động cấu hình toàn bộ cluster
 ├── deploy-app.sh               # Triển khai ứng dụng lên Kubernetes
 ├── update-dns.sh               # Cập nhật DNS để trỏ đến Kubernetes Ingress
-├── install-monitoring.sh       # Cài đặt công cụ giám sát (Prometheus, Grafana, K8s Dashboard)
+├── install-monitoring.sh       # Cài đặt công cụ giám sát (Prometheus, K8s Dashboard)
 ├── backup-restore.sh           # Script backup và restore cluster
 ├── ssh_master.pem              # SSH key để kết nối đến master node
 ├── ssh_worker.pem              # SSH key để kết nối đến các worker node
@@ -129,7 +129,7 @@ ssh -i k8s/ssh_master.pem ubuntu@113.173.64.57 "chmod +x update-dns.sh && sudo .
 
 ### 4. Cài đặt công cụ giám sát (tùy chọn)
 
-Để giám sát cluster, bạn có thể cài đặt Prometheus, Grafana và Kubernetes Dashboard:
+Để giám sát cluster, bạn có thể cài đặt Prometheus và Kubernetes Dashboard:
 
 ```bash
 scp -i k8s/ssh_master.pem k8s/install-monitoring.sh ubuntu@113.173.64.57:~/
@@ -253,4 +253,3 @@ systemctl restart kubelet
 - [kubeadm Documentation](https://kubernetes.io/docs/reference/setup-tools/kubeadm/)
 - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/)
 - [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)
-- [Grafana Documentation](https://grafana.com/docs/)

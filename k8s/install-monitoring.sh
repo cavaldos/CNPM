@@ -6,9 +6,8 @@
 # Cài đặt Helm
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-# Thêm repository cho Prometheus và Grafana
+# Thêm repository cho Prometheus
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 
 # Tạo namespace cho monitoring
@@ -20,21 +19,7 @@ helm install prometheus prometheus-community/prometheus \
   --set server.persistentVolume.enabled=false \
   --set alertmanager.persistentVolume.enabled=false
 
-# Cài đặt Grafana
-helm install grafana grafana/grafana \
-  --namespace monitoring \
-  --set persistence.enabled=false \
-  --set adminPassword=admin \
-  --set service.type=NodePort
-
-# Lấy thông tin truy cập Grafana
-GRAFANA_PASSWORD=$(kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode)
-GRAFANA_URL=$(kubectl get svc --namespace monitoring grafana -o jsonpath='{.spec.ports[0].nodePort}')
-
-echo "Prometheus và Grafana đã được cài đặt!"
-echo "Truy cập Grafana tại: http://<node-ip>:$GRAFANA_URL"
-echo "Username: admin"
-echo "Password: $GRAFANA_PASSWORD"
+echo "Prometheus đã được cài đặt!"
 
 # Cài đặt Kubernetes Dashboard
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
