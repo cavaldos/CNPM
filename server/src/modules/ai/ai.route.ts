@@ -15,6 +15,6 @@ router.get('/hello-world', AIController.helloWorld);
 
 // User routes via GraphQL
 router.get('/users', AIController.getUsers);
-router.post('/users', AIController.getUser);
+router.get('/users/:id', AIController.getUser);
 
 export default router;

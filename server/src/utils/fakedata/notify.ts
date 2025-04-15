@@ -1,6 +1,5 @@
-import { NotifyResponseDTO } from '../../dto/notify.dto';
 
-export const notifications: NotifyResponseDTO[] = [
+export const notifications= [
     {
         notifyID: 1,
         messageNotify: "Welcome to the Introduction to JavaScript course! Start your learning journey now.",

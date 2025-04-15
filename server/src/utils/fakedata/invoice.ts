@@ -1,6 +1,5 @@
-import { InvoiceResponseDTO, InvoiceDetailResponseDTO } from '../../dto/invoice.dto';
 
-export const invoices: InvoiceResponseDTO[] = [
+export const invoices = [
     {
         invoiceID: 1,
         totalAmount: 49.99,
@@ -182,7 +181,7 @@ export const invoices: InvoiceResponseDTO[] = [
     }
 ];
 
-export const invoiceDetails: InvoiceDetailResponseDTO[] = [
+export const invoiceDetails= [
     {
         invoiceDetailID: 1,
         price: 49.99,

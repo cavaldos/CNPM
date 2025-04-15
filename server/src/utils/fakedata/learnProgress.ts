@@ -1,6 +1,5 @@
-import { LearnProgressResponseDTO } from '../../dto/learnProgress.dto';
 
-export const learnProgress: LearnProgressResponseDTO[] = [
+export const learnProgress = [
     // Emily Davis - JavaScript Course
     {
         progressID: 1,

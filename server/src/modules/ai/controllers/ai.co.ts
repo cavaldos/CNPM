@@ -61,9 +61,31 @@ class AIController {
     }
   }
 
+  async getUsers(_req: Request, res: Response): Promise<void> {
+    try {
+      console.log('Received get all users request');
+
+      const users = await AIService.getAllUsers();
+
+      res.status(200).json({
+        success: true,
+        message: 'Users retrieved successfully',
+        data: {
+          users
+        }
+      });
+    } catch (error: any) {
+      console.error('Error in getUsers controller:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Internal server error'
+      });
+    }
+  }
+
   async getUser(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.body;
+      const id = req.params.id;
       console.log('Received get user request for ID:', id);
 
       if (!id) {
@@ -78,35 +100,13 @@ class AIController {
 
       res.status(200).json({
         success: true,
-        message: 'User fetched successfully',
+        message: 'User retrieved successfully',
         data: {
           user
         }
       });
     } catch (error: any) {
       console.error('Error in getUser controller:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Internal server error'
-      });
-    }
-  }
-
-  async getUsers(req: Request, res: Response): Promise<void> {
-    try {
-      console.log('Received get all users request');
-
-      const users = await AIService.getAllUsers();
-
-      res.status(200).json({
-        success: true,
-        message: 'Users fetched successfully',
-        data: {
-          users
-        }
-      });
-    } catch (error: any) {
-      console.error('Error in getUsers controller:', error);
       res.status(500).json({
         success: false,
         message: error.message || 'Internal server error'

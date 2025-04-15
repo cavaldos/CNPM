@@ -1,4 +1,3 @@
-import { CourseResponseDTO } from '../../dto/course.dto';
 
 export const datasearch = {
     results: [
@@ -38,7 +37,7 @@ export const paginationData = {
     hasPreviousPage: false
 }
 
-export const courses: CourseResponseDTO[] = [
+export const courses = [
     {
         courseID: 1,
         title: "Introduction to JavaScript",

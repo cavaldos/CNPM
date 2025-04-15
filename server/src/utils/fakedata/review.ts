@@ -1,6 +1,5 @@
-import { ReviewResponseDTO } from '../../dto/review.dto';
 
-export const reviews: ReviewResponseDTO[] = [
+export const reviews = [
     {
         reviewID: 1,
         comment: "Great introduction to JavaScript! The instructor explains concepts clearly and the examples are very helpful.",

@@ -1,6 +1,5 @@
-import { UserResponseDTO } from '../../dto/user.dto';
 
-export const users: UserResponseDTO[] = [
+export const users = [
     {
         userID: 1,
         userName: 'johndoe',

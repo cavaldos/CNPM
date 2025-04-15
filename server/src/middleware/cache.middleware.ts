@@ -6,7 +6,7 @@ import RedisClient, { DEFAULT_CACHE_TTL } from '../config/RedisClient';
  * @param ttl Cache time-to-live in seconds
  */
 export const cacheMiddleware = (ttl: number = DEFAULT_CACHE_TTL) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
     try {
       // Create a cache key based on the route and request body
       const cacheKey = `${req.originalUrl}:${JSON.stringify(req.body)}`;

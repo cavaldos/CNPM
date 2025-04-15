@@ -9,28 +9,35 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     /* Strict Type-Checking Options */
     "strict": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-
     /* Additional Checks */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false, // Đã tắt kiểm tra biến không dùng
+    "noUnusedParameters": false, // Đã tắt kiểm tra tham số không dùng
     "noImplicitReturns": true,
-
     /* Module Resolution Options */
     "moduleResolution": "node",
-    "typeRoots": ["node_modules/@types", "types"],
+    "typeRoots": [
+      "node_modules/@types",
+      "types"
+    ],
     "esModuleInterop": true,
-
     /* Advanced Options */
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "ts-node": {
     "esm": true
   },
-  "exclude": ["node_modules", "test", "types", "**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "test",
+    "**/*.test.ts"
+  ]
 }

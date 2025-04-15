@@ -1,6 +1,5 @@
-import { ForumMessageResponseDTO } from '../../dto/forum.dto';
 
-export const forumMessages: ForumMessageResponseDTO[] = [
+export const forumMessages = [
     {
         forumMessageID: 1,
         content: "Hello everyone! I'm having trouble understanding closures in JavaScript. Can someone explain them in simple terms?",

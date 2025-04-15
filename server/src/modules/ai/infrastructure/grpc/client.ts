@@ -8,7 +8,7 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import dotenv from 'dotenv';
-import { ProtoGrpcType } from './types/ai';
+import { ProtoGrpcType } from './types';
 import { AIServiceClient } from './types/ai/AIService';
 
 dotenv.config();
