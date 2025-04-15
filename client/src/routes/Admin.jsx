@@ -3,12 +3,21 @@ const AdminLayout = lazy(() => import("~/components/Layout/admin/AdminLayout"));
 const HomeAdmin = lazy(() => import("~/pages/admin/index"));
 import ManagerCourse from '../pages/admin/ManagerCourse';
 import ManagerUser from '../pages/admin/ManagerUser';
+import RevenueStats from '../pages/admin/RevenueStats';
 const AdminRouter = [
   {
-    name: "Home",
+    name: "Dashboard",
     icon: "",
     path: "/",
     component: HomeAdmin,
+    Layout: AdminLayout,
+  },
+
+  {
+    name: "Revenue Statistics",
+    icon: "",
+    path: "/revenue-stats",
+    component: RevenueStats,
     Layout: AdminLayout,
   },
 

@@ -57,6 +57,9 @@ const CourseDetail = () => {
   const errorText = useLanguageSwitcher("Error");
 
   useEffect(() => {
+    // Scroll to top when component mounts or when courseId changes
+    window.scrollTo(0, 0);
+
     const fetchCourseData = async () => {
       try {
         setLoading(true);

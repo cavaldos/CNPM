@@ -85,8 +85,6 @@ const AdminDashboard = () => {
 
   return (
     <DashboardContainer>
-      <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '30px', textAlign: 'center' }}>Course Topic Distribution Dashboard</h1>
-
       {/* Topic Distribution Chart */}
       <ChartContainer height="600px">
         <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '20px', textAlign: 'center' }}>Course Topic Distribution in the Platform</h3>
