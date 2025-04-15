@@ -1,9 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend
-} from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { CircularProgress } from '@mui/material';
 import PublicService from '../../services/public.service';
 
@@ -17,7 +14,7 @@ const ChartContainer = styled.div`
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
   height: ${props => props.height || '400px'};
 `;
@@ -25,7 +22,18 @@ const ChartContainer = styled.div`
 // No longer needed - removed monthly, performance, and activity data
 
 // Colors for the pie chart
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#A4DE6C', '#D0ED57', '#FFC658', '#FF6B6B'];
+const COLORS = [
+  '#0088FE',
+  '#00C49F',
+  '#FFBB28',
+  '#FF8042',
+  '#8884D8',
+  '#82CA9D',
+  '#A4DE6C',
+  '#D0ED57',
+  '#FFC658',
+  '#FF6B6B',
+];
 
 // Sample topic data in case API fails
 const sampleTopicData = [
@@ -62,7 +70,7 @@ const AdminDashboard = () => {
           // Convert to array format for the pie chart
           const formattedData = Object.keys(topicCounts).map(topic => ({
             name: topic,
-            value: topicCounts[topic]
+            value: topicCounts[topic],
           }));
 
           // If we got data from API, use it; otherwise use sample data
@@ -87,7 +95,16 @@ const AdminDashboard = () => {
     <DashboardContainer>
       {/* Topic Distribution Chart */}
       <ChartContainer height="600px">
-        <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '20px', textAlign: 'center' }}>Course Topic Distribution in the Platform</h3>
+        <h3
+          style={{
+            fontSize: '22px',
+            fontWeight: 'bold',
+            marginBottom: '20px',
+            textAlign: 'center',
+          }}
+        >
+          Course Topic Distribution in the Platform
+        </h3>
         {loading ? (
           <div className="flex justify-center items-center h-full">
             <CircularProgress />
@@ -115,8 +132,16 @@ const AdminDashboard = () => {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value, name, props) => [`${value} courses (${(props.percent * 100).toFixed(1)}%)`, name]}
-                contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                formatter={(value, name, props) => [
+                  `${value} courses (${(props.percent * 100).toFixed(1)}%)`,
+                  name,
+                ]}
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  borderRadius: '8px',
+                  border: 'none',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                }}
               />
               <Legend
                 layout="horizontal"
@@ -128,8 +153,8 @@ const AdminDashboard = () => {
           </ResponsiveContainer>
         )}
         <div style={{ textAlign: 'center', marginTop: '20px', color: '#64748b', fontSize: '14px' }}>
-          This chart shows the distribution of courses across different topics in the platform.
-          Each segment represents the proportion of courses in a specific topic category.
+          This chart shows the distribution of courses across different topics in the platform. Each
+          segment represents the proportion of courses in a specific topic category.
         </div>
       </ChartContainer>
 

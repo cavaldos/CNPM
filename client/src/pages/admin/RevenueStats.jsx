@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
-  LineChart, Line, AreaChart, Area, PieChart, Pie, Cell
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 import { CircularProgress, Paper, Grid, Typography, Box, Chip } from '@mui/material';
 import AdminService from '../../services/admin.service';
@@ -18,13 +31,13 @@ const ChartContainer = styled(Paper)`
   padding: 20px;
   margin-bottom: 20px;
   height: ${props => props.height || '400px'};
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
 const KeywordContainer = styled(Paper)`
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
 const KeywordGrid = styled.div`
@@ -45,7 +58,7 @@ const StatCard = styled(Paper)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
 const StatValue = styled(Typography)`
@@ -72,17 +85,17 @@ const RevenueStats = () => {
     totalRevenue: 0,
     monthlyGrowth: 0,
     averageOrderValue: 0,
-    conversionRate: 0
+    conversionRate: 0,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch revenue statistics
         const response = await AdminService.getRevenueStats();
-        
+
         if (response.success) {
           setRevenueData(response.data.monthlyRevenue || []);
           setCourseRevenueData(response.data.courseRevenue || []);
@@ -91,7 +104,7 @@ const RevenueStats = () => {
             totalRevenue: response.data.totalRevenue || 0,
             monthlyGrowth: response.data.monthlyGrowth || 0,
             averageOrderValue: response.data.averageOrderValue || 0,
-            conversionRate: response.data.conversionRate || 0
+            conversionRate: response.data.conversionRate || 0,
           });
         } else {
           console.warn('Failed to load revenue data, using sample data');
@@ -103,7 +116,7 @@ const RevenueStats = () => {
             totalRevenue: 125000,
             monthlyGrowth: 15.7,
             averageOrderValue: 49.99,
-            conversionRate: 3.2
+            conversionRate: 3.2,
           });
         }
       } catch (err) {
@@ -116,27 +129,27 @@ const RevenueStats = () => {
           totalRevenue: 125000,
           monthlyGrowth: 15.7,
           averageOrderValue: 49.99,
-          conversionRate: 3.2
+          conversionRate: 3.2,
         });
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 
   // Format currency
-  const formatCurrency = (value) => {
+  const formatCurrency = value => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(value);
   };
 
   // Format percentage
-  const formatPercent = (value) => {
+  const formatPercent = value => {
     return `${value}%`;
   };
 
@@ -152,7 +165,13 @@ const RevenueStats = () => {
 
   return (
     <StatsContainer>
-      <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ fontWeight: 'bold', mb: 4 }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        align="center"
+        sx={{ fontWeight: 'bold', mb: 4 }}
+      >
         Revenue Statistics Dashboard
       </Typography>
 
@@ -193,24 +212,24 @@ const RevenueStats = () => {
           <AreaChart data={revenueData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis tickFormatter={(value) => `${value / 1000}K`} />
-            <Tooltip formatter={(value) => formatCurrency(value)} />
+            <YAxis tickFormatter={value => `${value / 1000}K`} />
+            <Tooltip formatter={value => formatCurrency(value)} />
             <Legend />
-            <Area 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#2563eb" 
-              fill="#2563eb" 
-              fillOpacity={0.3} 
-              name="Revenue" 
+            <Area
+              type="monotone"
+              dataKey="revenue"
+              stroke="#2563eb"
+              fill="#2563eb"
+              fillOpacity={0.3}
+              name="Revenue"
             />
-            <Area 
-              type="monotone" 
-              dataKey="expenses" 
-              stroke="#10b981" 
-              fill="#10b981" 
-              fillOpacity={0.3} 
-              name="Expenses" 
+            <Area
+              type="monotone"
+              dataKey="expenses"
+              stroke="#10b981"
+              fill="#10b981"
+              fillOpacity={0.3}
+              name="Expenses"
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -227,8 +246,8 @@ const RevenueStats = () => {
               <BarChart data={courseRevenueData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="category" />
-                <YAxis tickFormatter={(value) => `${value / 1000}K`} />
-                <Tooltip formatter={(value) => formatCurrency(value)} />
+                <YAxis tickFormatter={value => `${value / 1000}K`} />
+                <Tooltip formatter={value => formatCurrency(value)} />
                 <Legend />
                 <Bar dataKey="revenue" fill="#2563eb" name="Revenue" />
                 <Bar dataKey="enrollments" fill="#10b981" name="Enrollments" />
@@ -236,7 +255,7 @@ const RevenueStats = () => {
             </ResponsiveContainer>
           </ChartContainer>
         </Grid>
-        
+
         <Grid item xs={12} md={5}>
           <ChartContainer height="400px">
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
@@ -259,7 +278,7 @@ const RevenueStats = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => formatCurrency(value)} />
+                <Tooltip formatter={value => formatCurrency(value)} />
               </PieChart>
             </ResponsiveContainer>
           </ChartContainer>
@@ -279,8 +298,8 @@ const RevenueStats = () => {
             <Chip
               key={index}
               label={`${keyword.term} (${keyword.count})`}
-              color={index < 5 ? "primary" : "default"}
-              variant={index < 3 ? "filled" : "outlined"}
+              color={index < 5 ? 'primary' : 'default'}
+              variant={index < 3 ? 'filled' : 'outlined'}
               size="medium"
             />
           ))}

@@ -1,21 +1,16 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const CourseInstructorView = ({
-  course,
-  onMenuOpen,
-  onToggleVisibility,
-  showControls = true,
-}) => {
+const CourseInstructorView = ({ course, onMenuOpen, onToggleVisibility, showControls = true }) => {
   const navigate = useNavigate();
 
-  const handleImageError = (e) => {
+  const handleImageError = e => {
     e.target.src =
-      "https://plus.unsplash.com/premium_photo-1672329278706-35c6005ffb0a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8";
+      'https://plus.unsplash.com/premium_photo-1672329278706-35c6005ffb0a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8';
     e.target.onerror = null;
   };
 
-  const handleGoToDiscussion = (courseId) => {
+  const handleGoToDiscussion = courseId => {
     navigate(`/discussion-forum/${courseId}`);
   };
 
@@ -24,30 +19,20 @@ const CourseInstructorView = ({
       {/* Image Section */}
       <div className="relative">
         <img
-          src={
-            course.Image?.startsWith("http")
-              ? course.Image
-              : `/images/courses/${course.Image}`
-          }
+          src={course.Image?.startsWith('http') ? course.Image : `/images/courses/${course.Image}`}
           alt={course.Title}
           className="w-full h-48 object-cover rounded-t-lg"
           onError={handleImageError}
         />
         <div className="absolute top-3 left-3">
           <span
-            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${course.IsHidden
-                ? "bg-gray-100 text-gray-800"
-                : "bg-blue-100 text-blue-800"
-              }`}
+            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+              course.IsHidden ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800'
+            }`}
           >
             {course.IsHidden ? (
               <>
-                <svg
-                  className="w-4 h-4 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -59,12 +44,7 @@ const CourseInstructorView = ({
               </>
             ) : (
               <>
-                <svg
-                  className="w-4 h-4 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -79,7 +59,7 @@ const CourseInstructorView = ({
         </div>
         {showControls && (
           <button
-            onClick={(e) => onMenuOpen(e, course)}
+            onClick={e => onMenuOpen(e, course)}
             className="absolute top-3 right-3 p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
           >
             <svg
@@ -101,16 +81,14 @@ const CourseInstructorView = ({
 
       {/* Content Section */}
       <div className="p-5 flex-grow">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-          {course.Title}
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{course.Title}</h3>
         <p className="text-sm text-gray-600 mb-3">{course.Topic}</p>
 
         <div className="flex items-center justify-between mb-4">
           <div className="text-sm text-gray-600">
-            Cập nhật:{" "}
+            Cập nhật:{' '}
             <span className="text-gray-800">
-              {new Date(course.CreateTime).toLocaleDateString("vi-VN")}
+              {new Date(course.CreateTime).toLocaleDateString('vi-VN')}
             </span>
           </div>
           {showControls && (
@@ -118,9 +96,7 @@ const CourseInstructorView = ({
               <input
                 type="checkbox"
                 checked={!course.IsHidden}
-                onChange={() =>
-                  onToggleVisibility(course.CourseID, course.IsHidden)
-                }
+                onChange={() => onToggleVisibility(course.CourseID, course.IsHidden)}
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200"></div>
@@ -132,9 +108,7 @@ const CourseInstructorView = ({
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
             <p className="text-sm text-gray-600">Bài học</p>
-            <p className="text-lg font-semibold text-gray-900">
-              {course.LessonCount || 0}
-            </p>
+            <p className="text-lg font-semibold text-gray-900">{course.LessonCount || 0}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Học viên</p>
@@ -157,12 +131,8 @@ const CourseInstructorView = ({
           </div>
           {!course.IsHidden && course.AvgRating > 0 && (
             <div>
-              <p className="text-sm text-gray-600">
-                Đánh giá ({course.ReviewCount})
-              </p>
-              <p className="text-lg font-semibold text-gray-900">
-                {course.AvgRating.toFixed(1)} ★
-              </p>
+              <p className="text-sm text-gray-600">Đánh giá ({course.ReviewCount})</p>
+              <p className="text-lg font-semibold text-gray-900">{course.AvgRating.toFixed(1)} ★</p>
             </div>
           )}
         </div>
@@ -171,12 +141,7 @@ const CourseInstructorView = ({
           onClick={() => handleGoToDiscussion(course.CourseID)}
           className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors duration-200"
         >
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

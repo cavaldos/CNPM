@@ -1,15 +1,15 @@
-import chatInstance from "./axios.chat.config";
+import chatInstance from './axios.chat.config';
 
 const ChatService = {
-    sendMessage: async (sender, receiver, content) => {
-        const response = await chatInstance.post("/messages/send", { sender, receiver, content });
-        return response;
-    },
-    getConversation: async (sender, receiver) => {
-        const response = await chatInstance.post(`/messages/conversation`, { sender, receiver });
-        return response;
+  sendMessage: async (sender, receiver, content) => {
+    const response = await chatInstance.post('/messages/send', { sender, receiver, content });
+    return response;
+  },
+  getConversation: async (sender, receiver) => {
+    const response = await chatInstance.post(`/messages/conversation`, { sender, receiver });
+    return response;
 
-        /** datademo
+    /** datademo
          * "data": [
         {
             "_id": "67dd97797fa0028afd9193a1",
@@ -58,14 +58,13 @@ const ChatService = {
         }
     ]
          */
-    },
-    deleteMessage: async (messageId, userId) => {
-        const response = await chatInstance.post(`/messages/delete`, {
-            messageId,
-            userId
-
-        });
-        return response;
-    }
-}
+  },
+  deleteMessage: async (messageId, userId) => {
+    const response = await chatInstance.post(`/messages/delete`, {
+      messageId,
+      userId,
+    });
+    return response;
+  },
+};
 export default ChatService;

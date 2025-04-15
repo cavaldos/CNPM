@@ -1,14 +1,11 @@
-
-
 import React, { useState } from 'react';
 
 import axios from 'axios';
 
 const CLOUD_NAME = 'deo6kaqhj';
 
-
 const uploadService = {
-  uploadImage: async (file) => {
+  uploadImage: async file => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'UploadImage'); // Cấu hình upload preset trong Cloudinary
@@ -21,17 +18,16 @@ const uploadService = {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-          }
+          },
         }
       );
       return { url: response.data.secure_url };
-
     } catch (err) {
       // throw new Error('Upload failed: ' + err.message);
       console.error('Upload failed:', err.response ? err.response.data : err.message);
       throw new Error('Upload failed: ' + (err.response ? err.response.data : err.message));
     }
-  }
+  },
 };
 
 export default uploadService;

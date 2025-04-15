@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import { useNavigate, useLocation } from "react-router-dom";
-import AdminRouter from "../../../routes/Admin";
-import Bread from "../../ui/utilize/Breadcrum";
-import { useDispatch } from "react-redux";
-import { clearUser } from "../../../redux/features/authSlice";
+import React, { useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { useNavigate, useLocation } from 'react-router-dom';
+import AdminRouter from '../../../routes/Admin';
+import Bread from '../../ui/utilize/Breadcrum';
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../../../redux/features/authSlice';
 
 const NavbarItem = ({ name, togglemenu, icon, path }) => {
   const navigate = useNavigate();
-  const handleClick = (path) => {
+  const handleClick = path => {
     navigate(path);
   };
   return (
@@ -19,9 +19,7 @@ const NavbarItem = ({ name, togglemenu, icon, path }) => {
     >
       {icon}
       {togglemenu ? (
-        <h3 className="truncate overflow-hidden whitespace-nowrap text-ellipsis">
-          {name}
-        </h3>
+        <h3 className="truncate overflow-hidden whitespace-nowrap text-ellipsis">{name}</h3>
       ) : (
         <h3></h3>
       )}
@@ -32,8 +30,9 @@ const NavbarItem = ({ name, togglemenu, icon, path }) => {
 const Sidebar = ({ togglemenu }) => {
   return (
     <div
-      className={`fixed top-16 left-0 h-[calc(100vh-4rem)] transition-all duration-300 bg-white  ${togglemenu ? "w-64" : "w-20"
-        }`}
+      className={`fixed top-16 left-0 h-[calc(100vh-4rem)] transition-all duration-300 bg-white  ${
+        togglemenu ? 'w-64' : 'w-20'
+      }`}
     >
       <nav className="p-5 overflow-y-auto h-full">
         {AdminRouter.map((item, index) => (
@@ -58,15 +57,12 @@ const AdminAccount = () => {
   const toggleDropdown = () => setIsOpen(!isOpen);
   const handleLogout = () => {
     dispatch(clearUser());
-    navigate("/");
+    navigate('/');
   };
 
   return (
     <div className="relative">
-      <div
-        className="flex items-center space-x-4 cursor-pointer"
-        onClick={toggleDropdown}
-      >
+      <div className="flex items-center space-x-4 cursor-pointer" onClick={toggleDropdown}>
         <a href="#" className="text-gray-600">
           English
         </a>
@@ -96,11 +92,7 @@ const Header = ({ togglemenu, toggleSidebar }) => {
     <div className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white shadow z-50 h-16">
       <div className="flex items-center">
         <button className="text-gray-700 mr-4" onClick={toggleSidebar}>
-          {togglemenu ? (
-            <MenuIcon className="text-2xl" />
-          ) : (
-            <MenuOpenIcon className="text-2xl" />
-          )}
+          {togglemenu ? <MenuIcon className="text-2xl" /> : <MenuOpenIcon className="text-2xl" />}
         </button>
         <div className="flex">
           <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -124,8 +116,7 @@ const AdminLayout = ({ children }) => {
       <div className="flex flex-1 pt-16">
         <Sidebar togglemenu={togglemenu} />
         <main
-          className={`flex-1 p-6 transition-all duration-300 ${togglemenu ? "ml-64" : "ml-20"
-            }`}
+          className={`flex-1 p-6 transition-all duration-300 ${togglemenu ? 'ml-64' : 'ml-20'}`}
         >
           {children}
         </main>

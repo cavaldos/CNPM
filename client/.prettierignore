@@ -1,0 +1,20 @@
+# Các thư mục build và cache
+dist
+build
+coverage
+node_modules
+.vite
+__mocks__
+__tests__
+e2e
+
+# Các file cấu hình
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Các file khác
+.DS_Store
+.env
+.env.*
+!.env.example

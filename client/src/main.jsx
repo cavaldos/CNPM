@@ -1,9 +1,9 @@
-import React, { lazy, Suspense } from "react";
-import ReactDOM from "react-dom/client";
+import React, { lazy, Suspense } from 'react';
+import ReactDOM from 'react-dom/client';
 
-import App from "~/App.jsx";
-import "~/index.css";
-import Provider from "./redux/provider.jsx";
+import App from '~/App.jsx';
+import '~/index.css';
+import Provider from './redux/provider.jsx';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <h1 className="mx-auto">
-          Something went wrong{" :("} {this.state.hasError}
+          Something went wrong{' :('} {this.state.hasError}
         </h1>
       );
     }
@@ -31,7 +31,7 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider>
       <ErrorBoundary>

@@ -1,5 +1,5 @@
-import React from "react";
-import CourseDetail from "../../components/ui/course/CourseDetail";
+import React from 'react';
+import CourseDetail from '../../components/ui/course/CourseDetail';
 
 const CourseDetailPage = () => {
   return (

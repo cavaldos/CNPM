@@ -1,18 +1,18 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Card, Typography, Box, Grid } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import SchoolIcon from "@mui/icons-material/School";
-import MessageIcon from "@mui/icons-material/Message";
-import PersonIcon from "@mui/icons-material/Person";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Card, Typography, Box, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SchoolIcon from '@mui/icons-material/School';
+import MessageIcon from '@mui/icons-material/Message';
+import PersonIcon from '@mui/icons-material/Person';
 
 const InstructorPage = () => {
   const navigate = useNavigate();
 
   // Các khóa học gần đây (giả lập dữ liệu)
   const recentCourses = [
-    { id: 1, title: "Introduction to Web Development", students: 120, status: "Published" },
-    { id: 2, title: "Advanced JavaScript Programming", students: 85, status: "Draft" }
+    { id: 1, title: 'Introduction to Web Development', students: 120, status: 'Published' },
+    { id: 2, title: 'Advanced JavaScript Programming', students: 85, status: 'Draft' },
   ];
 
   return (
@@ -26,7 +26,7 @@ const InstructorPage = () => {
         <Grid item xs={12} md={3}>
           <Card
             className="p-6 h-full cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/create-course")}
+            onClick={() => navigate('/create-course')}
           >
             <div className="flex flex-col items-center text-center h-full justify-center space-y-4">
               <div className="bg-blue-100 p-4 rounded-full">
@@ -45,7 +45,7 @@ const InstructorPage = () => {
         <Grid item xs={12} md={3}>
           <Card
             className="p-6 h-full cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/my-courses")}
+            onClick={() => navigate('/my-courses')}
           >
             <div className="flex flex-col items-center text-center h-full justify-center space-y-4">
               <div className="bg-green-100 p-4 rounded-full">
@@ -64,7 +64,7 @@ const InstructorPage = () => {
         <Grid item xs={12} md={3}>
           <Card
             className="p-6 h-full cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/messages")}
+            onClick={() => navigate('/messages')}
           >
             <div className="flex flex-col items-center text-center h-full justify-center space-y-4">
               <div className="bg-purple-100 p-4 rounded-full">
@@ -83,7 +83,7 @@ const InstructorPage = () => {
         <Grid item xs={12} md={3}>
           <Card
             className="p-6 h-full cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate('/profile')}
           >
             <div className="flex flex-col items-center text-center h-full justify-center space-y-4">
               <div className="bg-amber-100 p-4 rounded-full">
@@ -106,11 +106,7 @@ const InstructorPage = () => {
           <Typography variant="h5" component="h2" className="text-gray-800">
             Khóa học gần đây
           </Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => navigate("/my-courses")}
-          >
+          <Button variant="outlined" color="primary" onClick={() => navigate('/my-courses')}>
             Xem tất cả
           </Button>
         </div>
@@ -134,7 +130,7 @@ const InstructorPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {recentCourses.map((course) => (
+              {recentCourses.map(course => (
                 <tr key={course.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{course.title}</div>
@@ -143,8 +139,10 @@ const InstructorPage = () => {
                     <div className="text-sm text-gray-500">{course.students}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${course.status === "Published" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${course.status === 'Published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}
+                    >
                       {course.status}
                     </span>
                   </td>
@@ -169,20 +167,32 @@ const InstructorPage = () => {
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Card className="p-4">
-              <Typography variant="h6" className="text-gray-600 mb-1">Tổng số học viên</Typography>
-              <Typography variant="h4" className="font-bold">205</Typography>
+              <Typography variant="h6" className="text-gray-600 mb-1">
+                Tổng số học viên
+              </Typography>
+              <Typography variant="h4" className="font-bold">
+                205
+              </Typography>
             </Card>
           </Grid>
           <Grid item xs={12} md={4}>
             <Card className="p-4">
-              <Typography variant="h6" className="text-gray-600 mb-1">Xếp hạng trung bình</Typography>
-              <Typography variant="h4" className="font-bold">4.8/5.0</Typography>
+              <Typography variant="h6" className="text-gray-600 mb-1">
+                Xếp hạng trung bình
+              </Typography>
+              <Typography variant="h4" className="font-bold">
+                4.8/5.0
+              </Typography>
             </Card>
           </Grid>
           <Grid item xs={12} md={4}>
             <Card className="p-4">
-              <Typography variant="h6" className="text-gray-600 mb-1">Tin nhắn chưa đọc</Typography>
-              <Typography variant="h4" className="font-bold">12</Typography>
+              <Typography variant="h6" className="text-gray-600 mb-1">
+                Tin nhắn chưa đọc
+              </Typography>
+              <Typography variant="h4" className="font-bold">
+                12
+              </Typography>
             </Card>
           </Grid>
         </Grid>

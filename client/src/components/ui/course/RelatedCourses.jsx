@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import CourseCard from "./CourseCard";
-import PublicService from "../../../services/public.service";
-import useLanguageSwitcher from "../../../hooks/LanguageSwitcher";
+import React, { useState, useEffect, useRef } from 'react';
+import CourseCard from './CourseCard';
+import PublicService from '../../../services/public.service';
+import useLanguageSwitcher from '../../../hooks/LanguageSwitcher';
 
 const RelatedCourses = ({ currentCourseId }) => {
   const [relatedCourses, setRelatedCourses] = useState([]);
@@ -10,10 +10,10 @@ const RelatedCourses = ({ currentCourseId }) => {
   const retryTimerRef = useRef(null);
 
   // Language translations
-  const relatedCoursesText = useLanguageSwitcher("Related Courses");
-  const moreCoursesText = useLanguageSwitcher("More courses you might like");
-  const noRelatedCoursesText = useLanguageSwitcher("No related courses found");
-  const retryText = useLanguageSwitcher("Retry");
+  const relatedCoursesText = useLanguageSwitcher('Related Courses');
+  const moreCoursesText = useLanguageSwitcher('More courses you might like');
+  const noRelatedCoursesText = useLanguageSwitcher('No related courses found');
+  const retryText = useLanguageSwitcher('Retry');
 
   const fetchRelatedCourses = async () => {
     if (!currentCourseId) return;
@@ -30,12 +30,12 @@ const RelatedCourses = ({ currentCourseId }) => {
           .slice(0, 4);
         setRelatedCourses(filtered);
       } else {
-        throw new Error("Invalid response data");
+        throw new Error('Invalid response data');
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || error.message || "Unknown error";
+      const errorMsg = error.response?.data?.message || error.message || 'Unknown error';
       setError(errorMsg);
-      console.error("Error fetching related courses:", error);
+      console.error('Error fetching related courses:', error);
 
       // Auto-retry after 50ms like in HomeCourse
       retryTimerRef.current = setTimeout(() => {
@@ -93,7 +93,7 @@ const RelatedCourses = ({ currentCourseId }) => {
       ) : relatedCourses.length > 0 ? (
         <div className="overflow-x-auto pb-4">
           <div className="flex space-x-6 min-w-max">
-            {relatedCourses.map((course) => (
+            {relatedCourses.map(course => (
               <div key={course.CourseID} className="w-72 flex-shrink-0">
                 <CourseCard course={course} />
               </div>

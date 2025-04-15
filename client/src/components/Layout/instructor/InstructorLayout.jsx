@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import Sidebar from './SideBar'
-import Header from './Header'
+import React, { useState } from 'react';
+import Sidebar from './SideBar';
+import Header from './Header';
 
 const DashboardLayout = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -16,6 +16,6 @@ const DashboardLayout = ({ children }) => {
         </main>
       </div>
     </div>
-  )
-}
-export default DashboardLayout
+  );
+};
+export default DashboardLayout;

@@ -1,12 +1,12 @@
-import React from "react";
-import HomeCouse from "../../components/ui/course/HomeCourse";
+import React from 'react';
+import HomeCouse from '../../components/ui/course/HomeCourse';
 
 const StudentPage = () => {
-    return (
-        <>
-            <HomeCouse />
-        </>
-    );
+  return (
+    <>
+      <HomeCouse />
+    </>
+  );
 };
 
 export default StudentPage;

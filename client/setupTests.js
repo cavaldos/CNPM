@@ -5,20 +5,19 @@
 import '@testing-library/jest-dom';
 import { jest } from '@jest/globals';
 
-
 // Setup global mocks if needed
 global.matchMedia = jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),    // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+  matches: false,
+  media: query,
+  onchange: null,
+  addListener: jest.fn(), // deprecated
+  removeListener: jest.fn(), // deprecated
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  dispatchEvent: jest.fn(),
 }));
 
 // Reset all mocks after each test
 afterEach(() => {
-    jest.clearAllMocks();
+  jest.clearAllMocks();
 });
