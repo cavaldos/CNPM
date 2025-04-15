@@ -68,6 +68,18 @@ import {
   learnProgressRoutes
 } from './learnProgress';
 
+// Statistics module
+import {
+  StatisticsService,
+  StatisticsController,
+  statisticsRoutes,
+  StatisticsRepository,
+  RevenueStatisticsDTO,
+  KeywordTrendDTO,
+  MonthlyRevenueDTO,
+  CourseRevenueDTO
+} from './statistics';
+
 // Export all modules
 export {
   // Course module
@@ -122,5 +134,15 @@ export {
   LearnProgressFactory,
   LearnProgressRepository,
   LearnProgressController,
-  learnProgressRoutes
+  learnProgressRoutes,
+
+  // Statistics module
+  StatisticsService,
+  StatisticsController,
+  statisticsRoutes,
+  StatisticsRepository,
+  RevenueStatisticsDTO,
+  KeywordTrendDTO,
+  MonthlyRevenueDTO,
+  CourseRevenueDTO
 };
