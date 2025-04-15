@@ -6,7 +6,16 @@ import { AIServiceHandlers } from '../types/ai/AIService';
 import GroqAI from '../utils/groq';
 
 // Load proto file
-const PROTO_PATH = path.resolve(__dirname, '../../../proto/ai.proto');
+// Try multiple possible locations for the proto file
+let PROTO_PATH = '/usr/src/proto/ai.proto';
+
+// Fallback paths if the main one doesn't exist
+if (!require('fs').existsSync(PROTO_PATH)) {
+  const relativePath = path.resolve(__dirname, '../../../proto/ai.proto');
+  if (require('fs').existsSync(relativePath)) {
+    PROTO_PATH = relativePath;
+  }
+}
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -25,7 +34,7 @@ const aiService: AIServiceHandlers = {
   ChatWithGroq: async (call, callback) => {
     try {
       const { message } = call.request;
-      
+
       if (!message) {
         callback({
           code: grpc.status.INVALID_ARGUMENT,
@@ -35,7 +44,7 @@ const aiService: AIServiceHandlers = {
       }
 
       const response = await GroqAI(message);
-      
+
       callback(null, {
         success: true,
         message: 'Chat successful',
@@ -54,9 +63,9 @@ const aiService: AIServiceHandlers = {
 // Create and start gRPC server
 export function startGrpcServer(port: number = 50051): grpc.Server {
   const server = new grpc.Server();
-  
+
   server.addService(protoDescriptor.ai.AIService.service, aiService);
-  
+
   server.bindAsync(
     `0.0.0.0:${port}`,
     grpc.ServerCredentials.createInsecure(),
@@ -65,10 +74,10 @@ export function startGrpcServer(port: number = 50051): grpc.Server {
         console.error('Failed to bind gRPC server:', err);
         return;
       }
-      
+
       console.log(`\n 🚀 ➜ gRPC server running at 0.0.0.0:${boundPort}`);
     }
   );
-  
+
   return server;
 }

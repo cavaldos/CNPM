@@ -1,6 +1,6 @@
 /**
  * AI Module gRPC Client
- * 
+ *
  * This file defines the gRPC client for the AI module to communicate with the chatserver.
  */
 
@@ -14,7 +14,16 @@ import { AIServiceClient } from './types/ai/AIService';
 dotenv.config();
 
 // Load proto file
-const PROTO_PATH = path.resolve(__dirname, '../../../../../../proto/ai.proto');
+// Try multiple possible locations for the proto file
+let PROTO_PATH = '/usr/src/proto/ai.proto';
+
+// Fallback paths if the main one doesn't exist
+if (!require('fs').existsSync(PROTO_PATH)) {
+  const relativePath = path.resolve(__dirname, '../../../../../../proto/ai.proto');
+  if (require('fs').existsSync(relativePath)) {
+    PROTO_PATH = relativePath;
+  }
+}
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,

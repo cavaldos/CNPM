@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-COPY package.json  ./
+COPY chatserver/package.json  ./
 
 # Cài đặt TypeScript globally trước
 RUN yarn global add typescript
@@ -10,10 +10,14 @@ RUN yarn global add typescript
 # Cài đặt các phụ thuộc
 RUN yarn install --frozen-lockfile
 
-COPY ../proto ../proto
+# Create the directory structure for proto files
+RUN mkdir -p /usr/src/proto
 
-COPY . .
-COPY .env ./
+# Copy proto files to the correct location
+COPY proto/ai.proto /usr/src/proto/ai.proto
+
+COPY chatserver/ .
+COPY chatserver/.env ./
 
 RUN yarn build
 

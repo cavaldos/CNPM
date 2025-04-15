@@ -1,16 +1,19 @@
 FROM node:20-alpine
 
 WORKDIR /usr/src/app
-COPY package.json ./
+COPY server/package.json ./
 
 RUN yarn global add typescript
 RUN yarn install --frozen-lockfile
 
-# Copy proto files
-COPY ../proto ../proto
+# Create the directory structure for proto files
+RUN mkdir -p /usr/src/proto
 
-COPY . .
-COPY .env ./
+# Copy proto files to the correct location
+COPY proto/ai.proto /usr/src/proto/ai.proto
+
+COPY server/ .
+COPY server/.env ./
 
 RUN yarn build
 
