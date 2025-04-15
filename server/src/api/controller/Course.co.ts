@@ -90,6 +90,25 @@ const CourseController = {
         }
     },
 
+    getAllStudentByCourseID: async (req: Request, res: Response) => {
+        try {
+            const { courseID } = req.body;
+            const result = await CourseRepository.getAllStudentByCourseID(courseID);
+            res.status(200).json({
+                success: true,
+                message: "Student retrieved successfully",
+                data: result
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to get all students",
+                error: error
+            });
+        }
+    },
+
     createCourse: async (req: Request, res: Response) => {
         try {
             const { title, topic, description, image, instructorID } = req.body;

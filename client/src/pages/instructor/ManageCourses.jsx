@@ -19,6 +19,7 @@ import {
   DialogActions,
   CircularProgress,
 } from '@mui/material';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -129,6 +130,9 @@ const ManageCourses = () => {
     setDeleteDialogOpen(true);
   };
 
+  const handleGetCourseReport = () => {
+    navigate(`/courses/${selectedCourse.CourseID}/report`);
+  };
   // Function to fetch courses from API
   const fetchCourses = async () => {
     try {
@@ -311,6 +315,9 @@ const ManageCourses = () => {
           }}
         >
           <ChatBubbleIcon fontSize="small" className="mr-2" /> Diễn đàn thảo luận
+        </MenuItem>
+        <MenuItem onClick={handleGetCourseReport}>
+          <AssessmentIcon fontSize="small" className="mr-2" /> Xem báo cáo
         </MenuItem>
         <MenuItem onClick={handleDeleteClick} className="text-red-600">
           <DeleteIcon fontSize="small" className="mr-2" /> Xóa

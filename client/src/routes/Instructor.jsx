@@ -10,15 +10,16 @@ import {
 } from 'lucide-react';
 
 // Sử dụng đường dẫn tương đối thay vì alias (~)
-const InstructorLayout = lazy(() => import('../components/Layout/instructor/InstructorLayout'));
-const HomeInstructor = lazy(() => import('../pages/instructor/index'));
-const CreateCourse = lazy(() => import('../pages/instructor/CreateCourse'));
-const ManageCourses = lazy(() => import('../pages/instructor/ManageCourses'));
-const UpdateCourse = lazy(() => import('../pages/instructor/UpdateCourse'));
-const Messages = lazy(() => import('../pages/instructor/Messages'));
-const Profile = lazy(() => import('../pages/instructor/Profile'));
-const AddLessons = lazy(() => import('../pages/instructor/AddLessons'));
-const DiscussionForum = lazy(() => import('../pages/instructor/DiscussionForum'));
+const InstructorLayout = lazy(() => import("../components/Layout/instructor/InstructorLayout"));
+const HomeInstructor = lazy(() => import("../pages/instructor/index"));
+const CreateCourse = lazy(() => import("../pages/instructor/CreateCourse"));
+const ManageCourses = lazy(() => import("../pages/instructor/ManageCourses"));
+const UpdateCourse = lazy(() => import("../pages/instructor/UpdateCourse"));
+const Messages = lazy(() => import("../pages/instructor/Messages"));
+const Profile = lazy(() => import("../pages/instructor/Profile"));
+const AddLessons = lazy(() => import("../pages/instructor/AddLessons"));
+const DiscussionForum = lazy(() => import("../pages/instructor/DiscussionForum"));
+const CourseReport = lazy(() => import("../pages/instructor/CourseReport"));
 
 const InstructorRouter = [
   {
@@ -82,6 +83,13 @@ const InstructorRouter = [
     path: '/discussion-forum/:courseId',
     key: '',
     component: DiscussionForum,
+    Layout: InstructorLayout,
+  },
+  {
+    name: "Course Report",
+    icon: EditIcon,
+    path: "/courses/:courseId/report",
+    component: CourseReport,
     Layout: InstructorLayout,
   },
 ];
