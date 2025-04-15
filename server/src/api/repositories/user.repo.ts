@@ -34,11 +34,10 @@ const UserRepository = {
 
     async getAllUsers() {
         const query = `
-            SELECT u.*, 
-                   (SELECT COUNT(*) FROM Course c WHERE c.InstructorID = u.UserID) as CoursesCount,
-                   (SELECT COUNT(*) FROM Invoice i WHERE i.StudentID = u.UserID) as InvoicesCount
+            SELECT u.*,
+            (SELECT COUNT(*) FROM Course c WHERE c.InstructorID = u.UserID) as CoursesCount
             FROM [User] u
-            ORDER BY u.CreatedTime DESC
+            ORDER BY u.CreatedTime DESC 
         `;
         return await DataConnect.execute(query);
     },

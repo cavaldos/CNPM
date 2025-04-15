@@ -8,7 +8,7 @@ const PublicRouter = Router();
 PublicRouter.post("/user/create", UserController.createUser);
 PublicRouter.post("/user/update", UserController.updateUser);
 PublicRouter.post("/user/delete", UserController.deleteUser);
-PublicRouter.post("/user/getAll", UserController.getAllUsers);
+PublicRouter.post("/user/get-all", UserController.getAllUsers);
 PublicRouter.post("/user/get", UserController.getUserByID);
 
 // Course routes

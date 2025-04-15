@@ -18,7 +18,7 @@ const PublicService = {
         },
 
         getAllUsers: async () => {
-            const response = await axiosinstance.post("/public/user/getAll");
+            const response = await axiosinstance.post("/public/user/get-all");
             return response;
         },
 
