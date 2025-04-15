@@ -36,6 +36,7 @@
     "@elastic/elasticsearch": "^8.17.1",
     "@grpc/grpc-js": "^1.10.1",
     "@grpc/proto-loader": "^0.7.10",
+    "@types/redis": "^4.0.11",
     "ansi-colors": "^4.1.3",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
@@ -56,7 +57,8 @@
     "mssql": "^11.0.1",
     "nodemailer": "^6.10.0",
     "openai": "^4.86.2",
-    "portfinder": "^1.0.32"
+    "portfinder": "^1.0.32",
+    "redis": "^4.7.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",

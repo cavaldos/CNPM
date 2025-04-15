@@ -46,6 +46,8 @@ const CourseController = {
             const pageSize = parseInt(req.body.pageSize as string) || 10;
             // const offset = (page - 1) * pageSize;
 
+            // Note: The caching is now handled by the middleware
+            // This is just the original controller logic
             const result = await CourseRepository.getAllCoursesPagination(
                 page,
                 pageSize

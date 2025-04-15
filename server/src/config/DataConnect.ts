@@ -31,7 +31,7 @@ class DataConnect {
       }
       if (!this.pool.connected) {
         await this.pool.connect();
-        console.log('Connected to SQL Server 🎉');
+        console.log('  🔄 ➜  Connected to SQL Server 🎉');
       }
     } catch (error: any) {
       this.pool = null;

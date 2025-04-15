@@ -4,9 +4,11 @@ import cors from 'cors';
 import morgan from 'morgan';
 import routers from "./routes/index.route";
 import DataConnect from './config/DataConnect';
+import RedisClient from './config/RedisClient';
 
-// Kết nối MongoDB
+// Connect to databases
 DataConnect.open();
+RedisClient.connect();
 
 const app = express();
 
