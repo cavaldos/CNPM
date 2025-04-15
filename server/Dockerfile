@@ -7,7 +7,7 @@ RUN yarn global add typescript
 RUN yarn install --frozen-lockfile
 
 # Copy proto files
-COPY ../proto ./proto
+COPY ../proto ../proto
 
 COPY . .
 COPY .env ./

@@ -69,7 +69,7 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (_req: Request, res: Response) => {
   try {
     const users = await UserRepo.getAllUsers();
 
