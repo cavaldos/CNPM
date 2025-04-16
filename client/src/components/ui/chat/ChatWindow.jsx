@@ -79,11 +79,10 @@ const ChatWindow = ({ contact, messages, onSendMessage, currentUserId }) => {
 
               {/* Nội dung tin nhắn - style khác nhau dựa trên người gửi */}
               <div
-                className={`max-w-[70%] rounded-lg p-3 ${
-                  isCurrentUser
+                className={`max-w-[70%] rounded-lg p-3 ${isCurrentUser
                     ? 'bg-blue-600 text-white rounded-br-none ml-auto'
                     : 'bg-gray-200 text-gray-800 rounded-bl-none'
-                }`}
+                  }`}
               >
                 <p>{message.content || message.text}</p>
                 <div
