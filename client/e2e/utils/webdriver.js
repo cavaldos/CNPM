@@ -8,10 +8,12 @@ import chrome from 'selenium-webdriver/chrome.js';
 export async function createDriver() {
   // Set up Chrome options
   const options = new chrome.Options();
-  
-  // Uncomment the line below to run in headless mode (no browser UI)
-  // options.addArguments('--headless');
-  
+
+  // Run in headless mode to avoid display issues
+  options.addArguments('--headless=new');
+  options.addArguments('--no-sandbox');
+  options.addArguments('--disable-dev-shm-usage');
+
   // Create and return the WebDriver
   return new Builder()
     .forBrowser(Browser.CHROME)
@@ -92,10 +94,10 @@ export async function loginWithGoogle(driver, email, password) {
   // This is a simplified example - actual implementation would depend on your app's login flow
   // Navigate to login page
   await driver.get('http://localhost:5173/login');
-  
+
   // Click the Google login button
   await waitAndClick(driver, By.css('button[aria-label="Sign in with Google"]'));
-  
+
   // Handle Google login popup
   // Note: This is complex and may require switching to a popup window
   // For testing purposes, you might want to use a test account or mock authentication
