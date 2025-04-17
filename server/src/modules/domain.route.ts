@@ -13,6 +13,7 @@ import {
     learnProgressRoutes,
     statisticsRoutes
 } from '.';
+import autoCompleteRoute from './autoComplete/autoComplete.route';
 
 const DddRouter = Router();
 
@@ -23,5 +24,6 @@ DddRouter.use('/learning', learningRoutes);
 DddRouter.use('/enrollment', enrollmentRoutes);
 DddRouter.use('/learn-progress', learnProgressRoutes);
 DddRouter.use('/statistics', statisticsRoutes);
+DddRouter.use('/autocomplete', autoCompleteRoute);
 
 export default DddRouter;
