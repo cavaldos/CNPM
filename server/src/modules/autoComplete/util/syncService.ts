@@ -1,4 +1,4 @@
-import { Client} from 'cassandra-driver';
+import { Client } from 'cassandra-driver';
 import { Collection, ObjectId } from 'mongodb';
 import cassandra from '../../../config/Cassandra';
 import mongodb from '../../../config/MongoDB';
@@ -26,10 +26,16 @@ const syncDataToMongoDB = async (): Promise<void> => {
     try {
         console.log('Starting synchronization from Cassandra to MongoDB...');
 
+        // Check if Cassandra client is initialized
+        if (!cassandra.client) {
+            console.error('Cassandra client is not initialized. Make sure to call initCassandra() before syncing data.');
+            return;
+        }
+
         // Get unsynced searches from Cassandra
         const query: string = 'SELECT id, search_query, timestamp FROM search_history WHERE synced_to_mongo = ? ALLOW FILTERING';
         const params: [boolean] = [false];
-        const result = await (cassandra.client as Client).execute(query, params, { prepare: true });
+        const result = await cassandra.client.execute(query, params, { prepare: true });
 
         if (result.rows.length === 0) {
             console.log('No new searches to synchronize');
@@ -59,7 +65,7 @@ const syncDataToMongoDB = async (): Promise<void> => {
             // Update synced status in Cassandra
             const updateQuery: string = 'UPDATE search_history SET synced_to_mongo = ? WHERE id = ?';
             const updateParams: [boolean, string] = [true, row.id];
-            await (cassandra.client as Client).execute(updateQuery, updateParams, { prepare: true });
+            await cassandra.client.execute(updateQuery, updateParams, { prepare: true });
 
             console.log(`Synchronized search "${row.search_query}" to MongoDB`);
         }
@@ -95,16 +101,28 @@ const syncDataToMongoDB = async (): Promise<void> => {
 };
 
 // Interface for sync service control
-interface SyncServiceControl {
+export interface SyncServiceControl {
     stop: () => void;
 }
 
 // Start periodic synchronization
-const startSyncService = (intervalMs: number = 5000): SyncServiceControl => {
+const startSyncService = async (intervalMs: number = 5000): Promise<SyncServiceControl> => {
     console.log(`Starting synchronization service with interval of ${intervalMs}ms`);
 
+    // Ensure Cassandra is initialized before starting sync
+    if (!cassandra.client) {
+        try {
+            console.log('Initializing Cassandra connection before starting sync service...');
+            await cassandra.initCassandra();
+            console.log('Cassandra initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize Cassandra:', error);
+            throw new Error('Cannot start sync service: Cassandra initialization failed');
+        }
+    }
+
     // Run initial sync
-    syncDataToMongoDB();
+    await syncDataToMongoDB();
 
     // Set up interval for periodic sync
     const intervalId: NodeJS.Timeout = setInterval(syncDataToMongoDB, intervalMs);
