@@ -6,3 +6,5 @@ docker-compose.test.yml
 
 .vscode
 /.vscode
+setup_env.sh
+production_env.sh

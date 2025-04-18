@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import axios from 'axios';
 
-const CLOUD_NAME = 'deo6kaqhj';
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'deo6kaqhj'; // Tên Cloudinary của bạn
 
 const uploadService = {
   uploadImage: async file => {
