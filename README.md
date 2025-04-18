@@ -41,124 +41,120 @@ Coursera Clone is an online learning platform designed with a microservices arch
 4. Server processes API requests and interacts with ChatServer when needed
 5. ChatServer provides real-time chat services and AI integration
 
-## Detailed Component Documentation
+## Development View
 
-### 1. Client
+The project follows a modular microservices architecture with clear separation of concerns. Below is the directory structure showing the main components and their organization:
 
-Frontend application built with React, Vite, and Redux Toolkit, providing the user interface for the online learning platform.
-
-**Key Features:**
-- Multi-role user system (Admin, Instructor, Student, Guest)
-- Course management and learning platform
-- Real-time chat functionality
-- Discussion forums for courses
-- Admin dashboard with user management and statistics
-
-**Detailed Documentation:** [client/README.md](client/README.md)
-
-### 2. Server
-
-Main backend API built with Node.js, Express, and TypeScript, following Domain-Driven Design (DDD) architecture.
-
-**Key Features:**
-- User authentication and authorization
-- Course and lesson management
-- Enrollment and learning progress tracking
-- AI integration and statistics
-- Redis caching for improved performance
-
-**Detailed Documentation:** [server/README.md](server/README.md)
-
-### 3. ChatServer
-
-Specialized service for real-time communication and AI integration, using Socket.IO, gRPC, and GraphQL.
-
-**Key Features:**
-- Real-time chat via Socket.IO
-- AI integration with Groq API
-- gRPC API for AI services
-- GraphQL API for data queries
-
-**Detailed Documentation:** [chatserver/LEARN.md](chatserver/LEARN.md)
-
-### 4. Kubernetes (k8s)
-
-Configuration and scripts to deploy the application on a Kubernetes cluster with 1 master node and 3 worker nodes.
-
-**Key Features:**
-- Cluster installation and configuration scripts
-- Deployment files for services
-- Ingress configuration for traffic routing
-- Monitoring tools (Prometheus, K8s Dashboard)
-
-**Detailed Documentation:** [k8s/README.md](k8s/README.md)
-
-### 5. Load Balancer
-
-Load balancing service built with Rust and Axum framework, distributing requests to server instances.
-
-**Key Features:**
-- Load balancing between backend servers
-- Request routing to available servers
-- Error and timeout handling
-- Debug mode support
-
-### 6. Nginx
-
-Nginx configuration for reverse proxy and additional load balancing.
-
-**Key Features:**
-- Load balancing between backend servers
-- Reverse proxy configuration
-- Server health checks
-- Status monitoring
-
-### 7. Proto
-
-Directory containing Protocol Buffers definitions for gRPC communication between services.
-
-**Key Features:**
-- AI service and message definitions
-- Support for communication between Server and ChatServer
-
-## Deployment
-
-The system can be deployed in two ways:
-
-### 1. Docker Compose
-
-```bash
-# Deploy the entire system
-docker-compose up -d
-
-# Deploy a specific service
-docker-compose up -d client
+```
+.
+├── chatserver               # Real-time chat and AI service
+│   ├── proto                # Protocol definitions
+│   └── src                  # Source code
+│       ├── api              # API endpoints
+│       ├── config           # Configuration files
+│       ├── graphql          # GraphQL schema and resolvers
+│       ├── grpc             # gRPC service implementations
+│       ├── model            # Data models
+│       ├── services         # Business logic services
+│       └── utils            # Utility functions
+├── client                   # Frontend application
+│   ├── __mocks__            # Test mocks
+│   ├── __tests__            # Unit tests
+│   ├── e2e                  # End-to-end tests
+│   ├── public               # Static assets
+│   └── src                  # Source code
+│       ├── components       # React components
+│       ├── hooks            # Custom React hooks
+│       ├── pages            # Page components
+│       ├── redux            # State management
+│       ├── routes           # Routing configuration
+│       └── services         # API service clients
+├── gateway                  # API Gateway service
+│   ├── __test__             # Tests
+│   └── src                  # Source code
+├── k8s                      # Kubernetes configuration
+│   └── deployments          # Deployment manifests
+├── load_balancer            # Rust-based load balancer
+│   └── src                  # Source code
+│       ├── config           # Configuration
+│       ├── handlers         # Request handlers
+│       └── load             # Load balancing algorithms
+├── nginx                    # Nginx configuration
+│   ├── conf.d               # Configuration files
+│   └── logs                 # Log files
+├── proto                    # Shared Protocol Buffers
+└── server                   # Main backend API
+    ├── __test__             # Tests
+    ├── docs                 # Documentation
+    ├── src                  # Source code
+    │   ├── api              # API endpoints
+    │   ├── config           # Configuration
+    │   ├── middleware       # Express middleware
+    │   ├── modules          # Domain modules (DDD)
+    │   ├── routes           # Route definitions
+    │   └── utils            # Utility functions
+    └── types                # TypeScript type definitions
 ```
 
-### 2. Kubernetes
+### Key Development Aspects
 
+1. **Setup database**:
 ```bash
-# Set up the cluster
-cd k8s
-./setup-cluster.sh
+docker-compose -f docker-compose-database.yml up -d --build
+``` 
 
-# Deploy the application
-./deploy-app.sh
+2. **Setup Mornitoring**:
+```bash
+docker-compose -f docker-compose-grafana.yml up -d --build
+``` 
+
 ```
-
-## Technologies Used
-
-- **Frontend**: React, Redux Toolkit, TailwindCSS, Material-UI
-- **Backend**: Node.js, Express, TypeScript, Domain-Driven Design
-- **Database**: Microsoft SQL Server, MongoDB
-- **Caching**: Redis
-- **Search**: ElasticSearch
-- **API Communication**: REST, GraphQL, gRPC
-- **Real-time**: Socket.IO
-- **Load Balancing**: Rust/Axum, Nginx
-- **Containerization**: Docker, Kubernetes
-- **AI Integration**: Groq API
-
-## License
-
-This project is distributed under the MIT license. See the `LICENSE` file for more details.
+.
+├── chatserver               # Real-time chat and AI service
+│   ├── proto                # Protocol definitions
+│   └── src                  # Source code
+│       ├── api              # API endpoints
+│       ├── config           # Configuration files
+│       ├── graphql          # GraphQL schema and resolvers
+│       ├── grpc             # gRPC service implementations
+│       ├── model            # Data models
+│       ├── services         # Business logic services
+│       └── utils            # Utility functions
+├── client                   # Frontend application
+│   ├── __mocks__            # Test mocks
+│   ├── __tests__            # Unit tests
+│   ├── e2e                  # End-to-end tests
+│   ├── public               # Static assets
+│   └── src                  # Source code
+│       ├── components       # React components
+│       ├── hooks            # Custom React hooks
+│       ├── pages            # Page components
+│       ├── redux            # State management
+│       ├── routes           # Routing configuration
+│       └── services         # API service clients
+├── gateway                  # API Gateway service
+│   ├── __test__             # Tests
+│   └── src                  # Source code
+├── k8s                      # Kubernetes configuration
+│   └── deployments          # Deployment manifests
+├── load_balancer            # Rust-based load balancer
+│   └── src                  # Source code
+│       ├── config           # Configuration
+│       ├── handlers         # Request handlers
+│       └── load             # Load balancing algorithms
+├── nginx                    # Nginx configuration
+│   ├── conf.d               # Configuration files
+│   └── logs                 # Log files
+├── proto                    # Shared Protocol Buffers
+└── server                   # Main backend API
+    ├── __test__             # Tests
+    ├── docs                 # Documentation
+    ├── src                  # Source code
+    │   ├── api              # API endpoints
+    │   ├── config           # Configuration
+    │   ├── middleware       # Express middleware
+    │   ├── modules          # Domain modules (DDD)
+    │   ├── routes           # Route definitions
+    │   └── utils            # Utility functions
+    └── types                # TypeScript type definitions
+```
