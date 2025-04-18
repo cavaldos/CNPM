@@ -10,19 +10,22 @@ CREATE TABLE [Lessons] (
     [LessonType] nvarchar(255),
     [Ordinal] integer,
     [CourseID] integer
-) GO
+)
+GO
 
 CREATE TABLE [LessonVideo] (
     [LessonVideoID] integer PRIMARY KEY IDENTITY(1, 1),
     [URL] varchar(255),
     [LessonID] integer UNIQUE
-) GO
+) 
+GO
 
 CREATE TABLE [LessonDocument] (
     [LessonDocumentID] integer PRIMARY KEY IDENTITY(1, 1),
     [LessonID] integer UNIQUE,
     [Content] nvarchar(max)
-) GO
+)
+GO
 
 CREATE TABLE [User] (
     [UserID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -38,7 +41,8 @@ CREATE TABLE [User] (
     ),
     [CreatedTime] datetime,
     [UpdateTime] datetime
-) GO
+) 
+GO
 
 CREATE TABLE [Profile] (
     [ProfileID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -46,7 +50,8 @@ CREATE TABLE [Profile] (
     [Education] varchar(200),
     [Certification] varchar(200),
     [UserID] integer
-) GO
+) 
+GO
 
 CREATE TABLE [UserAuthProvider] (
     [AuthProviderID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -57,7 +62,8 @@ CREATE TABLE [UserAuthProvider] (
     [RefreshToken] varchar(512),
     [ExpiryDate] datetime,
     [CreatedTime] datetime
-) GO
+) 
+GO
 
 CREATE TABLE [Course] (
     [CourseID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -69,7 +75,8 @@ CREATE TABLE [Course] (
     [CreateTime] datetime,
     [IsHidden] bit,
     [InstructorID] integer
-) GO
+) 
+GO
 
 CREATE TABLE [Review] (
     [ReviewID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -78,7 +85,8 @@ CREATE TABLE [Review] (
     [CreatedDate] datetime,
     [StudentID] integer,
     [CourseID] integer
-) GO
+) 
+GO
 
 CREATE TABLE [Notify] (
     [NotifyID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -88,7 +96,8 @@ CREATE TABLE [Notify] (
         [StatusNotify] IN ('Read', 'UnRead')
     ),
     [ReceiveUserID] integer NOT NULL
-) GO
+) 
+GO
 
 CREATE TABLE [Enrollment] (
     [EnrollmentID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -102,7 +111,8 @@ CREATE TABLE [Enrollment] (
         )
     ),
     [EnrollDate] datetime
-) GO
+) 
+GO
 
 CREATE TABLE [LearnProgress] (
     [ProgressID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -117,7 +127,8 @@ CREATE TABLE [LearnProgress] (
     ),
     [StartTime] datetime,
     [CompletionTime] datetime
-) GO
+) 
+GO
 
 CREATE TABLE [ForumMessage] (
     [ForumMessageID] integer PRIMARY KEY IDENTITY(1, 1),
@@ -125,49 +136,65 @@ CREATE TABLE [ForumMessage] (
     [CreateAt] datetime,
     [CourseID] integer,
     [UserID] integer
-) GO
+) 
+GO
 
 ALTER TABLE [Lessons]
-ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) GO
+ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) 
+GO
 
 ALTER TABLE [LessonVideo]
-ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) GO
+ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) 
+GO
 
 ALTER TABLE [LessonDocument]
-ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) GO
+ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) 
+GO
 
 ALTER TABLE [Profile]
-ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [UserAuthProvider]
-ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [Course]
-ADD FOREIGN KEY ([InstructorID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([InstructorID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [Review]
-ADD FOREIGN KEY ([StudentID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([StudentID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [Review]
-ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) GO
+ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) 
+GO
 
 ALTER TABLE [Notify]
-ADD FOREIGN KEY ([ReceiveUserID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([ReceiveUserID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [Enrollment]
-ADD FOREIGN KEY ([StudentID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([StudentID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [Enrollment]
-ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) GO
+ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) 
+GO
 
 ALTER TABLE [LearnProgress]
-ADD FOREIGN KEY ([StudentID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([StudentID]) REFERENCES [User] ([UserID]) 
+GO
 
 ALTER TABLE [LearnProgress]
-ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) GO
+ADD FOREIGN KEY ([LessonID]) REFERENCES [Lessons] ([LessonID]) 
+GO
 
 ALTER TABLE [ForumMessage]
-ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) GO
+ADD FOREIGN KEY ([CourseID]) REFERENCES [Course] ([CourseID]) 
+GO
 
 ALTER TABLE [ForumMessage]
-ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) GO
+ADD FOREIGN KEY ([UserID]) REFERENCES [User] ([UserID]) 
+GO

@@ -1,6 +1,6 @@
 def generate_create_course_script():
     # Nhập số lượng lệnh muốn tạo
-    num_commands =10000
+    num_commands =10
     
     # Các thông tin cố định
     topic = "Sample Topic"
@@ -22,7 +22,7 @@ def generate_create_course_script():
         commands.append(command)
     
     # Lưu vào file SQL
-    with open('output.sql', 'w', encoding='utf-8') as file:
+    with open('./output.sql', 'w', encoding='utf-8') as file:
         # Ghi từng lệnh trực tiếp vào file
         for cmd in commands:
             file.write(cmd + '\n')

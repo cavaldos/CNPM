@@ -1,145 +1,123 @@
-IF OBJECT_ID(
-    'get_all_course',
-    'P'
-) IS NOT NULL DROP
-PROCEDURE get_all_course;
-GO
 
-CREATE PROCEDURE get_all_course 
-    @Offset INT, 
-    @PageSize INT 
-AS 
-BEGIN 
-
-    SELECT  
-        co.[CourseID],  
-        [Title],  
-        [Description],  
-        [Topic],  
-        [Image],  
-        [CreateTime],  
-        [IsHidden],  
-        u.UserID as InstructorID,
-        u.FullName  as InstructorName,
-        (SELECT AVG(r.Rating) FROM Review r WHERE r.CourseID = co.CourseID) as AvgRating,
-        (SELECT COUNT(*) FROM Enrollment e WHERE e.CourseID = co.CourseID) as EnrollmentCount
-    FROM  
-        [Course] co  
-    JOIN  
-        [User] u ON co.InstructorID = u.UserID  
-    JOIN 
-        [Enrollment] e ON e.CourseID = co.CourseID  
-    WHERE  
-        co.IsHidden = 0
-
-    ORDER BY  
-        co.CreateTime DESC 
-    OFFSET  
-        @Offset ROWS 
-    FETCH NEXT  
-        @PageSize ROWS ONLY; 
- 
-    -- Query to get total count 
-    SELECT  
-        COUNT(*) AS TotalCount 
-    FROM  
-        [Course] co 
-    JOIN  
-        [User] u ON co.InstructorID = u.UserID  
-    JOIN 
-        [Enrollment] e ON e.CourseID = co.CourseID  
-    WHERE  
-        co.IsHidden = 0
-END;
-GO
-
-EXEC get_all_course @Offset = 6, @PageSize = 10;
-
-
-
-
+-- Kiểm tra và xóa procedure nếu đã tồn tại
 IF OBJECT_ID('get_all_course', 'P') IS NOT NULL DROP
 PROCEDURE get_all_course;
 GO
 
+-- Tạo procedure mới với tham số Offset và PageSize
 CREATE PROCEDURE get_all_course 
-    @Offset INT, 
-    @PageSize INT 
+    @Offset INT,            -- Vị trí bắt đầu
+    @PageSize INT           -- Số lượng bản ghi trên mỗi trang
 AS 
 BEGIN 
+    SET NOCOUNT ON;     -- Tăng hiệu suất
 
-    -- Query to get paginated course data
+    -- Query chính để lấy danh sách khóa học với phân trang
     SELECT  
         co.[CourseID],  
-        [Title],  
-        [Description],  
-        [Topic],  
-        [Image],  
-        [CreateTime],  
-        [IsHidden],  
-        u.UserID as InstructorID,
-        u.FullName  as InstructorName,
-        (SELECT AVG(r.Rating) FROM Review r WITH (NOLOCK) WHERE r.CourseID = co.CourseID) as AvgRating,
-        (SELECT COUNT(*) FROM Enrollment e WITH (NOLOCK) WHERE e.CourseID = co.CourseID) as EnrollmentCount
+        co.[Title],  
+        co.[Description],  
+        co.[Topic],  
+        co.[Image],  
+        co.[CreateTime],  
+        co.[IsHidden],  
+        u.UserID AS InstructorID,
+        u.FullName AS InstructorName,
+        (SELECT AVG(CAST(r.Rating AS FLOAT)) FROM Review r WHERE r.CourseID = co.CourseID) AS AvgRating,
+        (SELECT COUNT(*) FROM Enrollment e WHERE e.CourseID = co.CourseID) AS EnrollmentCount
     FROM  
-        [Course] co WITH (NOLOCK)  
-    JOIN  
-        [User] u WITH (NOLOCK) ON co.InstructorID = u.UserID  
-    JOIN 
-        [Enrollment] e WITH (NOLOCK) ON e.CourseID = co.CourseID  
-    WHERE  
-        co.IsHidden = 0
-
+        [Course] co  
+    INNER JOIN  
+        [User] u ON co.InstructorID = u.UserID  
+    LEFT JOIN  
+        [Enrollment] e ON e.CourseID = co.CourseID  
+    -- WHERE  
+    --     co.IsHidden = 0
+    GROUP BY  
+        co.[CourseID], co.[Title], co.[Description], co.[Topic], co.[Image], 
+        co.[CreateTime], co.[IsHidden], u.UserID, u.FullName
     ORDER BY  
         co.CreateTime DESC 
     OFFSET  
         @Offset ROWS 
     FETCH NEXT  
         @PageSize ROWS ONLY; 
- 
-    -- Query to get total count 
+
+    -- Query để lấy tổng số bản ghi
     SELECT  
-        COUNT(*) AS TotalCount 
+        COUNT(DISTINCT co.CourseID) AS TotalCount 
     FROM  
-        [Course] co WITH (NOLOCK)
-    JOIN  
-        [User] u WITH (NOLOCK) ON co.InstructorID = u.UserID  
-    JOIN 
-        [Enrollment] e WITH (NOLOCK) ON e.CourseID = co.CourseID  
+        [Course] co 
+    INNER JOIN  
+        [User] u ON co.InstructorID = u.UserID  
+    LEFT JOIN  
+        [Enrollment] e ON e.CourseID = co.CourseID  
     WHERE  
-        co.IsHidden = 0
+        co.IsHidden = 0;
 END;
 GO
 
--- Thêm procedure vào database
-
-IF OBJECT_ID('get_courses_offset', 'P') IS NOT NULL DROP
-PROCEDURE get_courses_offset;
+-- Kiểm tra và xóa procedure nếu đã tồn tại
+IF OBJECT_ID('search_course', 'P') IS NOT NULL DROP
+PROCEDURE search_course;
 GO
 
-CREATE PROCEDURE get_courses_offset
-    @Offset INT, 
-    @PageSize INT 
+-- Tạo procedure mới với tham số SearchTerm
+CREATE PROCEDURE search_course 
+    @Offset INT,            -- Vị trí bắt đầu
+    @PageSize INT,          -- Số lượng bản ghi trên mỗi trang
+    @SearchTerm NVARCHAR(100) = NULL  -- Từ khóa tìm kiếm (mặc định là NULL)
 AS 
 BEGIN 
+    SET NOCOUNT ON;     -- Tăng hiệu suất
+
+    -- Query chính để lấy danh sách khóa học với phân trang và tìm kiếm
     SELECT  
         co.[CourseID],  
-        [Title],  
-        [Description],  
-        [Topic],  
-        [Image],  
-        [CreateTime],  
-        [IsHidden]
+        co.[Title],  
+        co.[Description],  
+        co.[Topic],  
+        co.[Image],  
+        co.[CreateTime],  
+        co.[IsHidden],  
+        u.UserID AS InstructorID,
+        u.FullName AS InstructorName,
+        (SELECT AVG(CAST(r.Rating AS FLOAT)) FROM Review r WHERE r.CourseID = co.CourseID) AS AvgRating,
+        (SELECT COUNT(*) FROM Enrollment e WHERE e.CourseID = co.CourseID) AS EnrollmentCount
     FROM  
-        [Course] co 
+        [Course] co  
+    INNER JOIN  
+        [User] u ON co.InstructorID = u.UserID  
+    LEFT JOIN  
+        [Enrollment] e ON e.CourseID = co.CourseID  
     WHERE  
         co.IsHidden = 0
-
+        AND (@SearchTerm IS NULL OR 
+             co.Title LIKE '%' + @SearchTerm + '%' OR 
+             co.Description LIKE '%' + @SearchTerm + '%')  -- Tìm kiếm trong Title hoặc Description
+    GROUP BY  
+        co.[CourseID], co.[Title], co.[Description], co.[Topic], co.[Image], 
+        co.[CreateTime], co.[IsHidden], u.UserID, u.FullName
     ORDER BY  
-        co.CourseID ASC
+        co.CreateTime DESC 
     OFFSET  
-        0 ROWS 
+        @Offset ROWS 
     FETCH NEXT  
-        10 ROWS ONLY; 
+        @PageSize ROWS ONLY; 
+
+    -- Query để lấy tổng số bản ghi
+    SELECT  
+        COUNT(DISTINCT co.CourseID) AS TotalCount 
+    FROM  
+        [Course] co 
+    INNER JOIN  
+        [User] u ON co.InstructorID = u.UserID  
+    LEFT JOIN  
+        [Enrollment] e ON e.CourseID = co.CourseID  
+    WHERE  
+        co.IsHidden = 0
+        AND (@SearchTerm IS NULL OR 
+             co.Title LIKE '%' + @SearchTerm + '%' OR 
+             co.Description LIKE '%' + @SearchTerm + '%');
 END;
 GO
