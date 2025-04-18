@@ -12,6 +12,14 @@ services:
     restart: unless-stopped
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -26,10 +34,17 @@ services:
       MSSQL_CONFIG_CONNECTIVITY: "LOCAL"
     volumes:
       - mssql-data:/var/opt/mssql
-      - ./mssql:/mssql
     restart: always
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
 
   mongodb:
     image: mongo:latest
@@ -40,11 +55,19 @@ services:
       MONGO_INITDB_DATABASE: chatdb
     ports:
       - "27017:27017"
-    # volumes:
-    #   - mongodb_data:/data/db
+    volumes:
+      - mongodb_data:/data/db
     restart: unless-stopped
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 1G
+        reservations:
+          cpus: '0.3'
+          memory: 512M
 
   cassandra:
     image: cassandra:latest
@@ -61,9 +84,17 @@ services:
       - CASSANDRA_RACK=rack1
       - CASSANDRA_AUTHENTICATOR=123456
       - CASSANDRA_ROLE_MANAGER=CassandraRoleManager
- #   volumes:
- #     - cassandra_data:/var/lib/cassandra 
+    volumes:
+     - cassandra_data:/var/lib/cassandra 
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
   
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -73,6 +104,14 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -88,6 +127,14 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
 
 networks:
@@ -99,8 +146,10 @@ volumes:
     driver: local
   mssql-data:
     driver: local
-  # mongodb_data:
-  #   driver: local
+  mongodb_data:
+    driver: local
+  cassandra_data:
+    driver: local
 
 
 
